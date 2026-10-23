@@ -1,3 +1,4 @@
+/* (c) 2026 Wizarts BV, wizarts.be. Alle rechten voorbehouden. wzts-gawfozonsd */
 const root = document.documentElement;
 const $ = <T extends Element = HTMLElement>(s: string, el: ParentNode = document) => el.querySelector<T>(s as any) as T | null;
 const $$ = <T extends Element = HTMLElement>(s: string, el: ParentNode = document) => Array.from(el.querySelectorAll<T>(s as any)) as T[];
