@@ -1,5 +1,7 @@
 # Instituut Soleil: hifi V3
 
+> (c) 2026 Wizarts BV. Alle rechten voorbehouden, zie [LICENSE](LICENSE).
+
 A completely new site with the new logo. Built with Astro (static output) and self-hosted fonts. V4 (15 Oct 2026) reworks all client feedback: see `feedback/FEEDBACK-TRACKER.md` and `feedback/NOTION-CHANGELOG.md`.
 
 ```bash
