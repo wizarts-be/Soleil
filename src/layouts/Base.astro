@@ -8,8 +8,6 @@ interface Props { title: string; description: string; image?: string }
 const { title, description, image = '/img/zaakvoerder-behandeling.webp' } = Astro.props;
 const full = title.includes('Soleil') ? title : `${title} | Instituut Soleil Beervelde`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-// Review layer (post-its, repo stijndemulder-wiz/postit-review). Remove before go-live.
-const postitSrc = import.meta.env.PUBLIC_POSTIT_SRC ?? 'https://wizarts-postits.netlify.app/postits.js';
 const ld = {
   '@context': 'https://schema.org',
   '@type': 'BeautySalon',
@@ -41,7 +39,6 @@ const ld = {
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
     <script is:inline>document.documentElement.classList.add('js');</script>
     <slot name="head" />
-    <script is:inline defer src={postitSrc} data-postit-laag data-project="soleil" data-vaste-header="[data-header]"></script>
   </head>
   <body>
     <Header />
