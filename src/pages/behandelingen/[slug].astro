@@ -12,7 +12,7 @@ const i = treatments.findIndex((x) => x.slug === t.slug);
 const prev = treatments[(i - 1 + treatments.length) % treatments.length];
 const next = treatments[(i + 1) % treatments.length];
 const href = (slug: string) => `/behandelingen/${slug}/`;
-const lowest = (gs: { rows: [string, string, number | string, string?][] }[]) => Math.min(...gs.flatMap((g) => g.rows).map((r) => (typeof r[2] === 'number' ? r[2] : 999)));
+const why = t.why?.titles ?? ['Herken je dit?', 'Wat ik doe', 'Wat jij eraan hebt'];
 ---
 <Base title={t.name} description={`${t.name} bij Instituut Soleil in Beervelde: ${t.sub}.`}>
   <div class="wrap" style="padding-top:clamp(24px,3vw,40px)">
@@ -65,23 +65,30 @@ const lowest = (gs: { rows: [string, string, number | string, string?][] }[]) =>
     </>
   ) : (
     <>
-    <header class="wrap thero">
+    <header class="wrap thead">
+      <figure class="framed rv-img"><img src={`/img/${t.img}.webp`} alt={t.alt} fetchpriority="high" /></figure>
       <div>
         <ol class="crumbs" role="list"><li><a href="/">Home</a></li><li><a href={`/behandelingen/#${t.group?.toLowerCase()}`}>{t.group}</a></li><li aria-current="page">{t.name}</li></ol>
-        <h1 class="h1 rv">{t.name}</h1>
+        <p class="label rv">{t.kicker ?? t.sub}</p>
+        <h1 class="display rv">{t.title ?? t.name}</h1>
         <p class="lede rv" style="--d:1">{t.intro}</p>
-        {t.from > 0 && <p class="rv" style="--d:2;margin-top:20px;font-weight:500">{euro(t.from)}</p>}
+        <div class="actions rv" style="--d:2">
+          {t.link ? (
+            <a class="btn" href={t.link.href} target="_blank" rel="noopener">{t.link.label}<Icon name="arrow-up-right" /></a>
+          ) : (
+            <a class="btn" href={info.booking} target="_blank" rel="noopener">Boek hier<Icon name="arrow-up-right" /></a>
+          )}
+        </div>
       </div>
-      <figure class="ph rv-img"><img src={`/img/${t.img}.webp`} alt={t.alt} fetchpriority="high" /></figure>
     </header>
 
     <section class="wrap tbody">
       <div>
         {t.why && (
           <div class="why">
-            <div class="rv"><Icon name="question" /><h3>Herken je dit?</h3><p>{t.why.problem}</p></div>
-            <div class="rv" style="--d:1"><Icon name="hand-heart" /><h3>Wat ik doe</h3><p>{t.why.solution}</p></div>
-            <div class="rv" style="--d:2"><Icon name="sparkle" /><h3>Wat jij eraan hebt</h3><p>{t.why.benefit}</p></div>
+            <div class="rv"><Icon name="question" /><h3>{why[0]}</h3>{Array.isArray(t.why.problem) ? <ul role="list">{t.why.problem.map((x) => <li>{x}</li>)}</ul> : <p>{t.why.problem}</p>}</div>
+            <div class="rv" style="--d:1"><Icon name="hand-heart" /><h3>{why[1]}</h3><p>{t.why.solution}</p></div>
+            <div class="rv" style="--d:2"><Icon name="sparkle" /><h3>{why[2]}</h3><p>{t.why.benefit}</p></div>
           </div>
         )}
         {t.parts && (
@@ -91,7 +98,6 @@ const lowest = (gs: { rows: [string, string, number | string, string?][] }[]) =>
                 <figure class="ph"><img src={`/img/${p.img}.webp`} alt={p.alt} loading="lazy" /></figure>
                 <div>
                   <h2 class="h3">{p.name}</h2>
-                  <p class="from">{euro(lowest(p.prices))}</p>
                   <p>{p.text}</p>
                   {p.prices.map((g) => <Prices rows={g.rows} title={g.title} />)}
                 </div>
@@ -110,11 +116,18 @@ const lowest = (gs: { rows: [string, string, number | string, string?][] }[]) =>
           </>
         ) : t.parts ? (
           <>
-            <h2 id="prijzen">Skin Expert</h2>
-            <p class="muted">Peel en Needling vanaf €125, Neo-Lift vanaf €120. Alle prijzen staan bij elke behandeling hiernaast.</p>
+            <h2 id="prijzen">{t.name}</h2>
+            <p class="muted">De prijzen staan bij elke behandeling hiernaast.</p>
           </>
         ) : (
           <h2 id="prijzen">{t.name}</h2>
+        )}
+        {t.extra && (
+          <div class="panel-extra">
+            <p class="label label--sunset">{t.extra.title}</p>
+            {t.extra.text && <p>{t.extra.text}</p>}
+            {t.extra.list.length > 0 && <ul role="list">{t.extra.list.map((x) => <li>{x}</li>)}</ul>}
+          </div>
         )}
         {t.tip && <p class="price-note">{t.tip}</p>}
         {t.link ? (

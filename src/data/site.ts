@@ -7,7 +7,7 @@
 export const info = {
   name: 'Instituut Soleil',
   owner: 'Saskia',
-  tagline: 'Stralen begint bij een huid in balans',
+  tagline: 'Stralen begint met een huid in balans',
   years: 27,
   street: 'Rivierstraat 70',
   city: '9080 Beervelde',
@@ -30,9 +30,10 @@ export const hours: Day[] = [
   { day: 'Woensdag', short: 'Wo', d: 3 },
   { day: 'Donderdag', short: 'Do', d: 4, open: '08:00', close: '20:00' },
   { day: 'Vrijdag', short: 'Vr', d: 5, open: '08:00', close: '18:00' },
-  { day: 'Zaterdag', short: 'Za', d: 6, open: '09:00', close: '13:30', note: 'namiddag op afspraak' },
-  { day: 'Zondag', short: 'Zo', d: 0 },
+  { day: 'Zaterdag', short: 'Za', d: 6, open: '09:00', close: '13:30' },
 ];
+/* Shown under the opening hours (post-it Saskia, 15 Oct). */
+export const hoursNote = 'Zaterdagnamiddag na telefonische afspraak.';
 export const time = (s?: string) => s?.replace(':00', 'u').replace(':', 'u').replace(/^0/, '');
 
 /* [naam, duur, prijs, toelichting?]. prijs: number in euro, string for ranges or notes */
@@ -56,8 +57,14 @@ export type Treatment = {
   tip?: string;
   note?: string;
   link?: { href: string; label: string };
-  /* Problem the visitor recognises, what Soleil does about it, what she gains. Kept to one or two lines each. */
-  why?: { problem: string; solution: string; benefit: string };
+  /* Problem the visitor recognises, what Soleil does about it, what she gains. Kept to one or two lines each.
+     titles overrides the three block headings; a problem given as a list shows as bullets. */
+  why?: { problem: string | string[]; solution: string; benefit: string; titles?: [string, string, string] };
+  /* Page heading and small line above it, when they differ from the menu name and sub. */
+  title?: string;
+  kicker?: string;
+  /* Extra block in the side panel, under the prices (e.g. the laser dates). */
+  extra?: { title: string; text?: string; list: string[] };
   parts?: { id: string; name: string; img: string; alt: string; text: string; prices: PriceGroup[] }[];
   /* Own page layout (make-up): intro questions, a brand block and simple service blocks instead of the price panel. */
   page?: {
@@ -107,7 +114,7 @@ export const skin: Treatment[] = [
   },
   {
     slug: 'skin-relax',
-    why: { problem: 'Je huid voelt dof of droog en je loopt al een tijd op je tandvlees.', solution: 'Een verzorgende gelaatsbehandeling, afgestemd op je huid, in een rustig en warm kader.', benefit: 'Een frisse, verzorgde huid en een uur waarin je helemaal tot rust komt.' },
+    why: { titles: ['Voelt je huid wat minder stralend?', 'Wat ik doe', 'Wat jij eraan hebt'], problem: 'Je huid voelt droog of ziet er wat dof uit. En misschien merk je dat je zelf ook toe bent aan een rustmoment.', solution: 'Bij Instituut Soleil neem ik graag de tijd voor jou, met een verzorging die je huid laat stralen en jou even op adem laat komen.', benefit: 'Een frisse, verzorgde huid en een uur waarin je helemaal tot rust komt.' },
     name: 'Skin Relax',
     sub: 'ontspannen & revitaliseren',
     img: 'gelaatsverzorging',
@@ -146,6 +153,8 @@ export const skin: Treatment[] = [
     intro:
       'Een doelgerichte gelaatsbehandeling met intensieve producten en specifieke technieken of toestellen. Afgestemd op jouw huid, met aandacht voor herstel en huidverbetering.',
     tip: 'Werk je voor het eerst aan huidverbetering? Begin dan met een Skin Discovery.',
+    /* Seasonal highlight in the side panel. Saskia changes this per season. */
+    extra: { title: 'In de kijker deze herfst', text: 'Skin Expert Peel: je huid voelt weer zacht en glad aan. De ideale start van een kuur.', list: [] },
     prices: [],
     parts: [
       {
@@ -173,7 +182,7 @@ export const skin: Treatment[] = [
           {
             rows: [
               ['Skin Expert Needling', '75 min', 125, 'needling + masker + LED-lichttherapie'],
-              ['Skin Expert Needling + peel', '90 min', 185],
+              ['Skin Expert Needling + peel', '90 min', 185, 'needling + peel + LED-masker'],
             ],
           },
         ],
@@ -183,11 +192,11 @@ export const skin: Treatment[] = [
         name: 'Neo-Lift',
         img: 'neo-lift',
         alt: 'Neo-Lift behandeling van het gelaat',
-        text: 'Radiofrequentie en elektrostimulatie samen: voor meer collageen en elastine en stevigere contouren, zonder naalden. Altijd in kuurvorm.',
+        text: 'Radiofrequentie en elektrostimulatie samen: voor meer collageen en elastine en stevigere contouren, zonder naalden. Voor een mooi resultaat is een kuur aan te raden.',
         prices: [
           {
             rows: [
-              ['Neo-Lift per zone', '45 min', 120],
+              ['Neo-Lift gelaat', '45 min', 120],
               ['Neo-Lift gelaat + hals', '90 min', 180],
               ['Neo-Lift + peel', '90 min', 185],
             ],
@@ -201,7 +210,7 @@ export const skin: Treatment[] = [
 /* ---------- Ontspanning: one page each, same template ---------- */
 export type Arrangement = { name: string; duration: string; solo: number; duo?: number; items: string[] };
 export const arrangements: Arrangement[] = [
-  { name: 'Mini', duration: '1u15', solo: 100, items: ['Skin Relax basisverzorging', 'Epilatie wenkbrauwen', 'Korte rugmassage'] },
+  { name: 'Mini-arrangement', duration: '1u15', solo: 100, items: ['Skin Relax basisverzorging', 'Epilatie wenkbrauwen', 'Korte rugmassage'] },
   { name: 'Feeling', duration: '1u30', solo: 115, duo: 220, items: ['Relaxerende rugmassage', 'Warme rugpakking', 'Mini gelaatsverzorging', 'Epilatie wenkbrauwen'] },
   { name: 'Soleil', duration: '2u', solo: 165, items: ['Relaxerende rugmassage', 'Skin Relax standaardverzorging', 'Epilatie wenkbrauwen', 'Manicure met hydratatie'] },
   { name: 'Relax', duration: '2u tot 2u30', solo: 150, duo: 290, items: ['Lichaamspeeling', 'Warme lichaamspakking + douche', 'Mini gelaatsverzorging'] },
@@ -209,13 +218,15 @@ export const arrangements: Arrangement[] = [
 ];
 const arrangementRows: Row[] = arrangements.flatMap((a) => {
   const rows: Row[] = [[a.name, a.duration, a.solo, a.items.join(' · ')]];
-  if (a.duo) rows.push([`${a.name} duo`, a.duration, a.duo, 'met twee in de duo-cabine']);
+  if (a.duo) rows.push([`${a.name} duo`, a.duration, a.duo, 'met 2 zalig genieten']);
   return rows;
 });
 
 export const laser = {
   name: 'Laser ontharing',
-  text: 'Definitieve ontharing met de diodelaser, in samenwerking met Haarlaser Team. Een erkende laserspecialist komt op vaste dagen naar het instituut. De test- en uitlegsessie is gratis.',
+  text: 'Elke ochtend scheren, ingegroeide haartjes en na twee dagen alweer stoppels? Tijd voor een gladde huid die ook glad blijft. Met de LightSheer® diodelaser, een medische diodelaser met 4 golflengtes, pak je ongewenst haar aan, snel en vrijwel pijnloos.',
+  /* Days the specialist (Cathy, Haarlaser Team) is in the institute. */
+  dates: ['Donderdag 29 oktober 2026', 'Dinsdag 10 november 2026', 'Donderdag 10 december 2026', 'Dinsdag 22 december 2026', 'Donderdag 21 januari 2027', 'Dinsdag 2 februari 2027', 'Donderdag 4 maart 2027', 'Dinsdag 16 maart 2027', 'Donderdag 15 april 2027', 'Dinsdag 27 april 2027', 'Donderdag 27 mei 2027', 'Dinsdag 8 juni 2027', 'Donderdag 8 juli 2027', 'Dinsdag 20 juli 2027'],
   url: 'https://www.haarlaser.team',
   label: 'Prijzen op haarlaser.team',
 };
@@ -229,7 +240,8 @@ export const relax: Treatment[] = [
     img: 'duo-cabine',
     alt: 'Twee personen krijgen tegelijk een gezichtsmassage in de duo-cabine',
     from: 100,
-    intro: 'Van kop tot teen verzorgd worden, alleen of met twee in de duo-cabine. Daarna geniet je na in de relaxruimte.',
+    kicker: "Self-care is not a luxury, it's a power move",
+    intro: 'Even helemaal niets moeten. Laat je onderdompelen in pure verwennerij, met zachte aanrakingen, heerlijke geuren en luxe producten. Laat de drukte los en kom opnieuw tot rust.',
     prices: [{ rows: arrangementRows }],
   },
   {
@@ -254,14 +266,14 @@ export const relax: Treatment[] = [
   },
   {
     slug: 'handen-voeten',
-    why: { problem: 'Je handen en voeten krijgen in de drukte het minst aandacht.', solution: 'Manicure, gellak en pedicure, ook te combineren met een Skin Relax.', benefit: 'Verzorgde handen en voeten, en alles in één afspraak.' },
+    why: { problem: 'Je handen en voeten krijgen in de drukte het minst aandacht.', solution: 'Manicure en pedicure met gellak, die tijdens een combo-verzorging ook een beetje extra aandacht krijgen.', benefit: 'Verzorgde handen en voeten, en alles in één afspraak.' },
     name: 'Handen & voeten',
     sub: 'manicure, gellak & pedicure',
     img: 'handen-voeten',
     alt: 'Verzorging van de handen',
     from: 25,
-    intro: 'Verzorgde handen en voeten, los of in combinatie met een Skin Relax.',
-    note: 'Een pedicure bied ik nooit apart aan. Kom je voor een Skin Relax, dan kan je een pedicure bijboeken en voorzie ik graag wat meer tijd. Boeken kan via de combo-verzorgingen.',
+    intro: 'Een extra moment van zachtheid voor je handen en voeten. Deze verzorgingen zijn vooral te boeken in combinatie met een Skin Relax-verzorging en maken je ontspanningsmoment compleet. Geniet van een verzorgd gevoel en kom helemaal tot rust.',
+    note: 'Pedicure bied ik uitsluitend aan als onderdeel van een combobehandeling, samen met de Skin Relax-verzorging. Zo wordt het één samenhangend verwenmoment, met rust en volle aandacht.',
     prices: [
       {
         title: 'Handen & voeten',
@@ -269,18 +281,18 @@ export const relax: Treatment[] = [
           ['Manicure / lakken', '30 min', '€25 / €35'],
           ['Gellak verwijderen + verzorging', '20 min', 25],
           ['Gellak en pedicure', '60 min', 65],
-          ['Kleine pedicure', '', 30],
-          ['Grote pedicure', '', 45],
+          ['Kleine pedicure', '', 30, '* enkel te boeken in combinatie met een Skin Relax'],
+          ['Grote pedicure', '', 45, '* enkel te boeken in combinatie met een Skin Relax'],
         ],
       },
       {
         title: 'Combo met Skin Relax',
         rows: [
-          ['Skin Relax basis + manicure', '', 90],
-          ['Skin Relax basis + pedicure', '', 95],
-          ['Skin Relax standaard + manicure', '', 115],
-          ['Skin Relax standaard + pedicure', '', 120],
-          ['Skin Relax standaard + manicure + pedicure', '', 145],
+          ['Skin Relax basis + manicure', '', 'vanaf €95'],
+          ['Skin Relax basis + pedicure', '', 'vanaf €100'],
+          ['Skin Relax standaard + manicure', '', 'vanaf €120'],
+          ['Skin Relax standaard + pedicure', '', 'vanaf €125'],
+          ['Skin Relax standaard + manicure + pedicure', '', 150],
         ],
       },
     ],
@@ -347,8 +359,10 @@ export const relax: Treatment[] = [
   },
   {
     slug: 'laser',
-    why: { problem: 'Je bent het scheren en harsen beu.', solution: 'Definitieve ontharing met de diodelaser, door een erkende laserspecialist van Haarlaser Team, in het instituut.', benefit: 'Blijvend resultaat, met een gratis test- en uitlegsessie vooraf.' },
+    why: { titles: ['Herken je dit?', 'Werkwijze', 'Wat jij eraan hebt'], problem: ['Ongewenste haargroei', 'Ingegroeide haren', 'Irritatie na het scheren'], solution: 'Definitieve ontharing met de diodelaser, door een erkende laserspecialist van Haarlaser Team, in het instituut.', benefit: 'Blijvend resultaat, met een gratis test- en uitlegsessie vooraf.' },
     name: laser.name,
+    title: 'Medische laserontharing',
+    extra: { title: 'Cathy van Haarlaser Team is aanwezig op', list: laser.dates },
     sub: 'definitief ontharen',
     img: 'ontharing',
     alt: 'Ontharing',
@@ -382,7 +396,7 @@ export const usps = [
   { icon: 'medal', title: '27 jaar ervaring', text: 'Al 27 jaar huidexpert in Beervelde, met elk jaar bijscholing.' },
   { icon: 'scan', title: 'Eerst analyse', text: 'Met de huidscanner zie ik wat je huid echt nodig heeft, voor we beginnen.' },
   { icon: 'chat-circle', title: 'Eerlijk advies', text: 'Geen snelle trends of loze beloftes, wel een aanpak die past bij jouw huid.' },
-  { icon: 'house-line', title: 'Ook thuis begeleid', text: '75% van het resultaat komt van je verzorging thuis. Die stem ik mee af.' },
+  { icon: 'house-line', title: 'Begeleiding voor thuis', text: '75% van het resultaat komt van je verzorging thuis. Die stem ik mee af, en ik blijf je begeleiden bij je thuisroutine.' },
 ];
 
 /* Reviews: real client reviews (Google and the booking system), chosen from the documents

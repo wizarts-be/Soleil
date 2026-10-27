@@ -12,33 +12,36 @@ const gallery = [
 ];
 ---
 <Base title="Over Soleil" description={`Ik ben ${info.owner}, het gezicht achter Instituut Soleil.`}>
-  <header class="wrap ph-head">
+  <header class="wrap" style="padding-top:clamp(24px,3vw,40px)">
     <ol class="crumbs" role="list"><li><a href="/">Home</a></li><li aria-current="page">Over Soleil</li></ol>
-    <h1 class="h1">Mijn persoonlijk verhaal</h1>
   </header>
 
-  <section class="wrap story">
-    <figure class="ph rv-img"><img src="/img/zaakvoerder-portret.webp" alt={`${info.owner}, zaakvoerder van Instituut Soleil`} width="1080" height="1080" fetchpriority="high" /></figure>
-    <div class="prose">
-      <p class="rv">Ik ben {info.owner}, het gezicht achter Instituut Soleil. Al {info.years} jaar begeleid ik met veel passie klanten naar een mooiere, sterkere en meer gebalanceerde huid.</p>
-      <p class="rv">Mijn interesse in duurzame huidverbetering is ook heel persoonlijk gegroeid. Ik heb zelf jarenlang geworsteld met acne en pigmentvlekken en weet hoe frustrerend een probleemhuid kan zijn. Door te werken met doordachte huidverbeterende merken zoals Environ en Jane Iredale kreeg ik mijn eigen huid beter onder controle. Die ervaring motiveerde mij om mij steeds verder te verdiepen en bij te scholen.</p>
-      <p class="rv">Ik kies bewust voor actieve producten, innovatieve technieken en behandelingen die ondersteund worden door wetenschappelijk onderzoek en kennis. Geen snelle TikTok-trends of loze beloftes, maar eerlijk advies en een aanpak die past bij jouw huid.</p>
-      <p class="rv">In een stijlvol en rustgevend kader neem ik de tijd om naar jou en je huid te luisteren. Samen werken we stap voor stap aan een huid die gezonder, egaler, sterker en meer in balans aanvoelt.</p>
+  <section class="wrap story section">
+    <figure class="framed rv-img"><img src="/img/zaakvoerder-portret.webp" alt={`${info.owner}, zaakvoerder van Instituut Soleil`} width="1080" height="1080" fetchpriority="high" /></figure>
+    <div>
+      <p class="label">Over Soleil</p>
+      <h1 class="display story-title">Mijn persoonlijk verhaal</h1>
+      <div class="prose">
+        <p class="rv">Ik ben {info.owner}, het gezicht achter Instituut Soleil. Al {info.years} jaar begeleid ik met veel passie klanten naar een mooiere, sterkere en meer gebalanceerde huid.</p>
+        <p class="rv">Mijn interesse in duurzame huidverbetering is ook heel persoonlijk gegroeid. Ik heb zelf jarenlang geworsteld met acne en pigmentvlekken en weet hoe frustrerend een probleemhuid kan zijn. Door te werken met huidverbeterende merken zoals Environ en Jane Iredale kreeg ik mijn eigen huid beter onder controle. Die ervaring motiveerde mij om mij steeds verder te verdiepen en bij te scholen.</p>
+        <p class="rv">Ik kies bewust voor actieve producten, innovatieve technieken en behandelingen die ondersteund worden door wetenschappelijk onderzoek en kennis. Geen snelle TikTok-trends of loze beloftes, maar eerlijk advies en een aanpak die past bij jouw huid.</p>
+        <p class="rv">In een stijlvol en rustgevend kader neem ik de tijd om naar jou en je huid te luisteren. Samen werken we stap voor stap aan een huid die gezonder, egaler, sterker en meer in balans aanvoelt.</p>
+      </div>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="sta">
+  <section style="padding-bottom:var(--section)" aria-labelledby="sta">
     <div class="wrap values">
       <div class="rv"><h2 id="sta" class="h2">Waar ik voor sta</h2><p>Drie principes die elke behandeling bepalen.</p></div>
       <div class="rv" style="--d:1"><h3 class="h3">Geen quick fix</h3><p>Elke huid is anders. Ik maak graag extra tijd vrij om je persoonlijk te adviseren en te begeleiden.</p></div>
-      <div class="rv" style="--d:2"><h3 class="h3">Thuis telt</h3><p>Wonderen met enkel professionele behandelingen bestaan niet. 75% van het resultaat komt van je verzorging thuis.</p></div>
+      <div class="rv" style="--d:2"><h3 class="h3">Advies voor thuiscare</h3><p>Wonderen met enkel professionele behandelingen bestaan niet. 75% van het resultaat komt van je verzorging thuis.</p></div>
       <div class="rv" style="--d:3;grid-column:span 2"><h3 class="h3">Bewezen werking</h3><p>Ik werk uitsluitend met producten en technieken die wetenschappelijk onderbouwd zijn.</p></div>
     </div>
   </section>
 
   <section aria-labelledby="merken">
     <div class="wrap">
-      <h2 id="merken" class="h1 rv" style="margin-bottom:clamp(20px,3vw,32px)">Merken waar ik mee werk</h2>
+      <h2 id="merken" class="h1 rv" style="margin-bottom:clamp(20px,3vw,32px)">Merken waar ik achter sta</h2>
       <ul class="btiles" role="list">
         {brands.map((b, i) => (
           <li class="rv" style={`--d:${i}`}>

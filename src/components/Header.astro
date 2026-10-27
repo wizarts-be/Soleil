@@ -1,15 +1,15 @@
 ---
-/* Version B header: logo left, all pages visible right, Behandelingen opens a wide panel.
-   On phones the same content lives in a full-screen menu. */
+/* Header: logo left, all pages visible right, Behandelingen opens a wide panel without prices
+   (value first, price on the treatment page). On phones the same content lives in a full-screen menu. */
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
-import { info, groups, euro } from '../data/site';
+import { info, groups } from '../data/site';
 const path = Astro.url.pathname;
 const href = (slug: string) => `/behandelingen/${slug}/`;
 const cur = (h: string) => (path === h ? 'page' : undefined);
 const pages = [
   { href: '/', label: 'Home' },
-  { href: '/behandelingen/', label: 'Alle behandelingen' },
+  { href: '/tarieven/', label: 'Alle behandelingen & prijzen' },
   { href: '/tarieven/', label: 'Tarieven' },
   { href: '/over-soleil/', label: 'Over Soleil' },
   { href: '/contact/', label: 'Contact' },
@@ -39,10 +39,11 @@ const pages = [
         <div>
           <p class="label">{g.title}</p>
           <ul role="list">
-            {g.items.map((t) => <li><a href={href(t.slug)} aria-current={cur(href(t.slug))}><span>{t.name}</span>{t.from > 0 && <small>{euro(t.from)}</small>}</a></li>)}
+            {g.items.map((t) => <li><a href={href(t.slug)} aria-current={cur(href(t.slug))}><span>{t.name}</span></a></li>)}
           </ul>
         </div>
       ))}
+      <a class="mega-all" href="/tarieven/" aria-current={cur('/tarieven/')}>Alle behandelingen & prijzen<Icon name="arrow-right" /></a>
       <a class="menu-card" href="/behandelingen/skin-discovery/">
         <img src="/img/zaakvoerder-toestel.webp" alt="" loading="lazy" />
         <span><small>Nieuw bij Soleil?</small>Start met een Skin Discovery</span>
@@ -58,7 +59,7 @@ const pages = [
           <p class="label">{g.title}</p>
           <ul role="list">
             {g.items.map((t) => (
-              <li><a href={href(t.slug)} aria-current={cur(href(t.slug))}><span>{t.name}</span>{t.from > 0 && <small>{euro(t.from)}</small>}</a></li>
+              <li><a href={href(t.slug)} aria-current={cur(href(t.slug))}><span>{t.name}</span></a></li>
             ))}
           </ul>
         </div>

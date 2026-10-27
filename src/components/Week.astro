@@ -1,5 +1,5 @@
 ---
-import { hours, time } from '../data/site';
+import { hours, hoursNote, time } from '../data/site';
 ---
 <div class="week" data-week>
   {hours.map((h) => (
@@ -8,4 +8,5 @@ import { hours, time } from '../data/site';
       <span>{h.open ? `${time(h.open)} - ${time(h.close)}` : 'gesloten'}{h.note && <>, {h.note}</>}</span>
     </div>
   ))}
+  <p class="week-note">{hoursNote}</p>
 </div>

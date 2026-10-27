@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import { info, brands, skin, relax, usps, reviews, reviewsArePlaceholders, euro } from '../data/site';
+import { info, brands, skin, relax, usps, reviews, reviewsArePlaceholders } from '../data/site';
 
 const t = (slug: string) => [...skin, ...relax].find((x) => x.slug === slug)!;
 const cards = [
@@ -16,18 +16,17 @@ const icons = ['medal', 'scan', 'chat-circle', 'house-line'];
   <link slot="head" rel="preload" as="image" href="/img/zaakvoerder-behandeling.webp" fetchpriority="high" />
 
   <section class="hero" aria-labelledby="h1">
-    <div class="wrap">
-      <div class="hero-frame">
-        <img src="/img/zaakvoerder-behandeling.webp" alt="Saskia geeft een behandeling in haar instituut" width="1600" height="1135" fetchpriority="high" />
-        <div class="hero-copy">
-          <h1 id="h1" class="display rv">Stralen begint bij een huid <em>in balans.</em></h1>
-          <p class="lede rv" style="--d:1">Huidverbetering met bewezen technieken en eerlijk, persoonlijk advies. Al {info.years} jaar in Beervelde.</p>
-          <div class="actions rv" style="--d:2">
-            <a class="btn btn--light" href={info.booking} target="_blank" rel="noopener">Afspraak maken<Icon name="arrow-up-right" /></a>
-            <a class="link" href="/behandelingen/skin-discovery/">Start met een Skin Discovery<Icon name="arrow-right" /></a>
-          </div>
+    <div class="wrap hero-in">
+      <div class="hero-copy">
+        <p class="label rv">Instituut Soleil · Beervelde</p>
+        <h1 id="h1" class="display rv">Stralen begint met een huid in balans.</h1>
+        <p class="rv" style="--d:1">Bij Instituut Soleil geef ik jou en je huid de aandacht die jullie verdienen. In een warme, rustgevende sfeer combineer ik huidverbetering met ontspanning en een moment helemaal voor jezelf.</p>
+        <div class="actions rv" style="--d:2">
+          <a class="btn" href={info.booking} target="_blank" rel="noopener">Afspraak maken<Icon name="arrow-up-right" /></a>
+          <a class="link" href="/behandelingen/skin-discovery/">Nieuw? Begin met een Skin Discovery<Icon name="arrow-right" /></a>
         </div>
       </div>
+      <figure class="hero-media rv-img"><img src="/img/zaakvoerder-behandeling.webp" alt="Saskia geeft een behandeling in haar instituut" width="1600" height="1135" fetchpriority="high" /></figure>
     </div>
   </section>
 
@@ -45,17 +44,16 @@ const icons = ['medal', 'scan', 'chat-circle', 'house-line'];
     <div class="wrap">
       <div class="sec-head">
         <h2 id="beh" class="h1 rv">Behandelingen</h2>
-        <a class="link rv" href="/tarieven/">Alle tarieven<Icon name="arrow-right" /></a>
+        <a class="link rv" href="/tarieven/">Alle behandelingen & prijzen<Icon name="arrow-right" /></a>
       </div>
       <a class="disc rv" href="/behandelingen/skin-discovery/">
         <div>
-          <p class="label">Nieuw bij Soleil?</p>
+          <p class="label label--sunset">Nieuw bij Soleil?</p>
           <h3>Begin met een Skin Discovery</h3>
           <p class="t">Een huidanalyse, een verzorging op maat en persoonlijk advies voor thuis. Ideaal als eerste behandeling.</p>
         </div>
         <div class="disc-side">
-          <p><strong>{euro(105)}</strong><small>90 minuten</small></p>
-          <span class="btn btn--light">Bekijk<Icon name="arrow-right" /></span>
+          <span class="btn btn--light">Ontdek de Skin Discovery<Icon name="arrow-right" /></span>
         </div>
       </a>
       <ul class="cards" role="list">
@@ -65,7 +63,6 @@ const icons = ['medal', 'scan', 'chat-circle', 'house-line'];
               <figure class="ph"><img src={`/img/${c.img}.webp`} alt="" loading="lazy" /></figure>
               <h3>{c.name}<Icon name="arrow-up-right" /></h3>
               <p>{c.sub}</p>
-              <p class="price">{euro(c.from)}</p>
             </a>
           </li>
         ))}
@@ -73,15 +70,15 @@ const icons = ['medal', 'scan', 'chat-circle', 'house-line'];
     </div>
   </section>
 
-  <section aria-label="Over Saskia">
-    <div class="wrap manifesto">
-      <figure class="ph rv-img"><img src="/img/zaakvoerder-portret.webp" alt={`${info.owner}, zaakvoerder van Instituut Soleil`} loading="lazy" /></figure>
-      <div>
-        <blockquote class="rv">Geen snelle trends of loze beloftes. Ik neem de tijd om naar jou en je huid te luisteren, en werk stap voor stap aan een huid die <em>gezonder en sterker</em> aanvoelt.</blockquote>
-        <footer class="rv" style="--d:1">
-          <span>{info.owner}, zaakvoerder</span>
-          <a class="link" href="/over-soleil/">Mijn verhaal<Icon name="arrow-right" /></a>
-        </footer>
+  <section class="section" style="padding-bottom:0" aria-labelledby="welkom">
+    <div class="wrap welcome">
+      <figure class="framed framed--left rv-img"><img src="/img/zaakvoerder-portret.webp" alt={`${info.owner}, zaakvoerder van Instituut Soleil`} width="1080" height="1080" loading="lazy" /></figure>
+      <div class="rv">
+        <p class="label">Welkom bij Soleil</p>
+        <h2 id="welkom" class="h1">Ik ben {info.owner}</h2>
+        <p class="muted">Met persoonlijke behandelingen, kwalitatieve producten en eerlijk advies stem ik elke verzorging af op wat jouw huid nodig heeft. Samen werken we stap voor stap aan een gezonde, stralende huid, met een verzorgingsroutine die ook thuis bij je past.</p>
+        <p class="muted">Ik verwelkom je graag voor een moment van rust, persoonlijke aandacht en een natuurlijke glow.</p>
+        <p><a class="link" href="/over-soleil/">Lees mijn verhaal<Icon name="arrow-right" /></a></p>
       </div>
     </div>
   </section>
@@ -97,7 +94,8 @@ const icons = ['medal', 'scan', 'chat-circle', 'house-line'];
       <ul class="quotes" role="list">
         {reviews.map((r, i) => (
           <li class="rv" style={`--d:${i}`}>
-            <blockquote>“{r.text}”</blockquote>
+            <span class="qmark" aria-hidden="true">“</span>
+            <blockquote>{r.text}</blockquote>
             <p><strong>{r.name}</strong><span>{r.place}</span></p>
           </li>
         ))}

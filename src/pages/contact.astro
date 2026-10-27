@@ -7,8 +7,8 @@ import { info } from '../data/site';
 <Base title="Contact" description="Instituut Soleil, Rivierstraat 70, 9080 Beervelde. Boek online, bel of stuur een bericht.">
   <header class="wrap ph-head">
     <ol class="crumbs" role="list"><li><a href="/">Home</a></li><li aria-current="page">Contact</li></ol>
-    <h1 class="h1">Kom langs in Beervelde</h1>
-    <p class="lede">Een afspraak maak je het makkelijkst online. Een vraag? Bel, mail of stuur hieronder een bericht.</p>
+    <h1 class="display">Welkom bij Instituut Soleil</h1>
+    <p class="lede">Jouw moment van rust begint hier. Boek eenvoudig online je afspraak of neem gerust contact op bij vragen. Ik help je graag verder.</p>
   </header>
   <section class="wrap contact">
     <div class="card rv">
@@ -27,8 +27,9 @@ import { info } from '../data/site';
     <div class="card route rv">
       <figure class="ph"><img src="/img/instituut-massage.webp" alt="De behandelruimte van Instituut Soleil" loading="lazy" /></figure>
       <div>
-        <h2>Zo kom je bij Soleil</h2>
-        <p class="muted">{info.street} in {info.city}, deelgemeente van Lochristi, vlak bij Gent.</p>
+        <h2>Zo bereik je Instituut Soleil</h2>
+        <p class="muted">Instituut Soleil ligt vlak bij de afrit van de E17 in Beervelde. Je bereikt ons vlot en parkeert comfortabel op de ruime parking voor de deur.</p>
+        <p class="muted" style="margin-top:8px">{info.street}, {info.city}</p>
         <div class="actions" style="margin-top:24px"><a class="btn btn--ghost" href={info.route} target="_blank" rel="noopener"><Icon name="map-pin" />Route plannen</a></div>
       </div>
     </div>
@@ -52,6 +53,17 @@ import { info } from '../data/site';
           <p class="muted" style="margin-top:8px">Verstuur het bericht daar. Opende er niets? Mail naar <a class="link" href={`mailto:${info.email}`}>{info.email}</a>.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="wrap section" style="padding-bottom:0" aria-labelledby="cadeau">
+    <div class="gift rv">
+      <div>
+        <p class="label label--sunset">Cadeaubon</p>
+        <h2 id="cadeau" class="h2">Schenk een moment van rust</h2>
+        <p class="muted">Een cadeaubon van Instituut Soleil koop je eenvoudig in de webshop.</p>
+      </div>
+      <a class="btn" href={info.webshop} target="_blank" rel="noopener">Naar de webshop<Icon name="arrow-up-right" /></a>
     </div>
   </section>
 </Base>

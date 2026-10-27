@@ -6,10 +6,10 @@ import { info, treatments } from '../data/site';
 // Skin Discovery is already listed under Huidanalyse and Skin Relax.
 const list = treatments.filter((t) => t.slug !== 'skin-discovery');
 ---
-<Base title="Tarieven" description="Alle prijzen van Instituut Soleil in Beervelde.">
+<Base title="Alle behandelingen & prijzen" description="Alle behandelingen en prijzen van Instituut Soleil in Beervelde.">
   <header class="wrap ph-head">
     <ol class="crumbs" role="list"><li><a href="/">Home</a></li><li aria-current="page">Tarieven</li></ol>
-    <h1 class="h1">Tarieven</h1>
+    <h1 class="display">Alle behandelingen & prijzen</h1>
     <p class="lede">Weet je niet goed wat kiezen en wil je aan huidverbetering werken? Boek dan best een <a class="link" href="/behandelingen/skin-discovery/">Skin Discovery</a>.</p>
     <nav class="chips" aria-label="Categorieën">
       {list.map((t) => <a href={`#${t.slug}`}>{t.name}</a>)}
