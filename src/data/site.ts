@@ -409,6 +409,39 @@ export const reviews: { text: string; name: string; place: string; placeholder?:
 ];
 export const reviewsArePlaceholders = reviews.some((r) => r.placeholder);
 
+/* ---------- Nieuw: what's in the spotlight (home block + /nieuw/ page). Saskia changes this per season. ----------
+   Items with placeholder: true are example copy until the client sends the real products and workshop dates. */
+export const spotlight = {
+  season: 'herfst',
+  name: 'Skin Expert Peel',
+  text: 'Na de zomer is je huid vaak droog, dof of wat ongelijk. Een peeling maakt de dode huidcellen los, zodat je huid weer zacht en glad aanvoelt. Met masker en LED, en de ideale start van een kuur.',
+  img: 'peeling',
+  alt: 'Een peeling wordt met een penseel aangebracht',
+  dur: '60 min',
+  price: 125,
+  href: '/behandelingen/skin-expert/#peel',
+};
+
+export const newProducts: { name: string; brand: string; text: string; img: string; href: string; placeholder?: boolean }[] = [
+  { name: 'Nieuwe herfstroutine', brand: 'Environ', text: 'Vitamine A en antioxidanten om je huid na de zomer te herstellen.', img: 'producten-environ', href: info.webshop, placeholder: true },
+  { name: 'Zachte peeling voor thuis', brand: 'Exuviance', text: 'Milde zuren voor een gladdere, egalere huid tussen je behandelingen door.', img: 'producten-exuviance', href: info.webshop, placeholder: true },
+  { name: 'Nieuwe herfsttinten', brand: 'jane iredale', text: 'Minerale make-up die je huid verzorgt, in warme kleuren voor het nieuwe seizoen.', img: 'producten-jane-iredale', href: info.webshop, placeholder: true },
+];
+
+const months = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+/* "Donderdag 29 oktober 2026" → Date, so past dates drop off at the next build. */
+const parseDate = (s: string) => {
+  const [, d, m, y] = s.toLowerCase().split(' ');
+  return new Date(+y, months.indexOf(m), +d, 23, 59);
+};
+export const upcoming = (dates: string[], n = 3) => dates.filter((s) => parseDate(s) >= new Date()).slice(0, n);
+
+export const events: { name: string; text: string; dates: string[]; href: string; label: string; img: string; placeholder?: boolean }[] = [
+  { name: 'Make-up workshop', text: 'Stap voor stap leren hoe je zelf je make-up aanbrengt, in een kleine groep en met volop ruimte voor vragen.', dates: ['Datum volgt'], href: '/behandelingen/make-up/', label: 'Meer over make-up', img: 'make-up', placeholder: true },
+  { name: laser.name, text: 'Cathy van Haarlaser Team komt naar het instituut. Een gratis test- en uitlegsessie vooraf is mogelijk.', dates: upcoming(laser.dates), href: '/behandelingen/laser/', label: 'Meer over laserontharing', img: 'ontharing' },
+];
+export const nieuwIsPlaceholder = [...newProducts, ...events].some((x) => x.placeholder);
+
 /* Footer list, in the client's own wording and order */
 export const footerTreatments = [
   { href: '/behandelingen/skin-relax/', label: 'Skin Relax Facials' },

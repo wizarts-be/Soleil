@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Spotlight from '../components/Spotlight.astro';
+import { info, newProducts, events, nieuwIsPlaceholder } from '../data/site';
+---
+<Base title="Nieuw bij Soleil" description="De verzorging van het seizoen, nieuwe producten en de volgende data voor workshops en laserontharing bij Instituut Soleil.">
+  <header class="wrap ph-head">
+    <ol class="crumbs" role="list"><li><a href="/">Home</a></li><li aria-current="page">Nieuw</li></ol>
+    <h1 class="display">Nieuw bij Soleil</h1>
+    <p class="lede">De verzorging van het seizoen, nieuwe producten en de volgende data, allemaal op één plek.</p>
+    {nieuwIsPlaceholder && <p class="muted" style="margin-top:12px">Voorbeeldinhoud: de producten en workshopdata vullen we nog aan.</p>}
+  </header>
+
+  <section class="wrap" aria-labelledby="kijker">
+    <Spotlight />
+  </section>
+
+  <section class="section" aria-labelledby="producten">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <h2 id="producten" class="h1 rv">Nieuwe producten</h2>
+          <p class="muted rv">Net binnen in het instituut en in de webshop.</p>
+        </div>
+        <a class="link rv" href={info.webshop} target="_blank" rel="noopener">Naar de webshop<Icon name="arrow-up-right" /></a>
+      </div>
+      <ul class="btiles news" role="list">
+        {newProducts.map((p, i) => (
+          <li class="rv" style={`--d:${i}`}>
+            <a href={p.href} target="_blank" rel="noopener">
+              <figure class="ph"><img src={`/img/${p.img}.webp`} alt="" loading="lazy" /></figure>
+              <p class="label">{p.brand}</p>
+              <h3>{p.name}<Icon name="arrow-up-right" /></h3>
+              <p>{p.text}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" aria-labelledby="data">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="data" class="h1 rv">Nieuwe data</h2></div>
+      <ul class="dates" role="list">
+        {events.map((e, i) => (
+          <li class="rv" style={`--d:${i}`}>
+            <figure class="ph"><img src={`/img/${e.img}.webp`} alt="" loading="lazy" /></figure>
+            <div>
+              <h3>{e.name}</h3>
+              <p class="muted">{e.text}</p>
+              <ul class="dates-list" role="list">{e.dates.map((d) => <li>{d}</li>)}</ul>
+              <a class="link" href={e.href}>{e.label}<Icon name="arrow-right" /></a>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>

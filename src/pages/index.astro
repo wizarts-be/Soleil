@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
+import Spotlight from '../components/Spotlight.astro';
 import { info, brands, skin, relax, usps, reviews, reviewsArePlaceholders } from '../data/site';
 
 const t = (slug: string) => [...skin, ...relax].find((x) => x.slug === slug)!;
@@ -67,6 +68,13 @@ const icons = ['medal', 'scan', 'chat-circle', 'house-line'];
           </li>
         ))}
       </ul>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" aria-labelledby="kijker">
+    <div class="wrap">
+      <Spotlight />
+      <p class="spot-more rv"><a class="link" href="/nieuw/">Alles wat nieuw is bij Soleil<Icon name="arrow-right" /></a></p>
     </div>
   </section>
 

@@ -11,6 +11,7 @@ const pages = [
   { href: '/', label: 'Home' },
   { href: '/tarieven/', label: 'Alle behandelingen & prijzen' },
   { href: '/tarieven/', label: 'Tarieven' },
+  { href: '/nieuw/', label: 'Nieuw' },
   { href: '/over-soleil/', label: 'Over Soleil' },
   { href: '/contact/', label: 'Contact' },
 ];
@@ -25,6 +26,7 @@ const pages = [
     <nav class="nv" aria-label="Hoofdmenu">
       <button class="nv-item" type="button" aria-expanded="false" aria-controls="mega" data-dd-btn data-current={path.startsWith('/behandelingen/') ? 'true' : undefined}>Behandelingen<Icon name="caret-down" /></button>
       <a class="nv-item" href="/tarieven/" aria-current={cur('/tarieven/')}>Tarieven</a>
+      <a class="nv-item" href="/nieuw/" aria-current={cur('/nieuw/')}>Nieuw</a>
       <a class="nv-item" href="/over-soleil/" aria-current={cur('/over-soleil/')}>Over Soleil</a>
       <a class="nv-item" href="/contact/" aria-current={cur('/contact/')}>Contact</a>
       <a class="btn hd-book" href={info.booking} target="_blank" rel="noopener">Afspraak maken</a>

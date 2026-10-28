@@ -1,0 +1,20 @@
+---
+/* Seasonal treatment in the spotlight: photo, short text, price and a booking link. Used on the home and on /nieuw/. */
+import Icon from './Icon.astro';
+import { info, spotlight as s, euro } from '../data/site';
+interface Props { id?: string }
+const { id = 'kijker' } = Astro.props;
+---
+<div class="spot">
+  <figure class="ph rv-img"><img src={`/img/${s.img}.webp`} alt={s.alt} loading="lazy" /></figure>
+  <div class="spot-copy rv">
+    <p class="label label--sunset">Verzorging in de kijker · {s.season}</p>
+    <h2 id={id} class="h1">{s.name}</h2>
+    <p class="muted">{s.text}</p>
+    <p class="spot-price"><span>{s.dur}</span><strong>{euro(s.price)}</strong></p>
+    <div class="actions">
+      <a class="btn" href={info.booking} target="_blank" rel="noopener">Boek deze verzorging<Icon name="arrow-up-right" /></a>
+      <a class="link" href={s.href}>Meer info<Icon name="arrow-right" /></a>
+    </div>
+  </div>
+</div>
