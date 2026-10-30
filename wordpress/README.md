@@ -13,8 +13,12 @@
 
 ```sh
 node wordpress/import/build_data.mjs                      # site.ts + journal.json -> import/content/data.json
+node wordpress/import/build_pages.mjs                     # vaste pagina's -> import/content/pages/*.html
 wordpress/bin/wp eval-file wordpress/import/import.php    # in WordPress zetten (opnieuw draaien mag)
 ```
+
+Opnieuw importeren overschrijft de vaste pagina's, behandelingen en instellingen met de inhoud van de statische
+site. Draai het dus niet meer zodra Saskia zelf teksten aanpast.
 
 ## Controle na een WordPress-update
 WordPress voegt soms zelf klassen of attributen toe aan blokken (bv. `wp-block-paragraph` sinds 7.0).
@@ -41,4 +45,8 @@ node wordpress/bin/build-js.mjs
 - **Behandelingen**: één invulkaart per behandeling (foto, teksten, prijzen, onderdelen, extra vak); de pagina bouwt zichzelf op
 - **Journaal**: artikels met een berichtkaart (foto, categorie, samenvatting); in de tekst ook het blok Openingsuren
 - **Activiteiten, Producten, Merken, Reviews**: een eenvoudig formulier; voorbije data van activiteiten verdwijnen vanzelf
+- **Pagina's**: home, behandelingen, tarieven, nieuw, over Soleil, contact, journaal en de 404-pagina (privé) zijn
+  vergrendeld: teksten, links en foto's aanpassen kan, blokken toevoegen, verschuiven of verwijderen niet
 - **Weergave > Menu's**: de lijst behandelingen in de footer
+- **Foto's uploaden**: nieuwe foto's worden bij het uploaden verkleind tot hoogstens 1600 px breed en bewaard als WebP
+  (het origineel wordt niet bewaard). De geïmporteerde foto's blijven het originele bestand.

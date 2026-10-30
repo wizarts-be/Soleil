@@ -226,6 +226,10 @@ add_action( 'wp_head', function () {
 		'sameAs'       => array( soleil_setting( 'instagram' ), soleil_setting( 'facebook' ) ),
 	);
 
+	// Homepagina: de grote foto bovenaan vroeg laden, zoals index.astro.
+	if ( is_front_page() && soleil_default_image_url() ) {
+		echo '<link rel="preload" as="image" href="' . esc_url( soleil_default_image_url() ) . '" fetchpriority="high">' . "\n";
+	}
 	echo '<meta name="description" content="' . esc_attr( $description ) . '">' . "\n";
 	if ( is_home() ) {
 		echo '<link rel="canonical" href="' . esc_url( get_permalink( (int) get_option( 'page_for_posts' ) ) ) . '">' . "\n";

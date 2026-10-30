@@ -17,6 +17,8 @@ require_once ABSPATH . 'wp-admin/includes/media.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
 
 define( 'SOLEIL_IMPORT_ROOT', dirname( __DIR__, 2 ) );
+// Geïmporteerde foto's blijven het originele bestand (zie inc/uploads.php).
+define( 'SOLEIL_IMPORT', true );
 $data = json_decode( file_get_contents( __DIR__ . '/content/data.json' ), true );
 if ( ! $data ) {
 	WP_CLI::error( 'content/data.json ontbreekt. Draai eerst: node wordpress/import/build_data.mjs' );
@@ -233,6 +235,48 @@ foreach ( $data['journal'] as $i => $p ) {
 // Voorbeeldinhoud van een verse installatie.
 foreach ( array( 'hello-world', 'hallo-wereld' ) as $slug ) {
 	$p = get_page_by_path( $slug, OBJECT, 'post' );
+	if ( $p ) {
+		wp_delete_post( $p->ID, true );
+	}
+}
+
+/* ---------------------------------------------------------------- Vaste pagina's */
+
+soleil_log( "Pagina's" );
+// slug => titel in de admin, titel in zoekmachines (leeg = de titel), beschrijving (= samenvatting). Uit de Base-props in src/pages.
+$pages = array(
+	'home'                 => array( 'Home', 'Instituut Soleil | Huidverbetering in Beervelde', 'Instituut Soleil in Beervelde: huidanalyse, Skin Relax en Skin Expert, ontspanning en eerlijk persoonlijk advies.' ),
+	'behandelingen'        => array( 'Behandelingen', '', 'Skin Discovery, huidanalyse, Skin Relax, Skin Expert en ontspanning bij Instituut Soleil in Beervelde.' ),
+	'tarieven'             => array( 'Tarieven', 'Alle behandelingen & prijzen', 'Alle behandelingen en prijzen van Instituut Soleil in Beervelde.' ),
+	'nieuw'                => array( 'Nieuw', 'Nieuw bij Soleil', 'De verzorging van het seizoen, nieuwe producten en de volgende data voor workshops en laserontharing bij Instituut Soleil.' ),
+	'over-soleil'          => array( 'Over Soleil', '', 'Ik ben ' . $data['settings']['owner'] . ', het gezicht achter Instituut Soleil.' ),
+	'contact'              => array( 'Contact', '', 'Instituut Soleil, Rivierstraat 70, 9080 Beervelde. Boek online, bel of stuur een bericht.' ),
+	'journaal'             => array( 'Journaal', '', 'Huidtips per seizoen en nieuws uit Instituut Soleil in Beervelde.' ),
+	'pagina-niet-gevonden' => array( 'Pagina niet gevonden', '', 'Deze pagina bestaat niet (meer).' ),
+);
+$page_ids = array();
+foreach ( $pages as $slug => list( $title, $seo, $excerpt ) ) {
+	$markup = (string) file_get_contents( __DIR__ . '/content/pages/' . $slug . '.html' );
+	// "{{ID:public/img/x.webp}}" (met aanhalingstekens, in de blokattributen) → bijlage-ID.
+	$markup = preg_replace_callback( '/"\{\{ID:([^}]+)\}\}"/', fn( $m ) => (string) soleil_import_media( $m[1] ), $markup );
+
+	$page_ids[ $slug ] = soleil_upsert( 'page', $slug, array(
+		'post_title'   => $title,
+		'post_excerpt' => $excerpt,
+		'post_content' => $markup,
+		'menu_order'   => count( $page_ids ),
+		// De 404-pagina is enkel bedoeld voor de 404-template: privé, dus niet zelf bereikbaar.
+		'post_status'  => 'pagina-niet-gevonden' === $slug ? 'private' : 'publish',
+	), array( 'seo_titel' => $seo ) );
+	soleil_log( "  $title" );
+}
+update_option( 'show_on_front', 'page' );
+update_option( 'page_on_front', $page_ids['home'] );
+update_option( 'page_for_posts', $page_ids['journaal'] );
+
+// Testinhoud van de ontwikkeling en voorbeeldinhoud van een verse installatie.
+foreach ( array( 'test', 'sample-page', 'voorbeeld-pagina' ) as $slug ) {
+	$p = get_page_by_path( $slug );
 	if ( $p ) {
 		wp_delete_post( $p->ID, true );
 	}

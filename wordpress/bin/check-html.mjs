@@ -13,6 +13,8 @@
 // Wat telt als gelijk: dezelfde tags, klassen, attributen en tekst. Genegeerd: het domein, het pad en de
 // grootte-suffix van foto's (/img/x.webp ↔ /wp-content/uploads/…/x.webp), de volgorde van attributen,
 // HTML-entiteiten (&amp; ↔ &), witruimte tussen tags en de inhoud van iconen (<svg>).
+// Ook genegeerd: width/height op foto's. WordPress schrijft de echte maat van het bestand, Astro had ze met de hand
+// getypt (de homefoto is 1600×1111, Astro zegt 1135). De CSS bepaalt de grootte, dus visueel verandert er niets.
 // Bewust anders: lijstitems met een voorbije datum ("Donderdag 29 oktober 2026"). WordPress laat die weg,
 // de Astro-build toont ze tot de volgende build (bv. op de laserpagina). Ze tellen aan beide kanten niet mee.
 import { readFileSync, existsSync, writeFileSync, mkdtempSync } from 'node:fs';
@@ -30,7 +32,10 @@ const ALL = [
   '/behandelingen/arrangementen/', '/behandelingen/lichaam/', '/behandelingen/handen-voeten/', '/behandelingen/epilaties/',
   '/behandelingen/make-up/', '/behandelingen/laser/',
   '/journaal/nieuwe-openingsuren/', '/journaal/peelen-na-de-zomer/', '/journaal/huid-verzorgen-na-de-zomer/', '/journaal/huidanalyse-toestel/',
+  '/bestaat-niet/',
 ];
+// Een pagina die niet bestaat, vergelijken we met de 404-pagina van de build.
+const distFile = (path) => (path === '/bestaat-niet/' ? 'dist/404.html' : `dist${path}index.html`);
 const pages = flag('--all') ? ALL : args.filter((a) => a.startsWith('/')).length ? args.filter((a) => a.startsWith('/')) : DEFAULT;
 
 if (flag('--build') || !existsSync('dist/index.html')) {
@@ -88,6 +93,7 @@ function normalise(html, chrome) {
       let value = decode(a[2] ?? a[3] ?? a[4] ?? '');
       if (name === 'href' || name === 'src' || name === 'action') value = value.replace(WP, '').replace('http://localhost:4321', '');
       if (tag === 'img' && name === 'src') value = photo(value);
+      if (tag === 'img' && (name === 'width' || name === 'height')) continue;
       if (name === 'class') value = value.split(/\s+/).filter(Boolean).join(' ');
       attrs.push(value === '' && !['alt', 'class'].includes(name) ? name : `${name}="${value}"`);
     }
@@ -116,12 +122,12 @@ function dropPastDates(tokens) {
 const dir = mkdtempSync(join(tmpdir(), 'soleil-check-'));
 let failed = 0;
 for (const path of pages) {
-  const file = `dist${path}index.html`;
+  const file = distFile(path);
   if (!existsSync(file)) { console.log(`?  ${path}: niet in de Astro-build`); failed++; continue; }
   let wp;
   try {
     const res = await fetch(WP + path);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok && !(path === '/bestaat-niet/' && res.status === 404)) throw new Error(`HTTP ${res.status}`);
     wp = await res.text();
   } catch (e) {
     console.log(`✗  ${path}: WordPress niet bereikbaar (${e.message}). Draait de Local-site?`);

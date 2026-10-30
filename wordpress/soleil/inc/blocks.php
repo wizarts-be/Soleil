@@ -74,6 +74,7 @@ function soleil_blocks() {
 				'tag'    => array( 'type' => 'string', 'default' => 'div' ),
 				'anchor' => array( 'type' => 'string', 'default' => '' ),
 				'attrs'  => array( 'type' => 'object', 'default' => array() ),
+				'templateLock' => array( 'type' => array( 'string', 'boolean' ), 'enum' => array( 'all', 'insert', 'contentOnly', false ) ),
 			),
 			'content'    => true,
 		),
@@ -125,6 +126,10 @@ const SOLEIL_EL_TAGS = array( 'div', 'section', 'header', 'footer', 'main', 'art
 const SOLEIL_EL_ATTRS = array( 'role', 'aria-label', 'aria-labelledby', 'aria-current', 'style', 'href', 'target', 'rel', 'tabindex', 'hidden' );
 
 function soleil_block_el( $a, $content ) {
+	// "pagina": het omhulsel van een vaste pagina. Het vergrendelt de inhoud in de editor en geeft zelf geen HTML.
+	if ( 'pagina' === $a['tag'] ) {
+		return $content;
+	}
 	$tag  = in_array( $a['tag'], SOLEIL_EL_TAGS, true ) ? $a['tag'] : 'div';
 	$html = '<' . $tag;
 	if ( '' !== $a['className'] ) {
@@ -468,7 +473,8 @@ function soleil_block_page_content( $a ) {
  * Extra attribuut htmlAttrs op tekst- en knopblokken: role, style, id en (voor knoppen) tag en icoon.
  * Zo krijgt een alinea bv. exact <p class="rv" style="--d:1">, wat WordPress zelf niet kan opslaan.
  */
-const SOLEIL_CORE_BLOCKS = array( 'core/paragraph', 'core/heading', 'core/list', 'core/buttons', 'core/button' );
+const SOLEIL_CORE_BLOCKS = array( 'core/paragraph', 'core/heading', 'core/list', 'core/list-item', 'core/buttons', 'core/button' );
+const SOLEIL_HTML_ATTRS  = array( 'role', 'style', 'id', 'aria-current', 'aria-label' );
 
 add_filter( 'register_block_type_args', function ( $args, $name ) {
 	if ( in_array( $name, SOLEIL_CORE_BLOCKS, true ) ) {
@@ -495,12 +501,16 @@ function soleil_core_markup( $html, $block ) {
 		return soleil_button_markup( $html, $block['attrs'] ?? array(), $attrs );
 	}
 	if ( 'core/buttons' === $name ) {
-		// <div class="wp-block-buttons …"> wordt <div class="actions …"> (of de tag uit htmlAttrs).
-		$tag   = in_array( $attrs['tag'] ?? 'div', array( 'div', 'p' ), true ) ? ( $attrs['tag'] ?? 'div' ) : 'div';
+		// <div class="wp-block-buttons …"> wordt <div class="actions …">, een <p> rond een losse link,
+		// of niets (tag "none": de knop staat rechtstreeks in de sectie, zoals naast een titel).
+		$tag   = in_array( $attrs['tag'] ?? 'div', array( 'div', 'p', 'none' ), true ) ? ( $attrs['tag'] ?? 'div' ) : 'div';
 		$class = trim( (string) ( $block['attrs']['className'] ?? '' ) );
-		$inner = preg_replace( '#^\s*<div[^>]*>(.*)</div>\s*$#s', '$1', $html );
-		$open  = '<' . $tag . ' class="' . esc_attr( '' !== $class ? $class : 'actions' ) . '"' . soleil_html_attrs( $attrs ) . '>';
-		return $open . trim( $inner ) . '</' . $tag . '>';
+		$inner = trim( preg_replace( '#^\s*<div[^>]*>(.*)</div>\s*$#s', '$1', $html ) );
+		if ( 'none' === $tag ) {
+			return $inner;
+		}
+		$class = '' === $class && 'div' === $tag ? 'actions' : $class;
+		return '<' . $tag . ( '' !== $class ? ' class="' . esc_attr( $class ) . '"' : '' ) . soleil_html_attrs( $attrs ) . '>' . $inner . '</' . $tag . '>';
 	}
 
 	$p = new WP_HTML_Tag_Processor( $html );
@@ -517,10 +527,13 @@ function soleil_core_markup( $html, $block ) {
 			$p->set_attribute( 'role', 'list' );
 		}
 	}
-	foreach ( array( 'role', 'style', 'id' ) as $key ) {
+	foreach ( SOLEIL_HTML_ATTRS as $key ) {
 		if ( isset( $attrs[ $key ] ) && '' !== $attrs[ $key ] ) {
 			$p->set_attribute( $key, $attrs[ $key ] );
 		}
+	}
+	if ( null === $p->get_attribute( 'class' ) || '' === trim( (string) $p->get_attribute( 'class' ) ) ) {
+		$p->remove_attribute( 'class' );
 	}
 	// Links naar /afspraak/, /webshop/, … wijzen naar de link uit de instellingen.
 	while ( $p->next_tag( 'a' ) ) {
@@ -529,15 +542,21 @@ function soleil_core_markup( $html, $block ) {
 			$p->set_attribute( 'href', soleil_link( $href ) );
 		}
 	}
-	return $p->get_updated_html();
+	$html = $p->get_updated_html();
+
+	// Alinea als <span> met icoon, bv. de knop in de Skin Discovery-banner (<span class="btn btn--light">… <svg>).
+	if ( 'core/paragraph' === $name && 'span' === ( $attrs['tag'] ?? '' ) ) {
+		$html = preg_replace( '#^(\s*)<p\b(.*)</p>(\s*)$#s', '$1<span$2' . ( ! empty( $attrs['icoon'] ) ? soleil_icon( $attrs['icoon'] ) : '' ) . '</span>$3', $html );
+	}
+	return $html;
 }
-foreach ( array( 'core/paragraph', 'core/heading', 'core/list', 'core/buttons', 'core/button' ) as $soleil_block ) {
+foreach ( SOLEIL_CORE_BLOCKS as $soleil_block ) {
 	add_filter( 'render_block_' . $soleil_block, 'soleil_core_markup', 20, 2 );
 }
 
 function soleil_html_attrs( $attrs ) {
 	$out = '';
-	foreach ( array( 'role', 'style', 'id' ) as $key ) {
+	foreach ( SOLEIL_HTML_ATTRS as $key ) {
 		if ( isset( $attrs[ $key ] ) && '' !== $attrs[ $key ] ) {
 			$out .= ' ' . $key . '="' . esc_attr( $attrs[ $key ] ) . '"';
 		}

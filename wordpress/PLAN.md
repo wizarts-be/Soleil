@@ -135,8 +135,13 @@ lijsten en het blok **Openingsuren**.
 ## Vergrendelde pagina's
 
 home (voorpagina), over-soleil, contact, nieuw, tarieven, behandelingen, journaal (berichtenpagina), pagina-niet-gevonden (privé, getoond door `404.html`).
-Via `block_editor_settings_all` krijgen ze `templateLock: "contentOnly"`: Saskia past teksten, links en foto's aan,
-maar voegt geen blokken toe en verschuift of verwijdert niets. Dynamische blokken tonen in de editor waar de inhoud vandaan komt.
+Saskia past teksten, links en foto's aan, maar voegt geen blokken toe en verschuift of verwijdert niets.
+
+Zo uitgewerkt (fase 5), na tests in WordPress 7.1:
+- de inhoud zit in één omhulsel (`soleil/el` met tag `pagina`, geen eigen HTML) met `templateLock: contentOnly` en `lock: move/remove`;
+- ook het hoogste niveau krijgt `contentOnly` (`block_editor_settings_all`). Met `all` ziet WordPress 7 het omhulsel als
+  een "sectie" met de knop "Patroon bewerken", waarmee de vergrendeling open kan;
+- `contentOnly` op het hoogste niveau houdt het invoegen niet tegen, dus `allowed_block_types_all` geeft voor deze pagina's `false`.
 
 ## Bestandsstructuur
 
@@ -183,6 +188,9 @@ wordpress/
 - **Header zonder WordPress-menu**: de opbouw ligt vast (behandelingen uit de CPT, vaste pagina's). Enkel de footerlijst is een menu.
 - **Importbouwers in Node** in plaats van Python, omdat site.ts TypeScript is (Node 25 leest het rechtstreeks).
 - **Complexe velden als JSON-meta** (prijzen, waarom, delen, make-up), bewerkt in de invulkaart.
+- **Foto's als origineel bestand, zonder srcset**, zodat de pixels gelijk zijn aan de huidige site. Nieuwe uploads worden
+  daarom bij het uploaden verkleind (max. 1600 px breed) en omgezet naar WebP.
+- **Controlescript** `bin/check-html.mjs`: vergelijkt de HTML met de Astro-build, na elke WordPress-update.
 
 ## Fases
 

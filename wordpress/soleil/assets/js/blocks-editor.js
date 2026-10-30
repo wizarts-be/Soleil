@@ -120,7 +120,7 @@
   });
 
   /* ---------- Extra HTML-attributen op tekst- en knopblokken (zie soleil_core_markup in inc/blocks.php) ---------- */
-  var CORE = ["core/paragraph", "core/heading", "core/list", "core/buttons", "core/button"];
+  var CORE = ["core/paragraph", "core/heading", "core/list", "core/list-item", "core/buttons", "core/button"];
   wp.hooks.addFilter("blocks.registerBlockType", "soleil/html-attrs", function (settings, name) {
     if (CORE.indexOf(name) === -1) return settings;
     return Object.assign({}, settings, { attributes: Object.assign({}, settings.attributes, { htmlAttrs: { type: "object", default: {} } }) });
@@ -166,8 +166,8 @@
         role: attrs.role,
         style: styleObject(attrs.style)
       });
-      var inner = be.useInnerBlocksProps(blockProps, { renderAppender: false });
-      return el(tag, inner);
+      var inner = be.useInnerBlocksProps(blockProps, { renderAppender: false, templateLock: a.templateLock });
+      return el(tag === "pagina" ? "div" : tag, inner);
     },
     save: function () { return el(be.InnerBlocks.Content); }
   });
@@ -497,5 +497,26 @@
   // Enkel de knopstijlen van Soleil (inc/blocks.php zet ze om naar .btn en .link).
   wp.domReady(function () {
     ["fill", "outline"].forEach(function (style) { wp.blocks.unregisterBlockStyle("core/button", style); });
+  });
+})(window.wp);
+
+/* Paneel "Zoekmachines" in de zijbalk van een pagina: titel in het tabblad en in Google. */
+(function (wp) {
+  if (!wp.editor || !wp.editor.PluginDocumentSettingPanel || !wp.plugins) return;
+  var el = wp.element.createElement;
+  wp.plugins.registerPlugin("soleil-seo", {
+    render: function () {
+      var type = wp.data.useSelect(function (s) { return s("core/editor").getCurrentPostType(); }, []);
+      var meta = wp.coreData.useEntityProp("postType", "page", "meta");
+      if (type !== "page") return null;
+      var m = meta[0] || {};
+      return el(wp.editor.PluginDocumentSettingPanel, { name: "soleil-seo", title: "Zoekmachines" },
+        el(wp.components.TextControl, {
+          label: "Titel in zoekmachines", value: m.seo_titel || "", __nextHasNoMarginBottom: true, __next40pxDefaultSize: true,
+          help: "Leeg = de titel van de pagina, met \"| Instituut Soleil Beervelde\" erachter. De beschrijving is de samenvatting.",
+          onChange: function (v) { meta[1](Object.assign({}, m, { seo_titel: v })); }
+        })
+      );
+    }
   });
 })(window.wp);
