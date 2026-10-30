@@ -92,12 +92,20 @@ add_action( 'init', function () {
 	);
 	wp_add_inline_script( 'soleil-blocks-editor', 'window.soleilEditor = ' . wp_json_encode( array( 'adminUrl' => admin_url() ) ) . ';', 'before' );
 
+	// Blokken die zich vullen uit een lijst of de instellingen. In een vergrendelde pagina kan je een blok enkel aanklikken
+	// als het een inhoudsattribuut heeft; zonder dat ziet Saskia nooit de melding "Aanpassen doe je bij …" met de knop Openen.
+	$managed = array( 'openingsuren', 'behandelingen-lijst', 'tarieven-chips', 'tarieven', 'in-de-kijker', 'reviews', 'merken', 'producten', 'activiteiten', 'contact-kaart', 'contactformulier', 'journaal' );
+
 	foreach ( soleil_blocks() as $name => $block ) {
 		$render = $block['render'];
+		$attrs  = ( $block['attributes'] ?? array() ) + array( 'className' => array( 'type' => 'string', 'default' => '' ) );
+		if ( in_array( $name, $managed, true ) ) {
+			$attrs['beheer'] = array( 'type' => 'string', 'default' => '', 'role' => 'content' );
+		}
 		register_block_type( 'soleil/' . $name, array(
 			'api_version'           => 3,
 			'category'              => 'soleil',
-			'attributes'            => ( $block['attributes'] ?? array() ) + array( 'className' => array( 'type' => 'string', 'default' => '' ) ),
+			'attributes'            => $attrs,
 			'render_callback'       => empty( $block['content'] )
 				? fn( $attrs ) => call_user_func( $render, $attrs )
 				: fn( $attrs, $content ) => call_user_func( $render, $attrs, $content ),
