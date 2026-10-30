@@ -1,6 +1,6 @@
 # Live gaan: checklist
 
-Werk van boven naar onder. Vink af in de pull request of in een kopie van dit bestand.
+Werk van boven naar onder. Vink af in een kopie van dit bestand.
 
 ## 0. Beslissingen die nog nodig zijn
 

@@ -1,5 +1,7 @@
 # Instituut Soleil – WordPress
 
+Deze code staat enkel op de branch `wordpress`. `main` is de Astro-site die de klant als preview ziet en verandert niet.
+
 - `soleil/` – block theme. Lokaal gekoppeld via symlink:
   `~/Local Sites/soleil/app/public/wp-content/themes/soleil`
 - `import/` – zet de inhoud van de statische site in WordPress.
