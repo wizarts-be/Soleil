@@ -19,6 +19,55 @@ function soleil_blocks() {
 		'berichtkaart' => array( 'render' => '__return_empty_string' ),
 		'artikel'      => array( 'render' => 'soleil_block_article' ),
 		'journaal-meer' => array( 'render' => 'soleil_block_more_posts' ),
+		'behandeling-switch' => array( 'render' => 'soleil_block_treatment_switch' ),
+		'behandeling'  => array( 'render' => 'soleil_block_treatment' ),
+		'behandeling-pager' => array( 'render' => 'soleil_block_treatment_pager' ),
+		'behandelingen-lijst' => array( 'render' => 'soleil_block_treatment_list' ),
+		'tarieven-chips' => array(
+			'render'     => 'soleil_block_rate_chips',
+			'attributes' => array( 'zonder' => array( 'type' => 'string', 'default' => 'skin-discovery' ) ),
+		),
+		'tarieven'     => array(
+			'render'     => 'soleil_block_rates',
+			'attributes' => array( 'zonder' => array( 'type' => 'string', 'default' => 'skin-discovery' ) ),
+		),
+		'home-kaarten' => array(
+			'render'     => 'soleil_block_home_cards',
+			'attributes' => array( 'items' => array( 'type' => 'array', 'default' => array(), 'role' => 'content' ) ),
+		),
+		'in-de-kijker' => array(
+			'render'     => 'soleil_block_spotlight',
+			'attributes' => array( 'kopId' => array( 'type' => 'string', 'default' => 'kijker' ) ),
+		),
+		'reviews'      => array( 'render' => 'soleil_block_reviews' ),
+		'voorbeeld-noot' => array(
+			'render'     => 'soleil_block_example_note',
+			'attributes' => array( 'soort' => array( 'type' => 'string', 'default' => 'reviews' ) ),
+		),
+		'merken'       => array( 'render' => 'soleil_block_brands' ),
+		'producten'    => array( 'render' => 'soleil_block_products' ),
+		'activiteiten' => array( 'render' => 'soleil_block_activities' ),
+		'contact-kaart' => array( 'render' => 'soleil_block_contact_card' ),
+		'contactformulier' => array( 'render' => 'soleil_block_contact_form' ),
+		'journaal'     => array( 'render' => 'soleil_block_journal' ),
+		'pagina-inhoud' => array(
+			'render'     => 'soleil_block_page_content',
+			'attributes' => array( 'pagina' => array( 'type' => 'string', 'default' => '' ) ),
+		),
+		'foto'         => array(
+			'render'     => 'soleil_block_photo',
+			'attributes' => array(
+				'id'            => array( 'type' => 'number', 'default' => 0, 'role' => 'content' ),
+				'alt'           => array( 'type' => 'string', 'default' => '', 'role' => 'content' ),
+				'tag'           => array( 'type' => 'string', 'default' => 'figure' ),
+				'loading'       => array( 'type' => 'string', 'default' => 'lazy' ),
+				'maten'         => array( 'type' => 'boolean', 'default' => false ),
+			),
+		),
+		'icoon'        => array(
+			'render'     => 'soleil_block_icon',
+			'attributes' => array( 'naam' => array( 'type' => 'string', 'default' => 'sparkle' ) ),
+		),
 		'el'           => array(
 			'render'     => 'soleil_block_el',
 			'attributes' => array(
@@ -56,6 +105,15 @@ add_action( 'init', function () {
 	}
 } );
 
+// Knopstijlen in de editor. soleil_button_markup() maakt er de klassen van de site van.
+add_action( 'init', function () {
+	register_block_style( 'core/button', array( 'name' => 'btn', 'label' => 'Knop', 'is_default' => true ) );
+	register_block_style( 'core/button', array( 'name' => 'light', 'label' => 'Licht' ) );
+	register_block_style( 'core/button', array( 'name' => 'ghost', 'label' => 'Omlijnd' ) );
+	register_block_style( 'core/button', array( 'name' => 'sunset', 'label' => 'Sunset' ) );
+	register_block_style( 'core/button', array( 'name' => 'link', 'label' => 'Link met pijl' ) );
+} );
+
 add_filter( 'block_categories_all', function ( $categories ) {
 	array_unshift( $categories, array( 'slug' => 'soleil', 'title' => 'Soleil' ) );
 	return $categories;
@@ -85,6 +143,34 @@ function soleil_block_el( $a, $content ) {
 		$html .= true === $value ? ' ' . $name : ' ' . $name . '="' . esc_attr( $value ) . '"';
 	}
 	return $html . '>' . $content . '</' . $tag . '>';
+}
+
+/* ---------- Foto en icoon ---------- */
+
+/**
+ * Foto in een vaste pagina: <figure class="…"><img></figure>, of een losse <img> (band, menukaart).
+ * loading: lazy, eager (geen attribuut) of high (fetchpriority="high").
+ */
+function soleil_block_photo( $a ) {
+	$attrs = array( 'alt' => $a['alt'] );
+	if ( $a['maten'] ) {
+		$attrs['size'] = true;
+	}
+	if ( 'high' === $a['loading'] ) {
+		$attrs['fetchpriority'] = 'high';
+	} elseif ( 'lazy' === $a['loading'] ) {
+		$attrs['loading'] = 'lazy';
+	}
+	$img = soleil_img( $a['id'], $attrs );
+	if ( 'img' === $a['tag'] ) {
+		return $img;
+	}
+	$tag = 'span' === $a['tag'] ? 'span' : 'figure';
+	return '<' . $tag . ( '' !== $a['className'] ? ' class="' . esc_attr( $a['className'] ) . '"' : '' ) . '>' . $img . '</' . $tag . '>';
+}
+
+function soleil_block_icon( $a ) {
+	return soleil_icon( $a['naam'] );
 }
 
 /* ---------- Openingsuren ---------- */
@@ -165,7 +251,7 @@ function soleil_post_date( $post ) {
 function soleil_post_card( $post ) {
 	$post  = get_post( $post );
 	$image = has_post_thumbnail( $post )
-		? get_the_post_thumbnail( $post, 'large', array( 'alt' => '', 'loading' => 'lazy', 'sizes' => '(max-width: 560px) 100vw, (max-width: 860px) 50vw, 440px' ) )
+		? soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => '', 'loading' => 'lazy' ) )
 		: '';
 	return '<a class="post rv" href="' . esc_url( get_permalink( $post ) ) . '">'
 		. '<figure class="ph">' . $image . '</figure>'
@@ -185,7 +271,7 @@ function soleil_block_article() {
 	}
 	$cat   = soleil_post_category( $post );
 	$image = has_post_thumbnail( $post )
-		? '<figure class="ph article-hero">' . get_the_post_thumbnail( $post, 'full', array( 'alt' => '', 'loading' => false, 'fetchpriority' => 'high', 'sizes' => '(max-width: 760px) 100vw, 760px' ) ) . '</figure>'
+		? '<figure class="ph article-hero">' . soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => '', 'fetchpriority' => 'high' ) ) . '</figure>'
 		: '';
 
 	$GLOBALS['soleil_in_article'] = true;
@@ -218,27 +304,271 @@ function soleil_block_more_posts() {
 		. '<div class="posts">' . implode( '', array_map( 'soleil_post_card', $posts ) ) . '</div></section>';
 }
 
-/* ---------- Tekst in artikels: dezelfde markup als nu ---------- */
+/* ---------- Verzorging in de kijker (Spotlight.astro) ---------- */
 
-// Tussentitels in een artikel zijn <h2 class="h3">, lijsten <ul role="list">, alinea's zonder klasse.
-// Via de filters per blok, met prioriteit 20: die lopen na de klassen die WordPress zelf toevoegt.
-function soleil_article_markup( $html, $block ) {
-	if ( empty( $GLOBALS['soleil_in_article'] ) ) {
+function soleil_block_spotlight( $a ) {
+	$href = soleil_setting( 'spot_href' );
+	return '<div class="spot">'
+		. '<figure class="ph rv-img">' . soleil_img( soleil_setting( 'spot_image' ), array( 'alt' => soleil_setting( 'spot_alt' ), 'loading' => 'lazy' ) ) . '</figure>'
+		. '<div class="spot-copy rv">'
+		. '<p class="label label--sunset">Verzorging in de kijker · ' . esc_html( soleil_setting( 'spot_season' ) ) . '</p>'
+		. '<h2 id="' . esc_attr( $a['kopId'] ) . '" class="h1">' . esc_html( soleil_setting( 'spot_name' ) ) . '</h2>'
+		. '<p class="muted">' . esc_html( soleil_setting( 'spot_text' ) ) . '</p>'
+		. '<p class="spot-price"><span>' . esc_html( soleil_setting( 'spot_dur' ) ) . '</span><strong>' . esc_html( soleil_euro( soleil_setting( 'spot_price' ) ) ) . '</strong></p>'
+		. '<div class="actions">' . soleil_book_button( 'btn', 'Boek deze verzorging' )
+		. '<a class="link" href="' . esc_url( str_starts_with( $href, '/' ) ? home_url( $href ) : $href ) . '">Meer info' . soleil_icon( 'arrow-right' ) . '</a></div>'
+		. '</div></div>';
+}
+
+/* ---------- Lijsten uit de eenvoudige inhoudstypes ---------- */
+
+function soleil_items( $type ) {
+	return get_posts( array( 'post_type' => $type, 'numberposts' => -1, 'orderby' => 'menu_order title', 'order' => 'ASC' ) );
+}
+
+function soleil_has_examples( $types ) {
+	foreach ( (array) $types as $type ) {
+		foreach ( soleil_items( $type ) as $post ) {
+			if ( get_post_meta( $post->ID, 'voorbeeld', true ) ) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+function soleil_block_reviews() {
+	$html = '';
+	foreach ( soleil_items( 'review' ) as $i => $post ) {
+		$html .= '<li class="rv" style="--d:' . $i . '"><span class="qmark" aria-hidden="true">“</span>'
+			. '<blockquote>' . esc_html( get_post_meta( $post->ID, 'tekst', true ) ) . '</blockquote>'
+			. '<p><strong>' . esc_html( get_the_title( $post ) ) . '</strong><span>' . esc_html( get_post_meta( $post->ID, 'plaats', true ) ) . '</span></p></li>';
+	}
+	return '<ul class="quotes" role="list">' . $html . '</ul>';
+}
+
+/**
+ * Melding dat een lijst nog voorbeeldinhoud bevat. Verdwijnt vanzelf als niets nog als voorbeeld gemarkeerd is.
+ */
+function soleil_block_example_note( $a ) {
+	if ( 'nieuw' === $a['soort'] ) {
+		return soleil_has_examples( array( 'product', 'activiteit' ) ) ? '<p class="muted" style="margin-top:12px">Voorbeeldinhoud: de producten en workshopdata vullen we nog aan.</p>' : '';
+	}
+	return soleil_has_examples( 'review' ) ? '<p class="muted rv">Voorbeeldreviews: deze vervangen we door echte reviews van klanten.</p>' : '';
+}
+
+function soleil_block_brands() {
+	$html = '';
+	foreach ( soleil_items( 'merk' ) as $i => $post ) {
+		$name  = get_the_title( $post );
+		$photo = has_post_thumbnail( $post )
+			? soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => 'Producten van ' . $name, 'loading' => 'lazy' ) )
+			: '<span class="word" aria-hidden="true">' . esc_html( $name ) . '</span>';
+		$html .= '<li class="rv" style="--d:' . $i . '"><figure class="ph">' . $photo . '</figure><h3>' . esc_html( $name ) . '</h3><p>' . esc_html( get_post_meta( $post->ID, 'regel', true ) ) . '</p></li>';
+	}
+	return '<ul class="btiles" role="list">' . $html . '</ul>';
+}
+
+function soleil_block_products() {
+	$html = '';
+	foreach ( soleil_items( 'product' ) as $i => $post ) {
+		$href  = (string) get_post_meta( $post->ID, 'link_url', true );
+		$href  = '' !== $href ? soleil_link( $href ) : soleil_setting( 'webshop' );
+		$html .= '<li class="rv" style="--d:' . $i . '"><a href="' . esc_url( $href ) . '"' . soleil_blank() . '>'
+			. '<figure class="ph">' . soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => '', 'loading' => 'lazy' ) ) . '</figure>'
+			. '<p class="label">' . esc_html( get_post_meta( $post->ID, 'merk', true ) ) . '</p>'
+			. '<h3>' . esc_html( get_the_title( $post ) ) . soleil_icon( 'arrow-up-right' ) . '</h3>'
+			. '<p>' . esc_html( get_post_meta( $post->ID, 'tekst', true ) ) . '</p></a></li>';
+	}
+	return '<ul class="btiles news" role="list">' . $html . '</ul>';
+}
+
+function soleil_block_activities() {
+	$html = '';
+	foreach ( soleil_items( 'activiteit' ) as $i => $post ) {
+		$dates = soleil_upcoming( (array) get_post_meta( $post->ID, 'data', true ) );
+		if ( ! $dates && '' !== (string) get_post_meta( $post->ID, 'geen_data', true ) ) {
+			$dates = array( (string) get_post_meta( $post->ID, 'geen_data', true ) );
+		}
+		$href  = (string) get_post_meta( $post->ID, 'link_url', true );
+		$html .= '<li class="rv" style="--d:' . $i . '">'
+			. '<figure class="ph">' . soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => '', 'loading' => 'lazy' ) ) . '</figure>'
+			. '<div><h3>' . esc_html( get_the_title( $post ) ) . '</h3>'
+			. '<p class="muted">' . esc_html( get_post_meta( $post->ID, 'tekst', true ) ) . '</p>'
+			. '<ul class="dates-list" role="list">' . implode( '', array_map( fn( $d ) => '<li>' . esc_html( $d ) . '</li>', $dates ) ) . '</ul>'
+			. ( '' !== $href ? '<a class="link" href="' . esc_url( str_starts_with( $href, '/' ) ? home_url( $href ) : $href ) . '">' . esc_html( get_post_meta( $post->ID, 'link_label', true ) ) . soleil_icon( 'arrow-right' ) . '</a>' : '' )
+			. '</div></li>';
+	}
+	return '<ul class="dates" role="list">' . $html . '</ul>';
+}
+
+/* ---------- Contact ---------- */
+
+function soleil_block_contact_card() {
+	return '<div class="card rv">'
+		. '<p class="big-line">' . esc_html( soleil_setting( 'street' ) ) . '<br>' . esc_html( soleil_setting( 'city' ) ) . '</p>'
+		. '<p style="margin-top:20px"><a class="link" href="' . esc_attr( soleil_setting( 'phone_href' ) ) . '">' . esc_html( soleil_setting( 'phone' ) ) . '</a></p>'
+		. '<p style="margin-top:8px"><a class="link" href="mailto:' . esc_attr( soleil_setting( 'email' ) ) . '">' . esc_html( soleil_setting( 'email' ) ) . '</a></p>'
+		. '<div class="actions" style="margin-top:28px">' . soleil_book_button() . '</div>'
+		. '</div>';
+}
+
+/**
+ * Het formulier opent het mailprogramma van de bezoeker (main.js), zoals nu. Er wordt niets op de server bewaard.
+ */
+function soleil_block_contact_form() {
+	$email = soleil_setting( 'email' );
+	return '<form class="form" data-form data-mailto="' . esc_attr( $email ) . '" novalidate>'
+		. '<div class="form-row">'
+		. '<div class="field"><label for="n">Naam</label><input id="n" name="naam" autocomplete="name" required aria-describedby="n-err" /><span class="err" id="n-err">Vul je naam in.</span></div>'
+		. '<div class="field"><label for="t">Telefoon <small>(niet verplicht)</small></label><input id="t" name="telefoon" type="tel" autocomplete="tel" /></div>'
+		. '</div>'
+		. '<div class="field"><label for="e">E-mail</label><input id="e" name="email" type="email" autocomplete="email" required aria-describedby="e-err" /><span class="err" id="e-err">Vul een geldig e-mailadres in.</span></div>'
+		. '<div class="field"><label for="m">Je vraag</label><textarea id="m" name="vraag" required aria-describedby="m-err"></textarea><span class="err" id="m-err">Schrijf kort je vraag.</span></div>'
+		. '<div class="actions"><button class="btn" type="submit">Verstuur via e-mail</button></div>'
+		. '</form>'
+		. '<div class="done" tabindex="-1" hidden><p class="h3">Je mailprogramma is geopend</p>'
+		. '<p class="muted" style="margin-top:8px">Verstuur het bericht daar. Opende er niets? Mail naar <a class="link" href="mailto:' . esc_attr( $email ) . '">' . esc_html( $email ) . '</a>.</p></div>';
+}
+
+/* ---------- Journaal (journaal/index.astro) ---------- */
+
+function soleil_block_journal() {
+	$posts = get_posts( array( 'numberposts' => -1 ) );
+	return '<section class="wrap posts" style="padding-bottom:var(--section)">' . implode( '', array_map( 'soleil_post_card', $posts ) ) . '</section>';
+}
+
+/* ---------- Inhoud van een vaste pagina in een template (journaal, 404) ---------- */
+
+/**
+ * pagina: "berichten" = de pagina die het journaal toont, anders een slug (bv. pagina-niet-gevonden, ook als die privé is).
+ */
+function soleil_block_page_content( $a ) {
+	static $depth = 0;
+	if ( 'berichten' === $a['pagina'] ) {
+		$page = get_post( (int) get_option( 'page_for_posts' ) );
+	} else {
+		$found = get_posts( array( 'post_type' => 'page', 'name' => $a['pagina'], 'post_status' => array( 'publish', 'private' ), 'numberposts' => 1 ) );
+		$page  = $found ? $found[0] : null;
+	}
+	if ( ! $page || $depth > 0 ) {
+		return '';
+	}
+	++$depth;
+	$html = do_blocks( $page->post_content );
+	--$depth;
+	return $html;
+}
+
+/* ==========================================================================
+   Kernblokken in de vaste pagina's: dezelfde markup als de statische site
+   ========================================================================== */
+
+/**
+ * Extra attribuut htmlAttrs op tekst- en knopblokken: role, style, id en (voor knoppen) tag en icoon.
+ * Zo krijgt een alinea bv. exact <p class="rv" style="--d:1">, wat WordPress zelf niet kan opslaan.
+ */
+const SOLEIL_CORE_BLOCKS = array( 'core/paragraph', 'core/heading', 'core/list', 'core/buttons', 'core/button' );
+
+add_filter( 'register_block_type_args', function ( $args, $name ) {
+	if ( in_array( $name, SOLEIL_CORE_BLOCKS, true ) ) {
+		$args['attributes']['htmlAttrs'] = array( 'type' => 'object', 'default' => array() );
+	}
+	return $args;
+}, 10, 2 );
+
+/**
+ * Waarom prioriteit 20, en via render_block_{blok} in plaats van render_block:
+ * sinds WordPress 7.0 voegt core zelf klassen toe aan opgeslagen blokken (bv. "wp-block-paragraph" via
+ * block_core_paragraph_add_class op render_block_core/paragraph, prioriteit 10). De filters per blok lopen ná het
+ * algemene render_block, dus wie de markup wil gelijktrekken moet daar en later inhaken.
+ * Controle na elke WordPress-update: node wordpress/bin/check-html.mjs (vergelijkt met de Astro-build).
+ */
+function soleil_core_markup( $html, $block ) {
+	if ( '' === trim( $html ) ) {
 		return $html;
 	}
+	$name  = $block['blockName'];
+	$attrs = (array) ( $block['attrs']['htmlAttrs'] ?? array() );
+
+	if ( 'core/button' === $name ) {
+		return soleil_button_markup( $html, $block['attrs'] ?? array(), $attrs );
+	}
+	if ( 'core/buttons' === $name ) {
+		// <div class="wp-block-buttons …"> wordt <div class="actions …"> (of de tag uit htmlAttrs).
+		$tag   = in_array( $attrs['tag'] ?? 'div', array( 'div', 'p' ), true ) ? ( $attrs['tag'] ?? 'div' ) : 'div';
+		$class = trim( (string) ( $block['attrs']['className'] ?? '' ) );
+		$inner = preg_replace( '#^\s*<div[^>]*>(.*)</div>\s*$#s', '$1', $html );
+		$open  = '<' . $tag . ' class="' . esc_attr( '' !== $class ? $class : 'actions' ) . '"' . soleil_html_attrs( $attrs ) . '>';
+		return $open . trim( $inner ) . '</' . $tag . '>';
+	}
+
 	$p = new WP_HTML_Tag_Processor( $html );
 	if ( ! $p->next_tag() ) {
 		return $html;
 	}
-	$p->remove_class( 'wp-block-' . substr( $block['blockName'], 5 ) );
-	if ( 'H2' === $p->get_tag() ) {
-		$p->add_class( 'h3' );
+	$p->remove_class( 'wp-block-' . substr( $name, 5 ) );
+	if ( ! empty( $GLOBALS['soleil_in_article'] ) ) {
+		// In een artikel: tussentitels <h2 class="h3">, lijsten <ul role="list">, zoals journaal/[slug].astro.
+		if ( 'H2' === $p->get_tag() ) {
+			$p->add_class( 'h3' );
+		}
+		if ( 'core/list' === $name ) {
+			$p->set_attribute( 'role', 'list' );
+		}
 	}
-	if ( 'core/list' === $block['blockName'] ) {
-		$p->set_attribute( 'role', 'list' );
+	foreach ( array( 'role', 'style', 'id' ) as $key ) {
+		if ( isset( $attrs[ $key ] ) && '' !== $attrs[ $key ] ) {
+			$p->set_attribute( $key, $attrs[ $key ] );
+		}
+	}
+	// Links naar /afspraak/, /webshop/, … wijzen naar de link uit de instellingen.
+	while ( $p->next_tag( 'a' ) ) {
+		$href = (string) $p->get_attribute( 'href' );
+		if ( '' !== $href ) {
+			$p->set_attribute( 'href', soleil_link( $href ) );
+		}
 	}
 	return $p->get_updated_html();
 }
-foreach ( array( 'core/paragraph', 'core/heading', 'core/list' ) as $soleil_block ) {
-	add_filter( 'render_block_' . $soleil_block, 'soleil_article_markup', 20, 2 );
+foreach ( array( 'core/paragraph', 'core/heading', 'core/list', 'core/buttons', 'core/button' ) as $soleil_block ) {
+	add_filter( 'render_block_' . $soleil_block, 'soleil_core_markup', 20, 2 );
+}
+
+function soleil_html_attrs( $attrs ) {
+	$out = '';
+	foreach ( array( 'role', 'style', 'id' ) as $key ) {
+		if ( isset( $attrs[ $key ] ) && '' !== $attrs[ $key ] ) {
+			$out .= ' ' . $key . '="' . esc_attr( $attrs[ $key ] ) . '"';
+		}
+	}
+	return $out;
+}
+
+/**
+ * core/button wordt <a class="btn …"> of <a class="link"> met het icoon van de site.
+ * Stijl in de editor → klasse: Knop = btn, Licht = btn btn--light, Omlijnd = btn btn--ghost, Sunset = btn btn--sunset, Link = link.
+ * Icoon (htmlAttrs.icoon): leeg = pijl (schuin bij een externe link), "map-pin" vooraan, "geen".
+ */
+function soleil_button_markup( $html, $block_attrs, $attrs ) {
+	if ( ! preg_match( '#<a\b([^>]*)>(.*?)</a>#s', $html, $m ) ) {
+		return $html;
+	}
+	$a     = new WP_HTML_Tag_Processor( '<a' . $m[1] . '>' );
+	$a->next_tag();
+	$href   = soleil_link( (string) $a->get_attribute( 'href' ) );
+	$blank  = '_blank' === $a->get_attribute( 'target' );
+	$styles = array( 'light' => 'btn btn--light', 'ghost' => 'btn btn--ghost', 'sunset' => 'btn btn--sunset', 'link' => 'link' );
+	$style  = preg_match( '/is-style-([a-z]+)/', (string) ( $block_attrs['className'] ?? '' ), $s ) ? $s[1] : '';
+	$extra  = trim( preg_replace( '/is-style-[a-z]+/', '', (string) ( $block_attrs['className'] ?? '' ) ) );
+	$class  = trim( ( $styles[ $style ] ?? 'btn' ) . ' ' . $extra );
+	$icon   = (string) ( $attrs['icoon'] ?? '' );
+	$label  = trim( $m[2] );
+
+	if ( 'map-pin' === $icon ) {
+		$label = soleil_icon( 'map-pin' ) . $label;
+	} elseif ( 'geen' !== $icon ) {
+		$label .= soleil_icon( '' !== $icon ? $icon : ( $blank ? 'arrow-up-right' : 'arrow-right' ) );
+	}
+	return '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $href ) . '"' . ( $blank ? soleil_blank() : '' ) . '>' . $label . '</a>';
 }

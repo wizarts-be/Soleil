@@ -2,12 +2,31 @@
 
 - `soleil/` – block theme. Lokaal gekoppeld via symlink:
   `~/Local Sites/soleil/app/public/wp-content/themes/soleil`
-- `import/` – zet de inhoud van de statische site in WordPress (fase 5).
+- `import/` – zet de inhoud van de statische site in WordPress.
 - `PLAN.md` – opbouw, blokken, inhoudsmodel.
 
 ## Opstarten
 1. Local openen → site **soleil** starten (http://soleil.local)
 2. WP-CLI: `wordpress/bin/wp <commando>` (bv. `wordpress/bin/wp post list`)
+
+## Import
+
+```sh
+node wordpress/import/build_data.mjs                      # site.ts + journal.json -> import/content/data.json
+wordpress/bin/wp eval-file wordpress/import/import.php    # in WordPress zetten (opnieuw draaien mag)
+```
+
+## Controle na een WordPress-update
+WordPress voegt soms zelf klassen of attributen toe aan blokken (bv. `wp-block-paragraph` sinds 7.0).
+Dit script vergelijkt de HTML met de Astro-build en toont elk verschil:
+
+```sh
+node wordpress/bin/check-html.mjs            # artikel + behandelingpagina
+node wordpress/bin/check-html.mjs --all      # alle pagina's
+node wordpress/bin/check-html.mjs --chrome   # ook header en footer
+```
+
+Voorbije data (bv. laserdata) laat WordPress bewust weg; die tellen niet mee.
 
 ## Scripts
 `main.js` wordt gebouwd uit dezelfde bronnen als de statische site (`src/scripts/main.ts` en het script in

@@ -18,7 +18,24 @@
       title: "Openingsuren", icon: "clock", inserter: true,
       description: "De openingsuren van het instituut. Aanpassen doe je onder Soleil > Openingsuren.",
       manage: ["Soleil > Openingsuren", "admin.php?page=soleil&tab=uren"]
-    }
+    },
+    "behandeling-switch": { title: "Behandeling: alle behandelingen", icon: "ellipsis", description: "De balk met alle behandelingen bovenaan." },
+    "behandeling": { title: "Behandeling: pagina", icon: "heart", description: "De pagina van een behandeling, opgebouwd uit de behandelingkaart." },
+    "behandeling-pager": { title: "Behandeling: vorige en volgende", icon: "leftright", description: "Links naar de vorige en volgende behandeling." },
+    "behandelingen-lijst": { title: "Lijst met behandelingen", icon: "list-view", description: "Alle behandelingen per groep.", manage: ["Behandelingen", "edit.php?post_type=behandeling"] },
+    "tarieven-chips": { title: "Tarieven: snelkoppelingen", icon: "tag", description: "Knopjes naar elke behandeling op de pagina.", manage: ["Behandelingen", "edit.php?post_type=behandeling"] },
+    "tarieven": { title: "Tarieven", icon: "money-alt", description: "De prijzen van alle behandelingen.", manage: ["Behandelingen", "edit.php?post_type=behandeling"] },
+    "in-de-kijker": { title: "Verzorging in de kijker", icon: "star-filled", description: "De verzorging van het seizoen.", manage: ["Soleil > In de kijker", "admin.php?page=soleil&tab=kijker"] },
+    "reviews": { title: "Reviews", icon: "format-quote", description: "Wat klanten zeggen.", manage: ["Reviews", "edit.php?post_type=review"] },
+    "voorbeeld-noot": { title: "Melding voorbeeldinhoud", icon: "info", description: "Verschijnt enkel zolang er iets als voorbeeld gemarkeerd is." },
+    "merken": { title: "Merken", icon: "tag", description: "Merken waar je mee werkt.", manage: ["Merken", "edit.php?post_type=merk"] },
+    "producten": { title: "Nieuwe producten", icon: "products", description: "Producten op de pagina Nieuw.", manage: ["Producten", "edit.php?post_type=product"] },
+    "activiteiten": { title: "Nieuwe data", icon: "calendar-alt", description: "Activiteiten met hun komende data.", manage: ["Activiteiten", "edit.php?post_type=activiteit"] },
+    "contact-kaart": { title: "Contactgegevens", icon: "location", description: "Adres, telefoon en e-mail.", manage: ["Soleil > Praktisch", "admin.php?page=soleil"] },
+    "contactformulier": { title: "Contactformulier", icon: "email-alt", description: "Het formulier opent het mailprogramma van de bezoeker.", manage: ["Soleil > Praktisch", "admin.php?page=soleil"] },
+    "journaal": { title: "Alle artikels", icon: "excerpt-view", description: "Alle artikels uit het journaal.", manage: ["Journaal", "edit.php"] },
+    "pagina-inhoud": { title: "Inhoud van een pagina", icon: "admin-page", description: "Toont de inhoud van een vaste pagina in een template." },
+    "icoon": { title: "Icoon", icon: "star-empty", description: "Een icoon van de site." }
   };
 
   Object.keys(blocks).forEach(function (name) {
@@ -45,6 +62,78 @@
       save: function () { return null; }
     });
   });
+
+  /* ---------- Kaarten op de home: 3 behandelingen + een eigen kaart ---------- */
+  function HomeCardsEdit(props) {
+    var blockProps = be.useBlockProps();
+    var items = props.attributes.items || [];
+    var custom = items.map(function (item, i) { return [item, i]; }).filter(function (x) { return !x[0].behandeling; });
+    var setItem = function (i, key, value) { props.setAttributes({ items: put(items, i, merge(items[i], key, value)) }); };
+    return el("div", blockProps,
+      props.isSelected ? el("div", { className: "soleil-manage" },
+        el("span", null, "De eerste kaarten volgen vanzelf de ", el("strong", null, "Behandelingen"), " (naam, korte omschrijving en foto). De eigen kaart pas je hieronder aan."),
+        el("a", { className: "soleil-manage__btn", target: "_top", href: admin() + "edit.php?post_type=behandeling" }, "Behandelingen")
+      ) : null,
+      props.isSelected ? custom.map(function (x) {
+        var item = x[0], i = x[1];
+        return el("div", { key: i, className: "soleil-card soleil-card--inline" },
+          el("div", { className: "soleil-card__section soleil-card__grid" },
+            el(Photo, { id: item.foto, removable: false, onChange: function (v) { setItem(i, "foto", v); } }),
+            el("div", { className: "soleil-card__fields" },
+              text("Naam", item.naam, function (v) { setItem(i, "naam", v); }),
+              text("Korte omschrijving", item.sub, function (v) { setItem(i, "sub", v); }),
+              text("Link", item.href, function (v) { setItem(i, "href", v); }, "Bv. /behandelingen/#ontspanning.")
+            )
+          )
+        );
+      }) : null,
+      el(c.Disabled, null, el(ServerSideRender, { block: "soleil/home-kaarten", attributes: props.attributes }))
+    );
+  }
+  wp.blocks.registerBlockType("soleil/home-kaarten", {
+    apiVersion: 3, title: "Behandelingen: kaarten", icon: "grid-view", category: "soleil",
+    description: "Vier kaarten onder Behandelingen op de homepagina.",
+    supports: { html: false, inserter: false, className: false, customClassName: false },
+    edit: HomeCardsEdit, save: function () { return null; }
+  });
+
+  /* ---------- Foto in een vaste pagina: vervangen en beschrijven in het canvas ---------- */
+  function PhotoEdit(props) {
+    var a = props.attributes;
+    var media = useSelect(function (select) { return a.id ? select("core").getEntityRecord("postType", "attachment", a.id) : null; }, [a.id]);
+    var img = media ? el("img", { src: media.source_url, alt: a.alt }) : el("span", { className: "soleil-photo__empty" }, "Nog geen foto");
+    var blockProps = be.useBlockProps({ className: a.tag === "img" ? "soleil-photo soleil-photo--bare" : "soleil-photo " + (a.className || "") });
+    var tools = props.isSelected ? el("div", { className: "soleil-photo__tools" },
+      el(be.MediaUploadCheck, null, el(be.MediaUpload, {
+        onSelect: function (m) { props.setAttributes({ id: m.id }); }, allowedTypes: ["image"], value: a.id,
+        render: function (o) { return el(c.Button, { variant: "primary", onClick: o.open }, a.id ? "Foto vervangen" : "Foto kiezen"); }
+      })),
+      el(c.TextControl, Object.assign({ label: "Beschrijving van de foto", hideLabelFromVision: false, value: a.alt, placeholder: "Leeg = decoratief", onChange: function (v) { props.setAttributes({ alt: v }); } }, ctl))
+    ) : null;
+    return el(a.tag === "span" ? "span" : (a.tag === "img" ? "div" : "figure"), blockProps, img, tools);
+  }
+  wp.blocks.registerBlockType("soleil/foto", {
+    apiVersion: 3, title: "Foto", icon: "format-image", category: "soleil",
+    description: "Foto op een vaste plaats in de pagina. Klik erop om ze te vervangen.",
+    supports: { html: false, inserter: false, className: false, customClassName: false },
+    edit: PhotoEdit, save: function () { return null; }
+  });
+
+  /* ---------- Extra HTML-attributen op tekst- en knopblokken (zie soleil_core_markup in inc/blocks.php) ---------- */
+  var CORE = ["core/paragraph", "core/heading", "core/list", "core/buttons", "core/button"];
+  wp.hooks.addFilter("blocks.registerBlockType", "soleil/html-attrs", function (settings, name) {
+    if (CORE.indexOf(name) === -1) return settings;
+    return Object.assign({}, settings, { attributes: Object.assign({}, settings.attributes, { htmlAttrs: { type: "object", default: {} } }) });
+  });
+  // In de editor dezelfde marges als op de site (bv. style="margin-top:28px").
+  wp.hooks.addFilter("editor.BlockListBlock", "soleil/html-attrs-style", wp.compose.createHigherOrderComponent(function (BlockListBlock) {
+    return function (props) {
+      var h = props.attributes && props.attributes.htmlAttrs;
+      if (CORE.indexOf(props.name) === -1 || !h || !h.style) return el(BlockListBlock, props);
+      var style = Object.assign({}, styleObject(h.style), (props.wrapperProps && props.wrapperProps.style) || {});
+      return el(BlockListBlock, Object.assign({}, props, { wrapperProps: Object.assign({}, props.wrapperProps, { style: style }) }));
+    };
+  }, "withSoleilHtmlAttrs"));
 
   /* ---------- Container: zelfde tag en klassen als op de site ---------- */
   function styleObject(css) {
@@ -404,5 +493,9 @@
     supports: { html: false, inserter: false, multiple: false, reusable: false, lock: false, className: false, customClassName: false },
     edit: PostSetup,
     save: function () { return null; }
+  });
+  // Enkel de knopstijlen van Soleil (inc/blocks.php zet ze om naar .btn en .link).
+  wp.domReady(function () {
+    ["fill", "outline"].forEach(function (style) { wp.blocks.unregisterBlockStyle("core/button", style); });
   });
 })(window.wp);

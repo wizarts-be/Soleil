@@ -66,7 +66,7 @@ function soleil_render_site_header() {
 
 	$discovery = get_page_by_path( 'skin-discovery', OBJECT, 'behandeling' );
 	$card_img  = $discovery && has_post_thumbnail( $discovery )
-		? get_the_post_thumbnail( $discovery, 'large', array( 'alt' => '', 'loading' => 'lazy', 'sizes' => '(max-width: 960px) 100vw, 440px' ) )
+		? soleil_img( get_post_thumbnail_id( $discovery ), array( 'alt' => '', 'loading' => 'lazy' ) )
 		: '';
 	$card = '<a class="menu-card" href="' . esc_url( soleil_treatment_url( 'skin-discovery' ) ) . '">' . $card_img
 		. '<span><small>Nieuw bij Soleil?</small>Start met een Skin Discovery</span></a>';

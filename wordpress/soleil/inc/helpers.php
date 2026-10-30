@@ -90,3 +90,56 @@ function soleil_aria_current( $href ) {
 function soleil_blank() {
 	return ' target="_blank" rel="noopener"';
 }
+
+/**
+ * Foto zoals op de statische site: het originele bestand, zonder srcset.
+ * WordPress zou anders een herschaalde versie tonen, en dan verschillen de pixels van de huidige site.
+ * $attrs in de volgorde van de Astro-markup, bv. array( 'alt' => '', 'loading' => 'lazy' ).
+ */
+function soleil_img( $id, $attrs = array() ) {
+	$id  = (int) $id;
+	$src = $id ? wp_get_attachment_image_url( $id, 'full' ) : '';
+	if ( ! $src ) {
+		return '';
+	}
+	$html = '<img src="' . esc_url( $src ) . '"';
+	$attrs += array( 'alt' => '' );
+	foreach ( $attrs as $name => $value ) {
+		if ( 'size' === $name ) {
+			// width/height van het origineel, enkel waar de statische site ze ook had.
+			$meta  = wp_get_attachment_metadata( $id );
+			$html .= ! empty( $meta['width'] ) ? ' width="' . (int) $meta['width'] . '" height="' . (int) $meta['height'] . '"' : '';
+			continue;
+		}
+		if ( null !== $value && false !== $value ) {
+			$html .= ' ' . $name . '="' . esc_attr( $value ) . '"';
+		}
+	}
+	return $html . '>';
+}
+
+/**
+ * Prijstabel, zoals Prices.astro. $rows: array( array( 'naam', 'duur', 'prijs', 'toelichting' ) ).
+ */
+function soleil_prices( $rows, $title = '', $note = '' ) {
+	$html = '<table class="prices">' . ( '' !== (string) $title ? '<caption>' . esc_html( $title ) . '</caption>' : '' ) . '<tbody>';
+	foreach ( $rows as $r ) {
+		$sub   = trim( (string) ( $r['toelichting'] ?? '' ) );
+		$html .= '<tr><th scope="row">' . esc_html( $r['naam'] ?? '' ) . ( '' !== $sub ? '<small>' . esc_html( $sub ) . '</small>' : '' ) . '</th>'
+			. '<td class="dur">' . esc_html( $r['duur'] ?? '' ) . '</td>'
+			. '<td class="eur">' . esc_html( soleil_euro( $r['prijs'] ?? '' ) ) . '</td></tr>';
+	}
+	$html .= '</tbody></table>';
+	return $html . ( '' !== (string) $note ? '<p class="price-note">' . esc_html( $note ) . '</p>' : '' );
+}
+
+/**
+ * Een groep prijstabellen (meta "prijzen" van een behandeling of een onderdeel).
+ */
+function soleil_price_groups( $groups ) {
+	$html = '';
+	foreach ( (array) $groups as $g ) {
+		$html .= soleil_prices( $g['rijen'] ?? array(), $g['titel'] ?? '', $g['noot'] ?? '' );
+	}
+	return $html;
+}

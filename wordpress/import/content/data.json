@@ -1,0 +1,1353 @@
+{
+ "settings": {
+  "name": "Instituut Soleil",
+  "owner": "Saskia",
+  "street": "Rivierstraat 70",
+  "city": "9080 Beervelde",
+  "phone": "0470 22 92 02",
+  "phone_href": "tel:+32470229202",
+  "email": "info@instituutsoleil.be",
+  "booking": "https://booking.optios.net/18875",
+  "webshop": "https://www.webshopsoleil.be/",
+  "route": "https://www.google.com/maps/dir/?api=1&destination=Rivierstraat+70+9080+Beervelde",
+  "instagram": "https://www.instagram.com/instituutsoleil/",
+  "facebook": "https://www.facebook.com/Instituut-Soleil-1582526178629782/",
+  "vat": "BE 0837.999.371",
+  "privacy": "https://instituutsoleil.be/privacy-policy/",
+  "footer_slogan": "Gun je huid de aandacht die ze verdient.",
+  "footer_note": "Tijdens behandelingen wordt de telefoon niet beantwoord, ik contacteer je zo vlug mogelijk.",
+  "hours_note": "Zaterdagnamiddag na telefonische afspraak.",
+  "hours": {
+   "1": {
+    "open": "09:00",
+    "close": "18:00",
+    "note": ""
+   },
+   "2": {
+    "open": "08:00",
+    "close": "18:30",
+    "note": ""
+   },
+   "3": {
+    "open": "",
+    "close": "",
+    "note": ""
+   },
+   "4": {
+    "open": "08:00",
+    "close": "20:00",
+    "note": ""
+   },
+   "5": {
+    "open": "08:00",
+    "close": "18:00",
+    "note": ""
+   },
+   "6": {
+    "open": "09:00",
+    "close": "13:30",
+    "note": ""
+   }
+  },
+  "spot_season": "herfst",
+  "spot_name": "Skin Expert Peel",
+  "spot_text": "Na de zomer is je huid vaak droog, dof of wat ongelijk. Een peeling maakt de dode huidcellen los, zodat je huid weer zacht en glad aanvoelt. Met masker en LED, en de ideale start van een kuur.",
+  "spot_image": "public/img/peeling.webp",
+  "spot_alt": "Een peeling wordt met een penseel aangebracht",
+  "spot_dur": "60 min",
+  "spot_price": "125",
+  "spot_href": "/behandelingen/skin-expert/#peel"
+ },
+ "groups": [
+  "Huidverbetering",
+  "Ontspanning"
+ ],
+ "treatments": [
+  {
+   "slug": "skin-discovery",
+   "name": "Skin Discovery",
+   "group": "Huidverbetering",
+   "order": 0,
+   "img": "public/img/zaakvoerder-toestel.webp",
+   "meta": {
+    "foto_alt": "Saskia naast een behandeltoestel in het instituut",
+    "sub": "nieuw? start hier",
+    "kicker": "",
+    "kop": "",
+    "intro": "Leer jouw huid beter kennen. We combineren een huidanalyse met een aangepaste gelaatsverzorging en persoonlijk advies voor thuis. Ideaal als eerste behandeling.",
+    "vanaf": 105,
+    "tip": "",
+    "noot": "",
+    "link_url": "",
+    "link_label": "",
+    "prijzen": [
+     {
+      "titel": "",
+      "rijen": [
+       {
+        "naam": "Skin Discovery",
+        "duur": "90 min",
+        "prijs": "105",
+        "toelichting": "analyse + verzorging + advies, 1e kennismakingsbehandeling"
+       }
+      ]
+     }
+    ],
+    "waarom": {
+     "probleem": "Je wilt iets aan je huid doen, maar je weet niet waar te beginnen of welke producten bij je passen.",
+     "oplossing": "In één afspraak analyseer ik je huid, geef ik een verzorging op maat en stel ik samen een plan voor thuis op.",
+     "resultaat": "Je weet meteen wat je huid nodig heeft en geeft geen geld meer uit aan producten die niet werken."
+    },
+    "extra": null,
+    "delen": null,
+    "makeup": null
+   },
+   "extra_activiteit": ""
+  },
+  {
+   "slug": "huidanalyse",
+   "name": "Huidanalyse & advies",
+   "group": "Huidverbetering",
+   "order": 1,
+   "img": "public/img/huidanalyse-scan.webp",
+   "meta": {
+    "foto_alt": "Een gezicht in beeld op de huidscanner",
+    "sub": "je huid beter leren kennen",
+    "kicker": "",
+    "kop": "",
+    "intro": "Met de huidscanner bekijk ik je huid tot in de diepere lagen. Daarna bespreken we samen wat ze nodig heeft, in het instituut en thuis.",
+    "vanaf": 60,
+    "tip": "Nieuw bij Soleil? Kies dan de Skin Discovery: analyse, verzorging en advies in één afspraak.",
+    "noot": "",
+    "link_url": "",
+    "link_label": "",
+    "prijzen": [
+     {
+      "titel": "",
+      "rijen": [
+       {
+        "naam": "Advies moment",
+        "duur": "30 min",
+        "prijs": "25",
+        "toelichting": "intakegesprek zonder analyse, gratis bij aankoop van 3 producten"
+       },
+       {
+        "naam": "Skin analyse + advies",
+        "duur": "60 min",
+        "prijs": "60"
+       },
+       {
+        "naam": "Skin Discovery",
+        "duur": "90 min",
+        "prijs": "105",
+        "toelichting": "analyse + verzorging + advies, 1e kennismakingsbehandeling"
+       }
+      ]
+     }
+    ],
+    "waarom": {
+     "probleem": "Je smeert al jaren crèmes, maar ziet weinig verschil. Wat er onder het oppervlak gebeurt, zie je niet.",
+     "oplossing": "Met de huidscanner bekijk ik pigment, rimpels, talg, vocht en zonschade tot in de diepere lagen.",
+     "resultaat": "Advies dat gebaseerd is op wat je huid echt nodig heeft, niet op trends of giswerk."
+    },
+    "extra": null,
+    "delen": null,
+    "makeup": null
+   },
+   "extra_activiteit": ""
+  },
+  {
+   "slug": "skin-relax",
+   "name": "Skin Relax",
+   "group": "Huidverbetering",
+   "order": 2,
+   "img": "public/img/gelaatsverzorging.webp",
+   "meta": {
+    "foto_alt": "Gezicht wordt gereinigd tijdens een gelaatsverzorging",
+    "sub": "ontspannen & revitaliseren",
+    "kicker": "",
+    "kop": "",
+    "intro": "Een verzorgende gelaatsbehandeling waarbij ontspanning centraal staat. Een rustmoment voor jezelf, met aandacht voor een frisse, verzorgde huid.",
+    "vanaf": 70,
+    "tip": "Weet je niet welke verzorging bij jou past? Kies dan eerst de Skin Discovery, dan overloop ik wat het best bij jou past.",
+    "noot": "",
+    "link_url": "",
+    "link_label": "",
+    "prijzen": [
+     {
+      "titel": "Skin Relax",
+      "rijen": [
+       {
+        "naam": "Skin Relax 1u",
+        "duur": "60 min",
+        "prijs": "70"
+       },
+       {
+        "naam": "Skin Relax 1u30",
+        "duur": "90 min",
+        "prijs": "90"
+       },
+       {
+        "naam": "Skin Discovery",
+        "duur": "90 min",
+        "prijs": "105",
+        "toelichting": "analyse + verzorging + advies, 1e kennismakingsbehandeling"
+       }
+      ]
+     },
+     {
+      "titel": "Extra's",
+      "rijen": [
+       {
+        "naam": "Extra oogcontour",
+        "duur": "20 min",
+        "prijs": "50"
+       },
+       {
+        "naam": "Extra epilatie gelaat, per zone",
+        "duur": "10 min",
+        "prijs": "10"
+       },
+       {
+        "naam": "Extra milia verwijderen",
+        "duur": "10 min",
+        "prijs": "10"
+       }
+      ]
+     }
+    ],
+    "waarom": {
+     "titels": [
+      "Voelt je huid wat minder stralend?",
+      "Wat ik doe",
+      "Wat jij eraan hebt"
+     ],
+     "probleem": "Je huid voelt droog of ziet er wat dof uit. En misschien merk je dat je zelf ook toe bent aan een rustmoment.",
+     "oplossing": "Bij Instituut Soleil neem ik graag de tijd voor jou, met een verzorging die je huid laat stralen en jou even op adem laat komen.",
+     "resultaat": "Een frisse, verzorgde huid en een uur waarin je helemaal tot rust komt."
+    },
+    "extra": null,
+    "delen": null,
+    "makeup": null
+   },
+   "extra_activiteit": ""
+  },
+  {
+   "slug": "skin-expert",
+   "name": "Skin Expert",
+   "group": "Huidverbetering",
+   "order": 3,
+   "img": "public/img/led-lichttherapie.webp",
+   "meta": {
+    "foto_alt": "Behandeltafel onder de LED-lamp in het instituut",
+    "sub": "herstellen & vernieuwen",
+    "kicker": "",
+    "kop": "",
+    "intro": "Een doelgerichte gelaatsbehandeling met intensieve producten en specifieke technieken of toestellen. Afgestemd op jouw huid, met aandacht voor herstel en huidverbetering.",
+    "vanaf": 120,
+    "tip": "Werk je voor het eerst aan huidverbetering? Begin dan met een Skin Discovery.",
+    "noot": "",
+    "link_url": "",
+    "link_label": "",
+    "prijzen": [],
+    "waarom": {
+     "probleem": "Fijne lijntjes, pigmentvlekken, littekens of acne die niet weggaan met gewone verzorging.",
+     "oplossing": "Doelgerichte behandelingen met peeling, needling of Neo-Lift, in kuurvorm en met de juiste verzorging thuis.",
+     "resultaat": "Zichtbare huidverbetering stap voor stap, met technieken waarvan de werking bewezen is."
+    },
+    "extra": {
+     "titel": "In de kijker deze herfst",
+     "tekst": "Skin Expert Peel: je huid voelt weer zacht en glad aan. De ideale start van een kuur.",
+     "lijst": []
+    },
+    "delen": [
+     {
+      "id": "peel",
+      "naam": "Peel",
+      "foto": "public/img/peeling.webp",
+      "alt": "Een peeling wordt met een penseel aangebracht",
+      "tekst": "Een peeling maakt de bovenste laag dode huidcellen los, zodat je huid weer zacht en glad aanvoelt en haar frisheid terugkrijgt. Altijd aangepast aan je huidtype. In kuurvorm verfijnt ze de huidstructuur en vermindert ze lijntjes, pigmentvlekken, littekens en acne. Een ideaal begin voor anti-aging en resultaatgerichte behandelingen.",
+      "prijzen": [
+       {
+        "titel": "",
+        "rijen": [
+         {
+          "naam": "Skin Expert Peel",
+          "duur": "60 min",
+          "prijs": "125",
+          "toelichting": "masker + LED"
+         },
+         {
+          "naam": "Skin Expert Peel Deluxe",
+          "duur": "90 min",
+          "prijs": "150",
+          "toelichting": "met relaxmassage"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "id": "needling",
+      "naam": "Needling",
+      "foto": "public/img/microneedling.webp",
+      "alt": "Microneedling-pen tijdens een behandeling",
+      "tekst": "Met fijne naaldjes stimuleer ik het natuurlijke huidherstel en de aanmaak van collageen. Dit helpt fijne lijntjes en acnelittekens te verzachten en de huidstructuur te verfijnen.",
+      "prijzen": [
+       {
+        "titel": "",
+        "rijen": [
+         {
+          "naam": "Skin Expert Needling",
+          "duur": "75 min",
+          "prijs": "125",
+          "toelichting": "needling + masker + LED-lichttherapie"
+         },
+         {
+          "naam": "Skin Expert Needling + peel",
+          "duur": "90 min",
+          "prijs": "185",
+          "toelichting": "needling + peel + LED-masker"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "id": "neo-lift",
+      "naam": "Neo-Lift",
+      "foto": "public/img/neo-lift.webp",
+      "alt": "Neo-Lift behandeling van het gelaat",
+      "tekst": "Radiofrequentie en elektrostimulatie samen: voor meer collageen en elastine en stevigere contouren, zonder naalden. Voor een mooi resultaat is een kuur aan te raden.",
+      "prijzen": [
+       {
+        "titel": "",
+        "rijen": [
+         {
+          "naam": "Neo-Lift gelaat",
+          "duur": "45 min",
+          "prijs": "120"
+         },
+         {
+          "naam": "Neo-Lift gelaat + hals",
+          "duur": "90 min",
+          "prijs": "180"
+         },
+         {
+          "naam": "Neo-Lift + peel",
+          "duur": "90 min",
+          "prijs": "185"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "makeup": null
+   },
+   "extra_activiteit": ""
+  },
+  {
+   "slug": "arrangementen",
+   "name": "Arrangementen",
+   "group": "Ontspanning",
+   "order": 4,
+   "img": "public/img/duo-cabine.webp",
+   "meta": {
+    "foto_alt": "Twee personen krijgen tegelijk een gezichtsmassage in de duo-cabine",
+    "sub": "solo of met twee",
+    "kicker": "Self-care is not a luxury, it's a power move",
+    "kop": "",
+    "intro": "Even helemaal niets moeten. Laat je onderdompelen in pure verwennerij, met zachte aanrakingen, heerlijke geuren en luxe producten. Laat de drukte los en kom opnieuw tot rust.",
+    "vanaf": 100,
+    "tip": "",
+    "noot": "",
+    "link_url": "",
+    "link_label": "",
+    "prijzen": [
+     {
+      "titel": "",
+      "rijen": [
+       {
+        "naam": "Mini-arrangement",
+        "duur": "1u15",
+        "prijs": "100",
+        "toelichting": "Skin Relax basisverzorging · Epilatie wenkbrauwen · Korte rugmassage"
+       },
+       {
+        "naam": "Feeling",
+        "duur": "1u30",
+        "prijs": "115",
+        "toelichting": "Relaxerende rugmassage · Warme rugpakking · Mini gelaatsverzorging · Epilatie wenkbrauwen"
+       },
+       {
+        "naam": "Feeling duo",
+        "duur": "1u30",
+        "prijs": "220",
+        "toelichting": "met 2 zalig genieten"
+       },
+       {
+        "naam": "Soleil",
+        "duur": "2u",
+        "prijs": "165",
+        "toelichting": "Relaxerende rugmassage · Skin Relax standaardverzorging · Epilatie wenkbrauwen · Manicure met hydratatie"
+       },
+       {
+        "naam": "Relax",
+        "duur": "2u tot 2u30",
+        "prijs": "150",
+        "toelichting": "Lichaamspeeling · Warme lichaamspakking + douche · Mini gelaatsverzorging"
+       },
+       {
+        "naam": "Relax duo",
+        "duur": "2u tot 2u30",
+        "prijs": "290",
+        "toelichting": "met 2 zalig genieten"
+       },
+       {
+        "naam": "Anti-stress",
+        "duur": "2u30",
+        "prijs": "200",
+        "toelichting": "Skin Relax standaardverzorging · Epilatie wenkbrauwen · Relaxerende rugmassage · Warme rugpakking · Manicure met hydratatie · Korte voetmassage"
+       }
+      ]
+     }
+    ],
+    "waarom": {
+     "probleem": "Je hebt het druk en vindt zelden tijd voor jezelf.",
+     "oplossing": "Van kop tot teen verzorgd worden, alleen of met twee in de duo-cabine, en daarna nagenieten in de relaxruimte.",
+     "resultaat": "Even helemaal weg, zonder iets te moeten. Ook een mooi cadeau."
+    },
+    "extra": null,
+    "delen": null,
+    "makeup": null
+   },
+   "extra_activiteit": ""
+  },
+  {
+   "slug": "lichaam",
+   "name": "Lichaamsbehandelingen",
+   "group": "Ontspanning",
+   "order": 5,
+   "img": "public/img/massage-lichaam.webp",
+   "meta": {
+    "foto_alt": "Rugmassage",
+    "sub": "massage, peeling & pakking",
+    "kicker": "",
+    "kop": "",
+    "intro": "Laat de spanning uit je lichaam wegvloeien met een massage, een peeling of een warme pakking.",
+    "vanaf": 35,
+    "tip": "",
+    "noot": "",
+    "link_url": "",
+    "link_label": "",
+    "prijzen": [
+     {
+      "titel": "",
+      "rijen": [
+       {
+        "naam": "Massage",
+        "duur": "25 min",
+        "prijs": "35"
+       },
+       {
+        "naam": "Lichaamspeeling met douche",
+        "duur": "30 min",
+        "prijs": "40"
+       },
+       {
+        "naam": "Lichaamspakking + douche",
+        "duur": "40 min",
+        "prijs": "40"
+       },
+       {
+        "naam": "Lichaamspeeling + pakking",
+        "duur": "60 min",
+        "prijs": "80"
+       }
+      ]
+     }
+    ],
+    "waarom": {
+     "probleem": "Spanning in je rug en schouders, of een huid die ruw en droog aanvoelt.",
+     "oplossing": "Massage, lichaamspeeling of een warme pakking, rustig en met aandacht.",
+     "resultaat": "Een ontspannen lichaam en een zachte, verzorgde huid."
+    },
+    "extra": null,
+    "delen": null,
+    "makeup": null
+   },
+   "extra_activiteit": ""
+  },
+  {
+   "slug": "handen-voeten",
+   "name": "Handen & voeten",
+   "group": "Ontspanning",
+   "order": 6,
+   "img": "public/img/handen-voeten.webp",
+   "meta": {
+    "foto_alt": "Verzorging van de handen",
+    "sub": "manicure, gellak & pedicure",
+    "kicker": "",
+    "kop": "",
+    "intro": "Een extra moment van zachtheid voor je handen en voeten. Deze verzorgingen zijn vooral te boeken in combinatie met een Skin Relax-verzorging en maken je ontspanningsmoment compleet. Geniet van een verzorgd gevoel en kom helemaal tot rust.",
+    "vanaf": 25,
+    "tip": "",
+    "noot": "Pedicure bied ik uitsluitend aan als onderdeel van een combobehandeling, samen met de Skin Relax-verzorging. Zo wordt het één samenhangend verwenmoment, met rust en volle aandacht.",
+    "link_url": "",
+    "link_label": "",
+    "prijzen": [
+     {
+      "titel": "Handen & voeten",
+      "rijen": [
+       {
+        "naam": "Manicure / lakken",
+        "duur": "30 min",
+        "prijs": "€25 / €35"
+       },
+       {
+        "naam": "Gellak verwijderen + verzorging",
+        "duur": "20 min",
+        "prijs": "25"
+       },
+       {
+        "naam": "Gellak en pedicure",
+        "duur": "60 min",
+        "prijs": "65"
+       },
+       {
+        "naam": "Kleine pedicure",
+        "duur": "",
+        "prijs": "30",
+        "toelichting": "* enkel te boeken in combinatie met een Skin Relax"
+       },
+       {
+        "naam": "Grote pedicure",
+        "duur": "",
+        "prijs": "45",
+        "toelichting": "* enkel te boeken in combinatie met een Skin Relax"
+       }
+      ]
+     },
+     {
+      "titel": "Combo met Skin Relax",
+      "rijen": [
+       {
+        "naam": "Skin Relax basis + manicure",
+        "duur": "",
+        "prijs": "vanaf €95"
+       },
+       {
+        "naam": "Skin Relax basis + pedicure",
+        "duur": "",
+        "prijs": "vanaf €100"
+       },
+       {
+        "naam": "Skin Relax standaard + manicure",
+        "duur": "",
+        "prijs": "vanaf €120"
+       },
+       {
+        "naam": "Skin Relax standaard + pedicure",
+        "duur": "",
+        "prijs": "vanaf €125"
+       },
+       {
+        "naam": "Skin Relax standaard + manicure + pedicure",
+        "duur": "",
+        "prijs": "150"
+       }
+      ]
+     }
+    ],
+    "waarom": {
+     "probleem": "Je handen en voeten krijgen in de drukte het minst aandacht.",
+     "oplossing": "Manicure en pedicure met gellak, die tijdens een combo-verzorging ook een beetje extra aandacht krijgen.",
+     "resultaat": "Verzorgde handen en voeten, en alles in één afspraak."
+    },
+    "extra": null,
+    "delen": null,
+    "makeup": null
+   },
+   "extra_activiteit": ""
+  },
+  {
+   "slug": "epilaties",
+   "name": "Epilaties",
+   "group": "Ontspanning",
+   "order": 7,
+   "img": "public/img/ontharing.webp",
+   "meta": {
+    "foto_alt": "Ontharing met hars",
+    "sub": "ontharing met hars",
+    "kicker": "",
+    "kop": "",
+    "intro": "Ontharing met hars, voor gelaat en lichaam. Definitief ontharen kan met de laser.",
+    "vanaf": 15,
+    "tip": "",
+    "noot": "",
+    "link_url": "",
+    "link_label": "",
+    "prijzen": [
+     {
+      "titel": "",
+      "rijen": [
+       {
+        "naam": "Onderbenen",
+        "duur": "30 min",
+        "prijs": "25"
+       },
+       {
+        "naam": "Onderbenen + achterzijde bil",
+        "duur": "30 min",
+        "prijs": "38"
+       },
+       {
+        "naam": "Volledige benen zonder bikini",
+        "duur": "60 min",
+        "prijs": "48"
+       },
+       {
+        "naam": "Bikini sliprand",
+        "duur": "15 min",
+        "prijs": "15"
+       },
+       {
+        "naam": "Bikini brazilian",
+        "duur": "30 min",
+        "prijs": "40"
+       },
+       {
+        "naam": "Oksels",
+        "duur": "10 min",
+        "prijs": "15"
+       },
+       {
+        "naam": "Wenkbrauwen",
+        "duur": "15 min",
+        "prijs": "15"
+       },
+       {
+        "naam": "Bovenlip, kin of wang, per zone",
+        "duur": "10 min",
+        "prijs": "15"
+       },
+       {
+        "naam": "Volledig gelaat",
+        "duur": "25 min",
+        "prijs": "35"
+       }
+      ]
+     }
+    ],
+    "waarom": {
+     "probleem": "Ongewenste haartjes die je liever niet zelf weghaalt.",
+     "oplossing": "Ontharing met hars, nauwkeurig en hygiënisch, voor gelaat en lichaam.",
+     "resultaat": "Een gladde huid voor langere tijd, zonder gedoe thuis."
+    },
+    "extra": null,
+    "delen": null,
+    "makeup": null
+   },
+   "extra_activiteit": ""
+  },
+  {
+   "slug": "make-up",
+   "name": "Make-up",
+   "group": "Ontspanning",
+   "order": 8,
+   "img": "public/img/make-up.webp",
+   "meta": {
+    "foto_alt": "Make-up wordt aangebracht met een kwast",
+    "sub": "minerale make-up",
+    "kicker": "",
+    "kop": "",
+    "intro": "Minerale make-up van Jane Iredale.",
+    "vanaf": 45,
+    "tip": "",
+    "noot": "",
+    "link_url": "",
+    "link_label": "",
+    "prijzen": null,
+    "waarom": null,
+    "extra": null,
+    "delen": null,
+    "makeup": {
+     "titel": "Skincare make-up",
+     "vragen": [
+      "Wil jij een mooie natuurlijke uitstraling?",
+      "Geen gedoe meer met poriën verstoppende producten?",
+      "En daarbovenop make-up die effectief huidverbeterend werkt?"
+     ],
+     "cta": "Boek dan jouw persoonlijke minerale make-up consultatie!",
+     "verhaal": {
+      "label": "Jane iredale minerale make up.",
+      "titel": "wist je dat...jane iredale veel meer is dan een klassiek mineraal of clean beauty make-up merk?",
+      "tekst": [
+       "Natuurlijk zijn de producten vrij van schadelijke stoffen, dat is de basis, maar bij jane iredale gaat het een flinke stap verder. De formules zitten boordevol actieve ingrediënten zoals antioxidanten en botanische extracten die je huid écht verbeteren. Ze hydrateren, beschermen tegen UV- en blauw licht en ondersteunen de gezondheid van de huid.",
+       "Geen plamuurlaagje dus, maar verzorgende make-up die je huid laat ademen, kalmeert én versterkt."
+      ],
+      "foto": "public/img/producten-jane-iredale.webp",
+      "alt": "Make-up producten van Jane Iredale"
+     },
+     "diensten": [
+      {
+       "naam": "Foundation test",
+       "tekst": "Ben je op zoek naar de perfecte foundation van jane iredale en heb je deze nog niet eerder gebruikt? Maar je wilt geen volledige make-up look? Boek en vind jouw ideale match.",
+       "duur": "25 min",
+       "prijs": "gratis"
+      },
+      {
+       "naam": "Kort make-up advies",
+       "tag": "SNEL & SPECIFIEK",
+       "tekst": "Heb je een kleine vraag of wil je 1 specifiek item uittesten (bv. Foundationkleur afstemmen, blush, lipstick, oogschaduw)? Dan is dit mini-moment ideaal.",
+       "duur": "20 min",
+       "prijs": "gratis"
+      },
+      {
+       "naam": "Make-up",
+       "tag": "make-up voor jouw mooiste momenten",
+       "tekst": "Een frisse, verzorgde look waarin jij straalt, zonder dat het te veel wordt. Zo zie je er fantastisch uit en kan je vol zelfvertrouwen schitteren",
+       "duur": "30 min",
+       "prijs": "45"
+      },
+      {
+       "naam": "Make up cursus",
+       "tekst": "Je leert stap voor stap alles zelf aanbrengen, met volop ruimte voor jouw vragen. Ideaal om je routine te verfijnen, iets bij te leren of gewoon te genieten van een moment voor jezelf.",
+       "duur": "70 min",
+       "prijs": "70"
+      }
+     ]
+    }
+   },
+   "extra_activiteit": ""
+  },
+  {
+   "slug": "laser",
+   "name": "Laser ontharing",
+   "group": "Ontspanning",
+   "order": 9,
+   "img": "public/img/ontharing.webp",
+   "meta": {
+    "foto_alt": "Ontharing",
+    "sub": "definitief ontharen",
+    "kicker": "",
+    "kop": "Medische laserontharing",
+    "intro": "Elke ochtend scheren, ingegroeide haartjes en na twee dagen alweer stoppels? Tijd voor een gladde huid die ook glad blijft. Met de LightSheer® diodelaser, een medische diodelaser met 4 golflengtes, pak je ongewenst haar aan, snel en vrijwel pijnloos.",
+    "vanaf": 0,
+    "tip": "",
+    "noot": "",
+    "link_url": "https://www.haarlaser.team",
+    "link_label": "Prijzen op haarlaser.team",
+    "prijzen": [],
+    "waarom": {
+     "titels": [
+      "Herken je dit?",
+      "Werkwijze",
+      "Wat jij eraan hebt"
+     ],
+     "probleem": [
+      "Ongewenste haargroei",
+      "Ingegroeide haren",
+      "Irritatie na het scheren"
+     ],
+     "oplossing": "Definitieve ontharing met de diodelaser, door een erkende laserspecialist van Haarlaser Team, in het instituut.",
+     "resultaat": "Blijvend resultaat, met een gratis test- en uitlegsessie vooraf."
+    },
+    "extra": {
+     "titel": "Cathy van Haarlaser Team is aanwezig op",
+     "tekst": "",
+     "lijst": []
+    },
+    "delen": null,
+    "makeup": null
+   },
+   "extra_activiteit": "laser-ontharing"
+  }
+ ],
+ "activities": [
+  {
+   "slug": "make-up-workshop",
+   "name": "Make-up workshop",
+   "order": 0,
+   "img": "public/img/make-up.webp",
+   "meta": {
+    "tekst": "Stap voor stap leren hoe je zelf je make-up aanbrengt, in een kleine groep en met volop ruimte voor vragen.",
+    "data": [],
+    "geen_data": "Datum volgt",
+    "link_url": "/behandelingen/make-up/",
+    "link_label": "Meer over make-up",
+    "voorbeeld": true
+   }
+  },
+  {
+   "slug": "laser-ontharing",
+   "name": "Laser ontharing",
+   "order": 1,
+   "img": "public/img/ontharing.webp",
+   "meta": {
+    "tekst": "Cathy van Haarlaser Team komt naar het instituut. Een gratis test- en uitlegsessie vooraf is mogelijk.",
+    "data": [
+     "2026-10-29",
+     "2026-11-10",
+     "2026-12-10",
+     "2026-12-22",
+     "2027-01-21",
+     "2027-02-02",
+     "2027-03-04",
+     "2027-03-16",
+     "2027-04-15",
+     "2027-04-27",
+     "2027-05-27",
+     "2027-06-08",
+     "2027-07-08",
+     "2027-07-20"
+    ],
+    "geen_data": "",
+    "link_url": "/behandelingen/laser/",
+    "link_label": "Meer over laserontharing",
+    "voorbeeld": false
+   }
+  }
+ ],
+ "products": [
+  {
+   "slug": "nieuwe-herfstroutine",
+   "name": "Nieuwe herfstroutine",
+   "order": 0,
+   "img": "public/img/producten-environ.webp",
+   "meta": {
+    "merk": "Environ",
+    "tekst": "Vitamine A en antioxidanten om je huid na de zomer te herstellen.",
+    "link_url": "",
+    "voorbeeld": true
+   }
+  },
+  {
+   "slug": "zachte-peeling-voor-thuis",
+   "name": "Zachte peeling voor thuis",
+   "order": 1,
+   "img": "public/img/producten-exuviance.webp",
+   "meta": {
+    "merk": "Exuviance",
+    "tekst": "Milde zuren voor een gladdere, egalere huid tussen je behandelingen door.",
+    "link_url": "",
+    "voorbeeld": true
+   }
+  },
+  {
+   "slug": "nieuwe-herfsttinten",
+   "name": "Nieuwe herfsttinten",
+   "order": 2,
+   "img": "public/img/producten-jane-iredale.webp",
+   "meta": {
+    "merk": "jane iredale",
+    "tekst": "Minerale make-up die je huid verzorgt, in warme kleuren voor het nieuwe seizoen.",
+    "link_url": "",
+    "voorbeeld": true
+   }
+  }
+ ],
+ "brands": [
+  {
+   "slug": "environ",
+   "name": "Environ",
+   "order": 0,
+   "img": "public/img/producten-environ.webp",
+   "meta": {
+    "regel": "Huidverzorging op basis van vitamine A, met jarenlang onderzoek achter elk product."
+   }
+  },
+  {
+   "slug": "isov",
+   "name": "ISOV",
+   "order": 1,
+   "img": "",
+   "meta": {
+    "regel": "Koreaanse huidverzorging die wetenschap en actieve ingrediënten combineert voor doelgerichte huidverbetering."
+   }
+  },
+  {
+   "slug": "exuviance",
+   "name": "Exuviance",
+   "order": 2,
+   "img": "public/img/producten-exuviance.webp",
+   "meta": {
+    "regel": "Zachte, effectieve zuren voor een gladdere, egalere huid."
+   }
+  },
+  {
+   "slug": "jane-iredale",
+   "name": "Jane Iredale",
+   "order": 3,
+   "img": "public/img/producten-jane-iredale.webp",
+   "meta": {
+    "regel": "Minerale make-up die je huid verzorgt terwijl je ze draagt."
+   }
+  }
+ ],
+ "reviews": [
+  {
+   "slug": "review-1",
+   "name": "Aurélie V.",
+   "order": 0,
+   "meta": {
+    "tekst": "Professioneel, vriendelijk en een echte expert in huidverzorging/verbetering. Saskia kent overduidelijk haar vak en heeft een heel aangename aanpak. Een madam met passie en al stiekem aan het aftellen naar de volgende behandeling.",
+    "plaats": "Huidverbetering",
+    "voorbeeld": false
+   }
+  },
+  {
+   "slug": "review-2",
+   "name": "Ann G.",
+   "order": 1,
+   "meta": {
+    "tekst": "Heel lieve dame, hartelijke ontvangst. Heel proper en stijlvol salon. Gekregen waar we voor gekomen waren, een fantastische gezichtsverzorging en massage voor ons twee. Zeker voor herhaling vatbaar.",
+    "plaats": "Verwennen met twee",
+    "voorbeeld": false
+   }
+  },
+  {
+   "slug": "review-3",
+   "name": "Hilde V.",
+   "order": 2,
+   "meta": {
+    "tekst": "Gelaatsverzorging en maquillage: een rustig moment op een fijne plek: gerealiseerd door een lieve en vakbekwame dame!",
+    "plaats": "Gelaatsverzorging & make-up",
+    "voorbeeld": false
+   }
+  }
+ ],
+ "footer": [
+  {
+   "label": "Skin Relax Facials",
+   "slug": "skin-relax"
+  },
+  {
+   "label": "Skin Expert Facials",
+   "slug": "skin-expert"
+  },
+  {
+   "label": "Epilaties",
+   "slug": "epilaties"
+  },
+  {
+   "label": "Lichaamsbehandelingen",
+   "slug": "lichaam"
+  },
+  {
+   "label": "Arrangementen",
+   "slug": "arrangementen"
+  },
+  {
+   "label": "Definitieve ontharing met laser",
+   "slug": "laser"
+  }
+ ],
+ "journal": [
+  {
+   "slug": "nieuwe-openingsuren",
+   "title": "Nieuwe openingsuren",
+   "cat": "Nieuws",
+   "date": "2026-09-07",
+   "img": "public/img/zaakvoerder-toestel.webp",
+   "excerpt": "Na 27 jaar en zo’n 2.450 gewerkte avonden ga ik mijn avonduren wat minderen. Voortaan werk ik ’s avonds enkel nog op donderdag.",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Na 27 jaar en zo’n 2.450 gewerkte avonden ga ik mijn avonduren wat minderen. Voortaan werk ik ’s avonds enkel nog op donderdag."
+    },
+    {
+     "type": "p",
+     "text": "Niet getreurd: mijn openingsuren op afspraak zijn nu nóg flexibeler!"
+    },
+    {
+     "type": "hours",
+     "text": ""
+    }
+   ]
+  },
+  {
+   "slug": "peelen-na-de-zomer",
+   "title": "Waarom peelen na de zomer zo belangrijk is",
+   "cat": "Huidtips",
+   "date": "2026-08-28",
+   "img": "public/img/peeling.webp",
+   "excerpt": "Na de zomer krijg ik vaak dezelfde vraag: “Mijn huid ziet er dof en onrustig uit. Wat kan ik eraan doen?”",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Na de zomer krijg ik vaak dezelfde vraag: “Mijn huid ziet er dof en onrustig uit. Wat kan ik eraan doen?”"
+    },
+    {
+     "type": "p",
+     "text": "De zomer is heerlijk, maar zon, warmte, transpiratie en zonneproducten kunnen hun sporen nalaten op je huid. Je huid kan wat ruwer aanvoelen, minder fris ogen, poriën kunnen meer opvallen en pigmentvlekjes kunnen zichtbaarder worden."
+    },
+    {
+     "type": "p",
+     "text": "Daarom vind ik het najaar een ideaal moment om opnieuw gericht aan huidvernieuwing te werken."
+    },
+    {
+     "type": "h2",
+     "text": "Waarom is een peeling na de zomer zo interessant?"
+    },
+    {
+     "type": "p",
+     "text": "Een peeling helpt om de huid gecontroleerd te exfoliëren en overtollige dode huidcellen aan het oppervlak los te maken."
+    },
+    {
+     "type": "p",
+     "text": "Daardoor kan je huid:"
+    },
+    {
+     "type": "li",
+     "text": "gladder en zachter aanvoelen"
+    },
+    {
+     "type": "li",
+     "text": "frisser en helderder ogen"
+    },
+    {
+     "type": "li",
+     "text": "egaler worden van teint"
+    },
+    {
+     "type": "li",
+     "text": "verfijnder ogen"
+    },
+    {
+     "type": "li",
+     "text": "minder dof zijn"
+    },
+    {
+     "type": "li",
+     "text": "je thuisproducten beter opnemen"
+    },
+    {
+     "type": "p",
+     "text": "Voor mij gaat een peeling dus niet over de huid zo hard mogelijk laten vervellen. Ik wil de huid op een doordachte manier stimuleren en tegelijk haar conditie blijven ondersteunen."
+    },
+    {
+     "type": "p",
+     "text": "Met professionele peelings van Environ of Exuviance kan ik de behandeling aanpassen aan wat jouw huid op dat moment nodig heeft."
+    },
+    {
+     "type": "h2",
+     "text": "Waarom stel ik liever een kleine peelingkuur voor?"
+    },
+    {
+     "type": "p",
+     "text": "Eén peeling kan je huid al een mooie frisse boost geven."
+    },
+    {
+     "type": "p",
+     "text": "Maar wanneer ik echt aan huidverbetering wil werken, stel ik meestal liever een kleine kuur voor."
+    },
+    {
+     "type": "p",
+     "text": "Waarom?"
+    },
+    {
+     "type": "p",
+     "text": "Omdat de huid tijd nodig heeft. Met verschillende behandelingen die elkaar opvolgen, kan ik stap voor stap verder werken aan de huidstructuur, helderheid en egaliteit van je huid."
+    },
+    {
+     "type": "p",
+     "text": "Het is een beetje zoals sporten: één keer bewegen is goed, maar regelmaat geeft meestal een mooier resultaat."
+    },
+    {
+     "type": "p",
+     "text": "Daarom bekijk ik samen met jou hoeveel behandelingen jouw huid nodig heeft. Niet iedere huid heeft dezelfde kuur nodig en ook de sterkte van een peeling pas ik altijd aan."
+    },
+    {
+     "type": "h2",
+     "text": "Moet mijn huid na een peeling helemaal vervellen?"
+    },
+    {
+     "type": "p",
+     "text": "Nee."
+    },
+    {
+     "type": "p",
+     "text": "Dat is een misverstand dat ik regelmatig hoor."
+    },
+    {
+     "type": "p",
+     "text": "Een goede peeling hoeft niet automatisch te betekenen dat je dagenlang met grote velletjes rondloopt."
+    },
+    {
+     "type": "p",
+     "text": "Bijvoorbeeld bij de Environ Cool Peel wordt bewust gewerkt met een milde en gecontroleerde aanpak. Het doel is de huid ondersteunen en verfijnen zonder haar onnodig te overbelasten."
+    },
+    {
+     "type": "p",
+     "text": "Hoe je huid reageert, hangt natuurlijk af van je huidconditie, het type peeling en de intensiteit van de behandeling."
+    },
+    {
+     "type": "h2",
+     "text": "Kan een peeling helpen bij pigmentvlekken na de zomer?"
+    },
+    {
+     "type": "p",
+     "text": "Een peeling kan een mooie aanvulling zijn wanneer je huid na de zomer ongelijkmatiger oogt of pigmentvlekjes meer zichtbaar zijn geworden."
+    },
+    {
+     "type": "p",
+     "text": "Ik kijk daarbij altijd naar het volledige plaatje."
+    },
+    {
+     "type": "p",
+     "text": "Niet alleen naar de peeling, maar ook naar antioxidanten, vitamine A of andere aangepaste actieve ingrediënten én vooral naar een goede dagelijkse zonnebescherming."
+    },
+    {
+     "type": "p",
+     "text": "Want wanneer je aan pigment en huidvernieuwing werkt, blijft SPF elke dag belangrijk."
+    },
+    {
+     "type": "h2",
+     "text": "En wat met een droge of gevoelige huid?"
+    },
+    {
+     "type": "p",
+     "text": "Ook dan ga ik niet zomaar intensief peelen."
+    },
+    {
+     "type": "p",
+     "text": "Als je huidbarrière uit balans is of je huid erg droog en gevoelig aanvoelt, kan het belangrijker zijn om eerst te hydrateren en te herstellen."
+    },
+    {
+     "type": "p",
+     "text": "Pas wanneer de huid er klaar voor is, bouwen we verder op."
+    },
+    {
+     "type": "p",
+     "text": "Daarom begin ik graag met te kijken naar jouw huid, en niet gewoon naar de behandeling die toevallig populair is."
+    },
+    {
+     "type": "h2",
+     "text": "Environ of Exuviance: welke peeling past bij mij?"
+    },
+    {
+     "type": "p",
+     "text": "Dat hangt af van je huidconditie en wat je graag wilt verbeteren."
+    },
+    {
+     "type": "p",
+     "text": "Ik werk onder andere met Environ en Exuviance, twee huidverbeterende merken met verschillende mogelijkheden op vlak van exfoliatie en actieve ingrediënten."
+    },
+    {
+     "type": "p",
+     "text": "Bij de ene huid wil ik vooral werken aan een doffe teint en meer glow. Bij een andere huid ligt de focus eerder op pigment, onzuiverheden, poriën of huidveroudering."
+    },
+    {
+     "type": "p",
+     "text": "Daarom kies ik niet standaard dezelfde peeling voor iedereen."
+    },
+    {
+     "type": "h2",
+     "text": "Is thuisverzorging belangrijk tijdens een peelingkuur?"
+    },
+    {
+     "type": "p",
+     "text": "Absoluut."
+    },
+    {
+     "type": "p",
+     "text": "Een salonbehandeling kan veel doen, maar de verzorging die je iedere dag thuis gebruikt, bepaalt mee hoe je huid zich verder ontwikkelt."
+    },
+    {
+     "type": "p",
+     "text": "Ik kijk daarom ook naar je reiniging, serum, dag- en nachtverzorging en zonnebescherming."
+    },
+    {
+     "type": "p",
+     "text": "Professionele behandelingen en een goede thuisroutine versterken elkaar."
+    },
+    {
+     "type": "p",
+     "text": "Zo werken we niet alleen aan een snelle glow, maar vooral aan een huid die stap voor stap gezonder, gladder en egaler oogt."
+    },
+    {
+     "type": "h2",
+     "text": "Wanneer starten we best?"
+    },
+    {
+     "type": "p",
+     "text": "Het najaar is voor mij een ideaal moment om je huid opnieuw wat extra aandacht te geven."
+    },
+    {
+     "type": "p",
+     "text": "Na maanden van zon en warmte kunnen we opnieuw focussen op huidvernieuwing, hydratatie, pigment, huidstructuur en glow."
+    },
+    {
+     "type": "p",
+     "text": "Wil je weten welke peeling of peelingkuur bij jouw huid past? Dan bekijk ik eerst je huid en stel ik een programma voor dat aansluit bij wat jouw huid écht nodig heeft."
+    },
+    {
+     "type": "p",
+     "text": "Stralen begint bij een huid in balans."
+    }
+   ]
+  },
+  {
+   "slug": "huid-verzorgen-na-de-zomer",
+   "title": "Huid verzorgen na de zomer: tips voor een gezonde glow",
+   "cat": "Huidtips",
+   "date": "2026-08-28",
+   "img": "public/img/gelaatsverzorging.webp",
+   "excerpt": "Na de zomer merk ik vaak dat de huid wat doffer, droger of onregelmatiger aanvoelt. Zon, warmte, transpiratie en vakantiedagen kunnen hun sporen nalaten. De huid kan meer nood hebben aan hydratatie, herstel en een verzorging die opnieuw wat frisheid en glow brengt.",
+   "blocks": [
+    {
+     "type": "h2",
+     "text": "Huid verzorgen na de zomer: zo krijg je je glow weer terug"
+    },
+    {
+     "type": "p",
+     "text": "Na de zomer merk ik vaak dat de huid wat doffer, droger of onregelmatiger aanvoelt. Zon, warmte, transpiratie en vakantiedagen kunnen hun sporen nalaten. De huid kan meer nood hebben aan hydratatie, herstel en een verzorging die opnieuw wat frisheid en glow brengt."
+    },
+    {
+     "type": "p",
+     "text": "Het najaar is daarom een mooi moment om je huidverzorging opnieuw onder de loep te nemen. Met een goede thuisroutine en de juiste actieve ingrediënten kan je stap voor stap werken aan een gladdere huidstructuur, een egalere teint en een gezonde uitstraling."
+    },
+    {
+     "type": "h2",
+     "text": "Begin met een goede basisverzorging"
+    },
+    {
+     "type": "p",
+     "text": "Een mooie huid begint voor mij altijd bij een goede basis. Je hoeft niet meteen heel veel producten te gebruiken. Het belangrijkste is dat je verzorging bij jouw huid past en dat je ze consequent gebruikt."
+    },
+    {
+     "type": "p",
+     "text": "Ik adviseer meestal een routine met:"
+    },
+    {
+     "type": "p",
+     "text": "Reiniging → serum → dag- of nachtverzorging → overdag SPF"
+    },
+    {
+     "type": "p",
+     "text": "Een goede reiniging verwijdert vuil, talg, zonnebescherming en andere restjes die zich gedurende de dag op de huid opstapelen. Daarna kan een serum gericht inspelen op wat jouw huid nodig heeft, zoals extra hydratatie, ondersteuning bij een doffe teint of huidveroudering."
+    },
+    {
+     "type": "p",
+     "text": "Een passende dag- en nachtverzorging helpt om de huid comfortabel en gehydrateerd te houden en ondersteunt de huidbarrière."
+    },
+    {
+     "type": "p",
+     "text": "Ook na de zomer blijft dagelijkse zonnebescherming belangrijk. UV-straling is er namelijk het hele jaar door."
+    },
+    {
+     "type": "h2",
+     "text": "Exfoliatie helpt bij een doffe huid na de zomer"
+    },
+    {
+     "type": "p",
+     "text": "Wanneer er veel dode huidcellen op het huidoppervlak blijven liggen, kan de huid er wat grauwer of ruwer uitzien. Een milde exfoliatie helpt om die opgehoopte huidcellen te verwijderen."
+    },
+    {
+     "type": "p",
+     "text": "Daardoor kan de huid gladder aanvoelen en frisser ogen. Ook kunnen je andere verzorgingsproducten mooi aansluiten binnen je routine."
+    },
+    {
+     "type": "p",
+     "text": "Naast een klassieke exfoliatie kunnen zuren zoals AHA’s en BHA’s interessant zijn."
+    },
+    {
+     "type": "p",
+     "text": "AHA’s werken vooral aan het huidoppervlak en kunnen helpen bij een doffe teint en een ongelijkmatige huidstructuur. BHA’s zijn eerder interessant bij een huid die snel last heeft van verstopte poriën en onzuiverheden."
+    },
+    {
+     "type": "p",
+     "text": "Ik vind het vooral belangrijk om zuren rustig op te bouwen. Meer of vaker exfoliëren geeft niet automatisch een mooier resultaat. Te veel exfoliatie kan de huid juist gevoeliger en droger maken."
+    },
+    {
+     "type": "h2",
+     "text": "Vitamine C en antioxidanten voor een helderdere huid"
+    },
+    {
+     "type": "p",
+     "text": "Een ander ingrediënt dat ik graag adviseer voor extra uitstraling is vitamine C."
+    },
+    {
+     "type": "p",
+     "text": "Een goed vitamine C-serum kan helpen om de huid er frisser, egaler en helderder uit te laten zien. Vitamine C is daarnaast een antioxidant en helpt de huid te ondersteunen tegen dagelijkse invloeden van buitenaf."
+    },
+    {
+     "type": "p",
+     "text": "Ook andere antioxidanten kunnen een mooie aanvulling zijn binnen je huidverzorging. Ze passen goed in een routine die gericht is op huidverbetering, bescherming en het behouden van een gezonde glow."
+    },
+    {
+     "type": "p",
+     "text": "Vooral na de zomer vind ik dit een fijn moment om opnieuw wat meer aandacht te geven aan hydratatie, herstel en een gelijkmatige teint."
+    },
+    {
+     "type": "h2",
+     "text": "Vergeet hydratatie en de huidbarrière niet"
+    },
+    {
+     "type": "p",
+     "text": "Na veel zon, warmte en airconditioning kan de huid droger of trekkeriger aanvoelen. Daarom focus ik niet alleen op exfoliatie en actieve ingrediënten."
+    },
+    {
+     "type": "p",
+     "text": "Hydratatie blijft minstens even belangrijk."
+    },
+    {
+     "type": "p",
+     "text": "Ingrediënten die vocht helpen vasthouden en de huidbarrière ondersteunen, kunnen ervoor zorgen dat de huid zachter, comfortabeler en voller aanvoelt. Een sterke huidbarrière helpt de huid bovendien om beter om te gaan met invloeden van buitenaf."
+    },
+    {
+     "type": "p",
+     "text": "Heb je een gevoelige of droge huid? Dan zou ik eerst focussen op herstel en hydratatie en pas daarna intensievere actieve ingrediënten toevoegen."
+    },
+    {
+     "type": "h2",
+     "text": "Een gezonde glow krijg je vooral door regelmaat"
+    },
+    {
+     "type": "p",
+     "text": "Een stralende huid ontstaat meestal niet door één intensieve behandeling of één wonderproduct."
+    },
+    {
+     "type": "p",
+     "text": "De mooiste huidverbetering zie ik wanneer je consequent een verzorging gebruikt die past bij jouw huid."
+    },
+    {
+     "type": "p",
+     "text": "Denk aan een goede reiniging, een gericht serum, voldoende hydratatie, dagelijkse zonnebescherming en eventueel een zorgvuldig gekozen exfoliatie."
+    },
+    {
+     "type": "p",
+     "text": "Zo geef je je huid na de zomer opnieuw de kans om in balans te komen en werk je stap voor stap aan een huid die gladder, zachter, egaler en natuurlijk stralend oogt."
+    },
+    {
+     "type": "p",
+     "text": "Twijfel je welke producten of actieve ingrediënten bij jouw huid passen? Dan kijk ik liever eerst naar wat jouw huid op dit moment nodig heeft. Zo kan je gericht verzorgen zonder je huid onnodig te overbelasten."
+    }
+   ]
+  },
+  {
+   "slug": "huidanalyse-toestel",
+   "title": "Nieuw: ons huidanalysetoestel",
+   "cat": "Nieuw",
+   "date": "2024-09-05",
+   "img": "public/img/huidanalyse-scan.webp",
+   "excerpt": "Huidanalyse is onlosmakelijk verbonden aan professionele huidverbetering en is de eerste stap naar een ideale huid. Veel huidaandoeningen beginnen in de diepere huidlagen en worden pas in de loop van de tijd zichtbaar. De OBSERV 520X analyseert ook de diepere huidlagen en brengt alle huidkenmerken haarscherp in beeld. Zien is geloven!",
+   "blocks": [
+    {
+     "type": "p",
+     "text": "Huidanalyse is onlosmakelijk verbonden aan professionele huidverbetering en is de eerste stap naar een ideale huid. Veel huidaandoeningen beginnen in de diepere huidlagen en worden pas in de loop van de tijd zichtbaar. De OBSERV 520X analyseert ook de diepere huidlagen en brengt alle huidkenmerken haarscherp in beeld. Zien is geloven!"
+    },
+    {
+     "type": "p",
+     "text": "Op basis van deze analyse krijg je uitleg over de conditie van je huid, ontvang je deskundig huidadvies en stellen we je geheel vrijblijvend behandeling(en) en thuisproducten voor. Begin dus niet zomaar uit het niets allerlei zalfjes te smeren!"
+    },
+    {
+     "type": "p",
+     "text": "Jouw huid, mijn passie!"
+    }
+   ]
+  }
+ ]
+}

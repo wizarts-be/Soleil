@@ -1,0 +1,263 @@
+<?php
+/**
+ * Zet de inhoud van de statische site in WordPress.
+ *
+ * Gebruik (WP-CLI, vanuit de repo-root):
+ *   node wordpress/import/build_data.mjs
+ *   wordpress/bin/wp eval-file wordpress/import/import.php
+ *
+ * Mag opnieuw gedraaid worden: bestaande items (zelfde slug) worden bijgewerkt,
+ * foto's worden maar één keer geüpload (bijgehouden in _soleil_source).
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+require_once ABSPATH . 'wp-admin/includes/file.php';
+require_once ABSPATH . 'wp-admin/includes/media.php';
+require_once ABSPATH . 'wp-admin/includes/image.php';
+
+define( 'SOLEIL_IMPORT_ROOT', dirname( __DIR__, 2 ) );
+$data = json_decode( file_get_contents( __DIR__ . '/content/data.json' ), true );
+if ( ! $data ) {
+	WP_CLI::error( 'content/data.json ontbreekt. Draai eerst: node wordpress/import/build_data.mjs' );
+}
+
+function soleil_log( $msg ) {
+	WP_CLI::log( $msg );
+}
+
+/* ---------------------------------------------------------------- Media */
+
+/**
+ * Bijlage voor een bestand in de repo (bv. public/img/peeling.webp). Eén keer uploaden, daarna hergebruiken.
+ */
+function soleil_import_media( $source ) {
+	if ( ! $source ) {
+		return 0;
+	}
+	$existing = soleil_media_by_source( $source );
+	if ( $existing ) {
+		return $existing;
+	}
+	$path = SOLEIL_IMPORT_ROOT . '/' . $source;
+	if ( ! file_exists( $path ) ) {
+		soleil_log( "  ! bestand ontbreekt: $source" );
+		return 0;
+	}
+	$tmp = wp_tempnam( basename( $path ) );
+	copy( $path, $tmp );
+	$id = media_handle_sideload( array( 'name' => basename( $path ), 'tmp_name' => $tmp ), 0 );
+	if ( is_wp_error( $id ) ) {
+		soleil_log( '  ! upload mislukt: ' . $source . ' (' . $id->get_error_message() . ')' );
+		@unlink( $tmp ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+		return 0;
+	}
+	update_post_meta( $id, '_soleil_source', $source );
+	soleil_log( '  foto: ' . basename( $path ) );
+	return (int) $id;
+}
+
+/* ---------------------------------------------------------------- Posts */
+
+function soleil_upsert( $type, $slug, $fields, $meta = array() ) {
+	$existing = get_posts( array(
+		'post_type'   => $type,
+		'name'        => $slug,
+		'post_status' => 'any',
+		'numberposts' => 1,
+	) );
+	$postarr = array_merge( array(
+		'post_type'      => $type,
+		'post_name'      => $slug,
+		'post_status'    => 'publish',
+		'post_author'    => 1,
+		'comment_status' => 'closed',
+		'ping_status'    => 'closed',
+	), $fields );
+	if ( $existing ) {
+		$postarr['ID'] = $existing[0]->ID;
+	}
+	$id = wp_insert_post( wp_slash( $postarr ), true );
+	if ( is_wp_error( $id ) ) {
+		soleil_log( "  ! $type $slug: " . $id->get_error_message() );
+		return 0;
+	}
+	foreach ( $meta as $key => $value ) {
+		update_post_meta( $id, $key, is_array( $value ) || is_bool( $value ) ? $value : wp_slash( $value ) );
+	}
+	return $id;
+}
+
+function soleil_json_meta( $value ) {
+	return null === $value ? '' : wp_json_encode( $value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+}
+
+/* ---------------------------------------------------------------- Instellingen */
+
+soleil_log( 'Instellingen' );
+update_option( 'blogname', 'Instituut Soleil' );
+update_option( 'blogdescription', 'Huidverbetering in Beervelde' );
+update_option( 'timezone_string', 'Europe/Brussels' );
+update_option( 'date_format', 'j F Y' );
+update_option( 'time_format', 'H:i' );
+update_option( 'start_of_week', 1 );
+update_option( 'default_comment_status', 'closed' );
+update_option( 'default_ping_status', 'closed' );
+update_option( 'default_pingback_flag', 0 );
+update_option( 'permalink_structure', '/journaal/%postname%/' );
+
+$settings = $data['settings'];
+foreach ( $settings['hours'] as $d => $h ) {
+	$settings[ 'hours_' . $d ] = $h;
+}
+unset( $settings['hours'] );
+$settings['spot_image'] = soleil_import_media( $settings['spot_image'] );
+update_option( 'soleil_settings', $settings );
+
+/* ---------------------------------------------------------------- Activiteiten (vóór de behandelingen: de laserpagina verwijst ernaar) */
+
+soleil_log( 'Activiteiten' );
+$activities = array();
+foreach ( $data['activities'] as $a ) {
+	$id = soleil_upsert( 'activiteit', $a['slug'], array( 'post_title' => $a['name'], 'menu_order' => $a['order'] ), $a['meta'] );
+	if ( $id ) {
+		set_post_thumbnail( $id, soleil_import_media( $a['img'] ) );
+		$activities[ $a['slug'] ] = $id;
+	}
+}
+
+/* ---------------------------------------------------------------- Behandelingen */
+
+soleil_log( 'Behandelingen' );
+$groups = array();
+foreach ( $data['groups'] as $i => $name ) {
+	$term = term_exists( $name, 'groep' ) ?: wp_insert_term( $name, 'groep' );
+	$groups[ $name ] = (int) $term['term_id'];
+	update_term_meta( $groups[ $name ], 'volgorde', $i );
+}
+
+foreach ( $data['treatments'] as $t ) {
+	$meta = $t['meta'];
+	foreach ( array( 'prijzen', 'waarom', 'extra' ) as $key ) {
+		$meta[ $key ] = soleil_json_meta( $meta[ $key ] );
+	}
+	if ( $meta['delen'] ) {
+		foreach ( $meta['delen'] as &$part ) {
+			$part['foto'] = soleil_import_media( $part['foto'] );
+		}
+		unset( $part );
+	}
+	if ( $meta['makeup'] ) {
+		$meta['makeup']['verhaal']['foto'] = soleil_import_media( $meta['makeup']['verhaal']['foto'] );
+	}
+	$meta['delen']            = soleil_json_meta( $meta['delen'] );
+	$meta['makeup']           = soleil_json_meta( $meta['makeup'] );
+	$meta['extra_activiteit'] = $t['extra_activiteit'] ? ( $activities[ $t['extra_activiteit'] ] ?? 0 ) : 0;
+
+	$id = soleil_upsert( 'behandeling', $t['slug'], array(
+		'post_title'   => $t['name'],
+		'menu_order'   => $t['order'],
+		'post_content' => '<!-- wp:soleil/behandelingkaart /-->',
+	), $meta );
+	if ( $id ) {
+		wp_set_object_terms( $id, array( $groups[ $t['group'] ] ), 'groep' );
+		set_post_thumbnail( $id, soleil_import_media( $t['img'] ) );
+		soleil_log( '  ' . $t['name'] );
+	}
+}
+
+/* ---------------------------------------------------------------- Producten, merken, reviews */
+
+soleil_log( 'Producten, merken en reviews' );
+foreach ( array( 'products' => 'product', 'brands' => 'merk', 'reviews' => 'review' ) as $key => $type ) {
+	foreach ( $data[ $key ] as $item ) {
+		$id = soleil_upsert( $type, $item['slug'], array( 'post_title' => $item['name'], 'menu_order' => $item['order'] ), $item['meta'] );
+		if ( $id && ! empty( $item['img'] ) ) {
+			set_post_thumbnail( $id, soleil_import_media( $item['img'] ) );
+		} elseif ( $id ) {
+			delete_post_thumbnail( $id );
+		}
+	}
+}
+
+/* ---------------------------------------------------------------- Journaal */
+
+soleil_log( 'Journaal' );
+$cats = array();
+foreach ( $data['journal'] as $i => $p ) {
+	if ( ! isset( $cats[ $p['cat'] ] ) ) {
+		$term              = term_exists( $p['cat'], 'category' ) ?: wp_insert_term( $p['cat'], 'category' );
+		$cats[ $p['cat'] ] = (int) $term['term_id'];
+	}
+
+	// Blokken uit journal.json → kernblokken. Opeenvolgende lijstitems worden één lijst, zoals in journaal/[slug].astro.
+	$blocks = array( '<!-- wp:soleil/berichtkaart {"lock":{"move":true,"remove":true}} /-->' );
+	$list   = array();
+	$flush  = function () use ( &$list, &$blocks ) {
+		if ( $list ) {
+			$items    = implode( "\n\n", array_map( fn( $x ) => "<!-- wp:list-item -->\n<li>" . esc_html( $x ) . "</li>\n<!-- /wp:list-item -->", $list ) );
+			$blocks[] = "<!-- wp:list -->\n<ul class=\"wp-block-list\">" . $items . "</ul>\n<!-- /wp:list -->";
+			$list     = array();
+		}
+	};
+	foreach ( $p['blocks'] as $b ) {
+		if ( 'li' === $b['type'] ) {
+			$list[] = $b['text'];
+			continue;
+		}
+		$flush();
+		if ( 'p' === $b['type'] ) {
+			$blocks[] = "<!-- wp:paragraph -->\n<p>" . esc_html( $b['text'] ) . "</p>\n<!-- /wp:paragraph -->";
+		} elseif ( 'h2' === $b['type'] ) {
+			$blocks[] = "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">" . esc_html( $b['text'] ) . "</h2>\n<!-- /wp:heading -->";
+		} elseif ( 'hours' === $b['type'] ) {
+			$blocks[] = '<!-- wp:soleil/openingsuren /-->';
+		}
+	}
+	$flush();
+
+	// Zelfde datum: een minuut verschil houdt de volgorde van journal.json aan.
+	$id = soleil_upsert( 'post', $p['slug'], array(
+		'post_title'    => $p['title'],
+		'post_excerpt'  => $p['excerpt'],
+		'post_date'     => $p['date'] . ' 12:' . sprintf( '%02d', 59 - $i ) . ':00',
+		'post_category' => array( $cats[ $p['cat'] ] ),
+		'post_content'  => implode( "\n\n", $blocks ),
+	) );
+	if ( $id ) {
+		set_post_thumbnail( $id, soleil_import_media( $p['img'] ) );
+		soleil_log( '  ' . $p['title'] );
+	}
+}
+
+// Voorbeeldinhoud van een verse installatie.
+foreach ( array( 'hello-world', 'hallo-wereld' ) as $slug ) {
+	$p = get_page_by_path( $slug, OBJECT, 'post' );
+	if ( $p ) {
+		wp_delete_post( $p->ID, true );
+	}
+}
+
+/* ---------------------------------------------------------------- Footermenu */
+
+soleil_log( 'Menu' );
+$menu    = wp_get_nav_menu_object( 'Footer: behandelingen' );
+$menu_id = $menu ? $menu->term_id : wp_create_nav_menu( 'Footer: behandelingen' );
+foreach ( (array) wp_get_nav_menu_items( $menu_id ) as $old ) {
+	wp_delete_post( $old->ID, true );
+}
+foreach ( $data['footer'] as $i => $f ) {
+	$t = get_page_by_path( $f['slug'], OBJECT, 'behandeling' );
+	wp_update_nav_menu_item( $menu_id, 0, array(
+		'menu-item-title'     => $f['label'],
+		'menu-item-object'    => 'behandeling',
+		'menu-item-object-id' => $t ? $t->ID : 0,
+		'menu-item-type'      => 'post_type',
+		'menu-item-status'    => 'publish',
+		'menu-item-position'  => $i + 1,
+	) );
+}
+set_theme_mod( 'nav_menu_locations', array( 'footer-behandelingen' => $menu_id ) );
+
+flush_rewrite_rules();
+soleil_log( 'Klaar.' );

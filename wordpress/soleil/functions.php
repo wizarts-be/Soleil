@@ -8,6 +8,7 @@ defined( 'ABSPATH' ) || exit;
 require_once __DIR__ . '/inc/helpers.php';
 require_once __DIR__ . '/inc/settings.php';
 require_once __DIR__ . '/inc/content-model.php';
+require_once __DIR__ . '/inc/treatments.php';
 require_once __DIR__ . '/inc/site-chrome.php';
 require_once __DIR__ . '/inc/blocks.php';
 require_once __DIR__ . '/inc/admin.php';
@@ -40,6 +41,9 @@ remove_action( 'wp_footer', 'the_block_template_skip_link' );
 
 // Teksten blijven letterlijk zoals ingevoerd: geen automatische kastlijnen of gekrulde quotes.
 add_filter( 'run_wptexturize', '__return_false' );
+
+// Foto's krijgen geen decoding="async": de statische site had het niet, en de markup blijft gelijk.
+add_filter( 'wp_img_tag_add_decoding_attr', '__return_false' );
 
 // Geen emoji-script, geen oEmbed-ontdekking: de statische site had ze ook niet.
 remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
