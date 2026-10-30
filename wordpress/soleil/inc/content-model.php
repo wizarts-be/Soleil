@@ -131,7 +131,7 @@ function soleil_fields() {
 			'voorbeeld' => array( 'boolean', 'Voorbeeldinhoud', 'Aan = op de pagina Nieuw staat dat de inhoud nog aangevuld wordt.' ),
 		),
 		'merk'        => array(
-			'regel' => array( 'text', 'Korte regel', 'Staat onder de naam. De foto kies je rechts; zonder foto staat de naam in de tegel.' ),
+			'regel' => array( 'text', 'Korte regel', 'Staat onder de naam. De foto kies je hieronder; zonder foto staat de naam in de tegel.' ),
 		),
 		'review'      => array(
 			'tekst'     => array( 'text', 'Review', 'Letterlijk zoals de klant ze schreef.' ),
@@ -224,6 +224,11 @@ add_action( 'add_meta_boxes', function ( $type ) {
 		return;
 	}
 	add_meta_box( 'soleil-fields', 'Gegevens', 'soleil_meta_box', $type, 'normal', 'high' );
+	// De foto onder de gegevens in plaats van onderaan rechts, waar je ze niet ziet staan.
+	if ( post_type_supports( $type, 'thumbnail' ) ) {
+		remove_meta_box( 'postimagediv', $type, 'side' );
+		add_meta_box( 'postimagediv', 'Foto', 'post_thumbnail_meta_box', $type, 'normal', 'high' );
+	}
 } );
 
 function soleil_meta_box( $post ) {
