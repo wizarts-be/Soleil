@@ -165,7 +165,7 @@ add_action( 'init', function () {
 					$args += array( 'type' => 'string', 'default' => '', 'sanitize_callback' => 'soleil_sanitize_json' );
 					break;
 				case 'dates':
-					$args += array( 'type' => 'array', 'default' => array(), 'sanitize_callback' => 'soleil_sanitize_dates', 'show_in_rest' => array( 'schema' => array( 'type' => 'array', 'items' => array( 'type' => 'string' ) ) ) );
+					$args = array_merge( $args, array( 'type' => 'array', 'default' => array(), 'sanitize_callback' => 'soleil_sanitize_dates', 'show_in_rest' => array( 'schema' => array( 'type' => 'array', 'items' => array( 'type' => 'string' ) ) ) ) );
 					break;
 				default:
 					$args += array( 'type' => 'string', 'default' => '' );

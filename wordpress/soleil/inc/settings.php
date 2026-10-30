@@ -185,7 +185,8 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 
 function soleil_settings_page() {
 	$tabs    = soleil_settings_fields();
-	$current = isset( $_GET['tab'], $tabs[ $_GET['tab'] ] ) ? sanitize_key( $_GET['tab'] ) : 'praktisch'; // phpcs:ignore WordPress.Security.NonceVerification
+	$tab_key = isset( $_GET['tab'] ) && is_string( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+	$current = isset( $tabs[ $tab_key ] ) ? $tab_key : 'praktisch';
 	$tab     = $tabs[ $current ];
 	?>
 	<div class="wrap soleil-settings">
@@ -253,6 +254,8 @@ function soleil_settings_field( $key, $type ) {
 				. '<button type="button" class="button-link" data-up aria-label="Omhoog">↑</button>'
 				. '<button type="button" class="button-link button-link-delete" data-remove>Verwijderen</button></li>';
 		};
+		// Altijd meesturen: zonder regels zou het veld ontbreken en bleef de oude lijst staan.
+		echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="">';
 		echo '<ul id="' . esc_attr( $id ) . '" style="margin:0">';
 		foreach ( (array) $value as $i => $item ) {
 			echo $row( $i, $item['label'] ?? '', $item['behandeling'] ?? '' ); // phpcs:ignore WordPress.Security.EscapeOutput
@@ -304,8 +307,10 @@ function soleil_settings_field( $key, $type ) {
 		return;
 	}
 
-	$input = array( 'url' => 'url', 'email' => 'email' )[ $type ] ?? 'text';
-	printf( '<input type="%s" class="regular-text" id="%s" name="%s" value="%s">', esc_attr( $input ), esc_attr( $id ), esc_attr( $name ), esc_attr( $value ) );
+	// Links als tekstveld: type="url" weigert een pad op deze site (/privacy-policy/), en dan slaat de browser het hele tabblad niet op.
+	$input = array( 'email' => 'email' )[ $type ] ?? 'text';
+	$extra = 'url' === $type ? ' inputmode="url" spellcheck="false"' : '';
+	printf( '<input type="%s" class="regular-text" id="%s" name="%s" value="%s"%s>', esc_attr( $input ), esc_attr( $id ), esc_attr( $name ), esc_attr( $value ), $extra ); // phpcs:ignore WordPress.Security.EscapeOutput
 }
 
 function soleil_settings_image_script() {

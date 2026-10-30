@@ -18,7 +18,14 @@ Deze code staat enkel op de branch `wordpress`. `main` is de Astro-site die de k
 wordpress/bin/import            # site.ts, journal.json en de vaste pagina's -> WordPress (opnieuw draaien mag)
 ```
 
-Het script bouwt `import/content/data.json` en `import/content/pages/*.html` en draait dan `import/import.php`.
+Het script zet eerst het thema actief en WordPress in het Nederlands (`nl_BE`, nodig voor de data), bouwt dan
+`import/content/data.json` en `import/content/pages/*.html` en draait `import/import.php`. Op een lege WordPress-installatie
+is niets anders nodig: geen thema activeren, geen taal, geen permalinks, geen pagina's of menu's met de hand.
+
+`wordpress/bin/import` werkt op de Local-site. Op de server gelden de stappen in `LIVE.md` (thema en taal in stap 3).
+
+Een andere installatie op dezelfde Local-database (bv. een schone test):
+`SOLEIL_WP_PATH=/pad/naar/wordpress wordpress/bin/import`.
 
 **Slot na de oplevering.** Staat de optie `soleil_opgeleverd` aan, dan weigert de import: hij zou de teksten, prijzen
 en instellingen van Saskia overschrijven. Toch nodig? `wordpress/bin/import --force` (vraagt om "ja" te typen).

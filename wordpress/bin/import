@@ -18,6 +18,18 @@ if [ -n "$FORCE" ]; then
 	[ "$ok" = "ja" ] || { echo "Gestopt."; exit 1; }
 fi
 
+# Eerst het slot: een opgeleverde site niet aanraken (ook thema en taal niet) zonder --force.
+if [ -z "$FORCE" ] && [ -n "$(wordpress/bin/wp option get soleil_opgeleverd 2>/dev/null)" ] && [ "$(wordpress/bin/wp option get soleil_opgeleverd 2>/dev/null)" != "0" ]; then
+	echo "De site is opgeleverd (optie soleil_opgeleverd): de import zou de aanpassingen van Saskia overschrijven." >&2
+	echo "Wil je dat echt, draai dan: wordpress/bin/import --force" >&2
+	exit 1
+fi
+
+# Een schone installatie klaarzetten: thema actief, WordPress in het Nederlands (voor de data, bv. "Donderdag 29 oktober 2026").
+wordpress/bin/wp theme is-active soleil || wordpress/bin/wp theme activate soleil
+wordpress/bin/wp language core is-installed nl_BE || wordpress/bin/wp language core install nl_BE
+[ "$(wordpress/bin/wp option get WPLANG 2>/dev/null)" = "nl_BE" ] || wordpress/bin/wp site switch-language nl_BE
+
 node wordpress/import/build_data.mjs
 node wordpress/import/build_pages.mjs
 wordpress/bin/wp eval-file wordpress/import/import.php $FORCE

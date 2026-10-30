@@ -432,7 +432,7 @@ function soleil_block_activities() {
 function soleil_block_contact_card() {
 	return '<div class="card rv">'
 		. '<p class="big-line">' . esc_html( soleil_setting( 'street' ) ) . '<br>' . esc_html( soleil_setting( 'city' ) ) . '</p>'
-		. '<p style="margin-top:20px"><a class="link" href="' . esc_attr( soleil_setting( 'phone_href' ) ) . '">' . esc_html( soleil_setting( 'phone' ) ) . '</a></p>'
+		. '<p style="margin-top:20px"><a class="link" href="' . esc_url( soleil_setting( 'phone_href' ) ) . '">' . esc_html( soleil_setting( 'phone' ) ) . '</a></p>'
 		. '<p style="margin-top:8px"><a class="link" href="mailto:' . esc_attr( soleil_setting( 'email' ) ) . '">' . esc_html( soleil_setting( 'email' ) ) . '</a></p>'
 		. '<div class="actions" style="margin-top:28px">' . soleil_book_button() . '</div>'
 		. '</div>';

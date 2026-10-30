@@ -94,8 +94,8 @@ function soleil_render_site_header() {
 		. '<div class="menu" id="menu" data-sheet><div class="wrap menu-in">'
 		. '<nav class="menu-treat" aria-label="Behandelingen">' . $lists . '</nav>'
 		. '<div class="menu-side"><nav aria-label="Pagina\'s"><ul role="list">' . $pages . '</ul></nav>' . $card
-		. '<p class="menu-contact"><a href="' . esc_attr( soleil_setting( 'phone_href' ) ) . '">' . soleil_icon( 'phone' ) . esc_html( soleil_setting( 'phone' ) ) . '</a>'
-		. '<a href="' . esc_url( soleil_setting( 'route' ) ) . '"' . soleil_blank() . '>' . soleil_icon( 'map-pin' ) . esc_html( soleil_setting( 'street' ) ) . ', Beervelde</a></p>'
+		. '<p class="menu-contact"><a href="' . esc_url( soleil_setting( 'phone_href' ) ) . '">' . soleil_icon( 'phone' ) . esc_html( soleil_setting( 'phone' ) ) . '</a>'
+		. '<a href="' . esc_url( soleil_setting( 'route' ) ) . '"' . soleil_blank() . '>' . soleil_icon( 'map-pin' ) . esc_html( soleil_setting( 'street' ) . ', ' . preg_replace( '/^\d{4}\s+/', '', soleil_setting( 'city' ) ) ) . '</a></p>'
 		. '</div></div></div>'
 		. '<a class="dock btn" href="' . esc_url( $booking ) . '"' . soleil_blank() . ' data-dock>Afspraak maken</a>';
 }
@@ -109,7 +109,7 @@ function soleil_render_site_footer() {
 		$treatments .= '<li><a href="' . esc_url( soleil_treatment_url( $item['behandeling'] ) ) . '">' . esc_html( $item['label'] ) . '</a></li>';
 	}
 
-	$tel  = '<a href="' . esc_attr( soleil_setting( 'phone_href' ) ) . '">' . esc_html( soleil_setting( 'phone' ) ) . '</a>';
+	$tel  = '<a href="' . esc_url( soleil_setting( 'phone_href' ) ) . '">' . esc_html( soleil_setting( 'phone' ) ) . '</a>';
 	$mail = '<a href="mailto:' . esc_attr( soleil_setting( 'email' ) ) . '">' . esc_html( soleil_setting( 'email' ) ) . '</a>';
 
 	return '<footer class="ft"><div class="wrap ft-top">'

@@ -2,6 +2,8 @@
 # WP-CLI voor de Local-site "soleil", zonder Local's site shell te openen.
 # Gebruik: wordpress/bin/wp <commando>   (bv. wordpress/bin/wp post list)
 # Vereist: Local draait en de site is gestart.
+# Een andere WordPress-installatie op dezelfde Local-database (bv. een schone testinstallatie):
+#   SOLEIL_WP_PATH=/pad/naar/wordpress wordpress/bin/import
 
 SITE_PATH="$HOME/Local Sites/soleil"
 LOCAL_DATA="$HOME/Library/Application Support/Local"
@@ -19,4 +21,4 @@ SOCKET="$LOCAL_DATA/run/$SITE_ID/mysql/mysqld.sock"
 [ -S "$SOCKET" ] || { echo "Database draait niet: start de site in Local." >&2; exit 1; }
 
 exec "$PHP_BIN" -d mysqli.default_socket="$SOCKET" -d pdo_mysql.default_socket="$SOCKET" -d memory_limit=512M \
-  "/Applications/Local.app/Contents/Resources/extraResources/bin/wp-cli/wp-cli.phar" --path="$SITE_PATH/app/public" "$@"
+  "/Applications/Local.app/Contents/Resources/extraResources/bin/wp-cli/wp-cli.phar" --path="${SOLEIL_WP_PATH:-$SITE_PATH/app/public}" "$@"
