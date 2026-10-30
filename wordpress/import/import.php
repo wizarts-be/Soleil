@@ -2,15 +2,20 @@
 /**
  * Zet de inhoud van de statische site in WordPress.
  *
- * Gebruik (WP-CLI, vanuit de repo-root):
- *   node wordpress/import/build_data.mjs
- *   wordpress/bin/wp eval-file wordpress/import/import.php
+ * Gebruik (vanuit de repo-root): wordpress/bin/import          (bouwt data.json en de pagina's, draait dan dit script)
  *
  * Mag opnieuw gedraaid worden: bestaande items (zelfde slug) worden bijgewerkt,
  * foto's worden maar één keer geüpload (bijgehouden in _soleil_source).
+ *
+ * Slot: na de oplevering staat de optie soleil_opgeleverd aan. Dan weigert de import, want ze zou de teksten,
+ * prijzen en instellingen van Saskia overschrijven met die van de statische site. Toch draaien: wordpress/bin/import --force
  */
 
 defined( 'ABSPATH' ) || exit;
+
+if ( get_option( 'soleil_opgeleverd' ) && ! in_array( 'force', $args ?? array(), true ) ) {
+	WP_CLI::error( "De site is opgeleverd (optie soleil_opgeleverd): de import zou de aanpassingen van Saskia overschrijven.\nWil je dat echt, draai dan: wordpress/bin/import --force" );
+}
 
 require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once ABSPATH . 'wp-admin/includes/media.php';
@@ -282,26 +287,17 @@ foreach ( array( 'test', 'sample-page', 'voorbeeld-pagina' ) as $slug ) {
 	}
 }
 
-/* ---------------------------------------------------------------- Footermenu */
+/* ---------------------------------------------------------------- Footer: lijst behandelingen (Soleil > Footer) */
 
-soleil_log( 'Menu' );
-$menu    = wp_get_nav_menu_object( 'Footer: behandelingen' );
-$menu_id = $menu ? $menu->term_id : wp_create_nav_menu( 'Footer: behandelingen' );
-foreach ( (array) wp_get_nav_menu_items( $menu_id ) as $old ) {
-	wp_delete_post( $old->ID, true );
+$settings                 = get_option( 'soleil_settings', array() );
+$settings['footer_items'] = array_map( fn( $f ) => array( 'label' => $f['label'], 'behandeling' => $f['slug'] ), $data['footer'] );
+update_option( 'soleil_settings', $settings );
+
+// Vroegere versies gebruikten hiervoor een WordPress-menu.
+$old_menu = wp_get_nav_menu_object( 'Footer: behandelingen' );
+if ( $old_menu ) {
+	wp_delete_nav_menu( $old_menu->term_id );
 }
-foreach ( $data['footer'] as $i => $f ) {
-	$t = get_page_by_path( $f['slug'], OBJECT, 'behandeling' );
-	wp_update_nav_menu_item( $menu_id, 0, array(
-		'menu-item-title'     => $f['label'],
-		'menu-item-object'    => 'behandeling',
-		'menu-item-object-id' => $t ? $t->ID : 0,
-		'menu-item-type'      => 'post_type',
-		'menu-item-status'    => 'publish',
-		'menu-item-position'  => $i + 1,
-	) );
-}
-set_theme_mod( 'nav_menu_locations', array( 'footer-behandelingen' => $menu_id ) );
 
 flush_rewrite_rules();
 soleil_log( 'Klaar.' );

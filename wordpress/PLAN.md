@@ -60,7 +60,7 @@ met een gele balk "Deze lijst vult zich vanzelf uit … Aanpassen doe je daar" +
 | Blok | Toont | Bron | Waar |
 |---|---|---|---|
 | `site-header` | skip-link, header met logo, nav, mega-paneel Behandelingen, mobiel menu, dock-knop | behandelingen per groep (CPT), instellingen (boeking, telefoon, route, adres), foto van Skin Discovery in de menu-kaart | `parts/header.html` |
-| `site-footer` | slogan, boekknop, openingsuren, behandelingenlijst, contact, onderbalk | instellingen, menu "Footer: behandelingen" (Weergave > Menu's, labels van de klant: "Skin Relax Facials", …) | `parts/footer.html` |
+| `site-footer` | slogan, boekknop, openingsuren, behandelingenlijst, contact, onderbalk | instellingen, ook de behandelingenlijst (Soleil > Footer, labels van de klant: "Skin Relax Facials", …) | `parts/footer.html` |
 | `nieuwsbrief` | popup rechtsonder | vaste tekst, privacy-url uit instellingen | `parts/footer.html` |
 | `openingsuren` | `.week` met dagen, uren, notitie; vandaag gemarkeerd door main.js | instellingen (hours, hoursNote) | footer, contact, in artikels (met `margin-block:1.6em`-wrapper) |
 | `behandeling-switch` | `.tswitch` met alle behandelingen, groepen gescheiden | CPT behandeling | `single-behandeling.html` |
@@ -185,7 +185,9 @@ wordpress/
 - **Editor-CSS in `assets/css/editor.css`** in plaats van een heredoc in admin.php.
 - **Vaste pagina's met `templateLock: contentOnly`.**
 - **`soleil/el` in plaats van `core/group`**, plus `htmlAttrs` op kernblokken en herschreven knoppen: de HTML moet exact de bestaande zijn.
-- **Header zonder WordPress-menu**: de opbouw ligt vast (behandelingen uit de CPT, vaste pagina's). Enkel de footerlijst is een menu.
+- **Geen WordPress-menu's**: de header ligt vast (behandelingen uit de CPT, vaste pagina's). De lijst behandelingen in de
+  footer staat op de instellingenpagina: een menu vraagt het recht `edit_theme_options`, en daarmee ziet een redacteur
+  ook thema's en de site-editor (fase 6).
 - **Importbouwers in Node** in plaats van Python, omdat site.ts TypeScript is (Node 25 leest het rechtstreeks).
 - **Complexe velden als JSON-meta** (prijzen, waarom, delen, make-up), bewerkt in de invulkaart.
 - **Foto's als origineel bestand, zonder srcset**, zodat de pixels gelijk zijn aan de huidige site. Nieuwe uploads worden

@@ -4,6 +4,7 @@
   `~/Local Sites/soleil/app/public/wp-content/themes/soleil`
 - `import/` – zet de inhoud van de statische site in WordPress.
 - `PLAN.md` – opbouw, blokken, inhoudsmodel.
+- `LIVE.md` – checklist om live te gaan.
 
 ## Opstarten
 1. Local openen → site **soleil** starten (http://soleil.local)
@@ -12,13 +13,14 @@
 ## Import
 
 ```sh
-node wordpress/import/build_data.mjs                      # site.ts + journal.json -> import/content/data.json
-node wordpress/import/build_pages.mjs                     # vaste pagina's -> import/content/pages/*.html
-wordpress/bin/wp eval-file wordpress/import/import.php    # in WordPress zetten (opnieuw draaien mag)
+wordpress/bin/import            # site.ts, journal.json en de vaste pagina's -> WordPress (opnieuw draaien mag)
 ```
 
-Opnieuw importeren overschrijft de vaste pagina's, behandelingen en instellingen met de inhoud van de statische
-site. Draai het dus niet meer zodra Saskia zelf teksten aanpast.
+Het script bouwt `import/content/data.json` en `import/content/pages/*.html` en draait dan `import/import.php`.
+
+**Slot na de oplevering.** Staat de optie `soleil_opgeleverd` aan, dan weigert de import: hij zou de teksten, prijzen
+en instellingen van Saskia overschrijven. Toch nodig? `wordpress/bin/import --force` (vraagt om "ja" te typen).
+Het slot gaat aan als laatste stap van de oplevering, zie `LIVE.md`.
 
 ## Controle na een WordPress-update
 WordPress voegt soms zelf klassen of attributen toe aan blokken (bv. `wp-block-paragraph` sinds 7.0).
@@ -41,12 +43,14 @@ node wordpress/bin/build-js.mjs
 ```
 
 ## Wat Saskia zelf beheert
-- **Soleil** (menu links): praktische gegevens, openingsuren, footer, verzorging in de kijker
+Saskia heeft een account met de rol **Redacteur**: ze past alle inhoud en de instellingenpagina aan, maar ziet geen
+thema's, plugins, gebruikers of WordPress-instellingen.
+
+- **Soleil** (menu links): praktische gegevens, openingsuren, footer (ook de lijst behandelingen), verzorging in de kijker
 - **Behandelingen**: één invulkaart per behandeling (foto, teksten, prijzen, onderdelen, extra vak); de pagina bouwt zichzelf op
 - **Journaal**: artikels met een berichtkaart (foto, categorie, samenvatting); in de tekst ook het blok Openingsuren
 - **Activiteiten, Producten, Merken, Reviews**: een eenvoudig formulier; voorbije data van activiteiten verdwijnen vanzelf
 - **Pagina's**: home, behandelingen, tarieven, nieuw, over Soleil, contact, journaal en de 404-pagina (privé) zijn
   vergrendeld: teksten, links en foto's aanpassen kan, blokken toevoegen, verschuiven of verwijderen niet
-- **Weergave > Menu's**: de lijst behandelingen in de footer
 - **Foto's uploaden**: nieuwe foto's worden bij het uploaden verkleind tot hoogstens 1600 px breed en bewaard als WebP
   (het origineel wordt niet bewaard). De geïmporteerde foto's blijven het originele bestand.

@@ -1,0 +1,23 @@
+#!/bin/bash
+# Zet de inhoud van de statische site in WordPress (Local-site "soleil").
+# Gebruik (vanuit de repo-root):  wordpress/bin/import            gewone import
+#                                 wordpress/bin/import --force    ook na de oplevering (overschrijft de aanpassingen van Saskia)
+set -e
+cd "$(dirname "$0")/../.."
+
+FORCE=""
+for arg in "$@"; do
+	case "$arg" in
+		--force) FORCE="force" ;;
+		*) echo "Onbekende optie: $arg" >&2; exit 1 ;;
+	esac
+done
+
+if [ -n "$FORCE" ]; then
+	read -r -p "Dit overschrijft teksten, prijzen en instellingen die Saskia zelf aanpaste. Typ 'ja' om door te gaan: " ok
+	[ "$ok" = "ja" ] || { echo "Gestopt."; exit 1; }
+fi
+
+node wordpress/import/build_data.mjs
+node wordpress/import/build_pages.mjs
+wordpress/bin/wp eval-file wordpress/import/import.php $FORCE

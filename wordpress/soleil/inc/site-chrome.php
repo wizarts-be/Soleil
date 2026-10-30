@@ -1,16 +1,12 @@
 <?php
 /**
  * Header, footer, nieuwsbrief en de head-tags, zoals Header.astro, Footer.astro, Newsletter.astro en Base.astro.
- * De behandelingen komen uit het inhoudstype Behandeling, de rest uit de instellingen (Soleil in het menu).
+ * De behandelingen komen uit het inhoudstype Behandeling, de rest uit de instellingen (Soleil in het menu),
+ * ook de lijst behandelingen in de footer: een WordPress-menu zou het recht edit_theme_options vragen,
+ * en daarmee ziet een redacteur ook thema's en de site-editor.
  */
 
 defined( 'ABSPATH' ) || exit;
-
-add_action( 'after_setup_theme', function () {
-	register_nav_menus( array(
-		'footer-behandelingen' => 'Footer: behandelingen',
-	) );
-} );
 
 /**
  * Behandelingen per groep, in menuvolgorde: array( array( 'title' => 'Huidverbetering', 'slug' => …, 'items' => WP_Post[] ) ).
@@ -107,11 +103,10 @@ function soleil_render_site_header() {
 /* ---------- Footer ---------- */
 
 function soleil_render_site_footer() {
+	// De lijst staat op de instellingenpagina (Soleil > Footer), in de woorden van Saskia.
 	$treatments = '';
-	$locations  = get_nav_menu_locations();
-	$items      = empty( $locations['footer-behandelingen'] ) ? array() : (array) wp_get_nav_menu_items( $locations['footer-behandelingen'] );
-	foreach ( $items as $item ) {
-		$treatments .= '<li><a href="' . esc_url( $item->url ) . '"' . ( '_blank' === $item->target ? soleil_blank() : '' ) . '>' . esc_html( $item->title ) . '</a></li>';
+	foreach ( (array) soleil_setting( 'footer_items' ) as $item ) {
+		$treatments .= '<li><a href="' . esc_url( soleil_treatment_url( $item['behandeling'] ) ) . '">' . esc_html( $item['label'] ) . '</a></li>';
 	}
 
 	$tel  = '<a href="' . esc_attr( soleil_setting( 'phone_href' ) ) . '">' . esc_html( soleil_setting( 'phone' ) ) . '</a>';

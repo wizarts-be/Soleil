@@ -589,3 +589,8 @@ em { font-style: italic; font-weight: 400; }
 /* Adminbalk: de sticky header en het menu schuiven eronder. */
 body.admin-bar .hd { top: calc(var(--header-h) - var(--header-top) + var(--wp-admin--admin-bar--height, 0px)); }
 body.admin-bar .menu { top: var(--wp-admin--admin-bar--height, 0px); }
+/* Onder 600 px staat de adminbalk niet vast maar scrolt hij mee: dan geen verschuiving. */
+@media (max-width: 600px) {
+  body.admin-bar .hd { top: calc(var(--header-h) - var(--header-top)); }
+  body.admin-bar .menu { top: 0; }
+}

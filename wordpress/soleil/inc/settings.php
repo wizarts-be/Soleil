@@ -55,6 +55,7 @@ function soleil_settings_fields() {
 			'fields' => array(
 				'footer_slogan' => array( 'Slogan', 'text', 'De grote zin links in de footer.' ),
 				'footer_note'   => array( 'Noot over de telefoon', 'textarea', 'Kleine tekst onder de knop.' ),
+				'footer_items'  => array( 'Behandelingen', 'links', 'De lijst in de footer: per regel een tekst en de behandeling waar ze naartoe gaat.' ),
 			),
 		),
 		'kijker'    => array(
@@ -146,6 +147,16 @@ function soleil_sanitize_settings( $input ) {
 				case 'image':
 					$out[ $key ] = absint( $value );
 					break;
+				case 'links':
+					$out[ $key ] = array();
+					foreach ( (array) $value as $row ) {
+						$label = sanitize_text_field( $row['label'] ?? '' );
+						$slug  = sanitize_title( $row['behandeling'] ?? '' );
+						if ( '' !== $label && '' !== $slug ) {
+							$out[ $key ][] = array( 'label' => $label, 'behandeling' => $slug );
+						}
+					}
+					break;
 				case 'textarea':
 					$out[ $key ] = sanitize_textarea_field( $value );
 					break;
@@ -221,6 +232,43 @@ function soleil_settings_field( $key, $type ) {
 			esc_attr( $h['close'] ?? '' ),
 			esc_attr( $h['note'] ?? '' )
 		);
+		return;
+	}
+
+	if ( 'links' === $type ) {
+		$treatments = get_posts( array( 'post_type' => 'behandeling', 'numberposts' => -1, 'orderby' => 'menu_order title', 'order' => 'ASC' ) );
+		$row        = function ( $i, $label, $slug ) use ( $name, $treatments ) {
+			$options = '';
+			foreach ( $treatments as $t ) {
+				$options .= '<option value="' . esc_attr( $t->post_name ) . '"' . selected( $slug, $t->post_name, false ) . '>' . esc_html( get_the_title( $t ) ) . '</option>';
+			}
+			return '<li style="display:flex;gap:8px;align-items:center;margin-bottom:6px">'
+				. '<input type="text" class="regular-text" aria-label="Tekst" name="' . esc_attr( $name ) . '[' . $i . '][label]" value="' . esc_attr( $label ) . '">'
+				. '<select aria-label="Behandeling" name="' . esc_attr( $name ) . '[' . $i . '][behandeling]">' . $options . '</select>'
+				. '<button type="button" class="button-link" data-up aria-label="Omhoog">↑</button>'
+				. '<button type="button" class="button-link button-link-delete" data-remove>Verwijderen</button></li>';
+		};
+		echo '<ul id="' . esc_attr( $id ) . '" style="margin:0">';
+		foreach ( (array) $value as $i => $item ) {
+			echo $row( $i, $item['label'] ?? '', $item['behandeling'] ?? '' ); // phpcs:ignore WordPress.Security.EscapeOutput
+		}
+		echo '</ul><button type="button" class="button" id="' . esc_attr( $id ) . '-add">Regel toevoegen</button>';
+		echo '<template id="' . esc_attr( $id ) . '-row">' . $row( '__i__', '', '' ) . '</template>'; // phpcs:ignore WordPress.Security.EscapeOutput
+		?>
+		<script>
+		(function () {
+			var list = document.getElementById(<?php echo wp_json_encode( $id ); ?>), tpl = document.getElementById(<?php echo wp_json_encode( $id . '-row' ); ?>);
+			var renumber = function () { list.querySelectorAll('li').forEach(function (li, i) { li.querySelectorAll('[name]').forEach(function (f) { f.name = f.name.replace(/\[(\d+|__i__)\]/, '[' + i + ']'); }); }); };
+			document.getElementById(<?php echo wp_json_encode( $id . '-add' ); ?>).addEventListener('click', function () { list.appendChild(tpl.content.cloneNode(true)); renumber(); list.lastElementChild.querySelector('input').focus(); });
+			list.addEventListener('click', function (e) {
+				var li = e.target.closest('li');
+				if (e.target.matches('[data-remove]')) li.remove();
+				if (e.target.matches('[data-up]') && li.previousElementSibling) li.parentNode.insertBefore(li, li.previousElementSibling);
+				renumber();
+			});
+		})();
+		</script>
+		<?php
 		return;
 	}
 
