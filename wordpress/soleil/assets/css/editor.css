@@ -110,3 +110,11 @@
    Alle lijsten die als vak (soleil/el) gebouwd zijn, hebben op de site role="list". */
 .editor-styles-wrapper ul.wp-block-soleil-el, .editor-styles-wrapper ol.wp-block-soleil-el { list-style: none; padding: 0; }
 .editor-styles-wrapper .crumbs { list-style: none; padding: 0; }
+
+/* Tekstpagina (privacybeleid): pagina zonder vast omhulsel, in de leeskolom van een artikel. */
+.post-type-page .is-root-container:not(:has(> .wp-block-soleil-el)),
+.post-type-page:not(:has(.wp-block-soleil-el)) .editor-post-title { max-width: calc(760px + 2 * var(--gutter)); margin-inline: auto; padding-inline: var(--gutter); }
+.post-type-page .is-root-container:not(:has(> .wp-block-soleil-el)) { padding-bottom: 96px; }
+.post-type-page .is-root-container:not(:has(> .wp-block-soleil-el)) > * + * { margin-top: 1.1em; }
+.post-type-page .is-root-container:not(:has(> .wp-block-soleil-el)) > h2 { margin-top: 2em; font-size: var(--fs-lg); font-weight: 500; line-height: 1.4; }
+.post-type-page .is-root-container:not(:has(> .wp-block-soleil-el)) > ul { padding-left: 1.2em; list-style: disc; }

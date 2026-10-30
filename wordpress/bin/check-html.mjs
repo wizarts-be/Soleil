@@ -91,7 +91,8 @@ function normalise(html, chrome) {
       const name = a[1].toLowerCase();
       if (name === '/' || name.startsWith('data-astro-cid')) continue;
       let value = decode(a[2] ?? a[3] ?? a[4] ?? '');
-      if (name === 'href' || name === 'src' || name === 'action') value = value.replace(WP, '').replace('http://localhost:4321', '');
+      // Het domein van de site telt niet mee: zo zijn http://soleil.local/x en https://instituutsoleil.be/x hetzelfde pad.
+      if (name === 'href' || name === 'src' || name === 'action') value = value.replace(WP, '').replace('http://localhost:4321', '').replace('https://instituutsoleil.be', '');
       if (tag === 'img' && name === 'src') value = photo(value);
       if (tag === 'img' && (name === 'width' || name === 'height')) continue;
       if (name === 'class') value = value.split(/\s+/).filter(Boolean).join(' ');

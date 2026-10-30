@@ -116,3 +116,27 @@ add_action( 'init', function () {
 		'auth_callback' => fn() => current_user_can( 'edit_pages' ),
 	) );
 } );
+
+/* ---------- Privacybeleid: vaste opbouw (template page-privacy-policy.html), vrije tekst ---------- */
+
+function soleil_is_privacy_page( $post ) {
+	$post = get_post( $post );
+	// Op slug, niet via wp_page_for_privacy_policy: die WordPress-pagina mag enkel een beheerder bewerken.
+	return $post && 'page' === $post->post_type && 'privacy-policy' === $post->post_name;
+}
+
+// Enkel tekst: alinea's, tussentitels en lijsten. Titel en kruimelpad komen uit de template.
+add_filter( 'allowed_block_types_all', function ( $allowed, $context ) {
+	return ! empty( $context->post ) && soleil_is_privacy_page( $context->post )
+		? array( 'core/paragraph', 'core/heading', 'core/list', 'core/list-item' )
+		: $allowed;
+}, 20, 2 );
+
+add_action( 'enqueue_block_editor_assets', function () {
+	$post = get_post();
+	if ( ! $post || ! soleil_is_privacy_page( $post ) ) {
+		return;
+	}
+	$notice = 'Het privacybeleid: de titel en de opbouw liggen vast, de tekst schrijf je hieronder met alinea\'s, tussentitels en lijsten.';
+	wp_add_inline_script( 'wp-edit-post', 'wp.domReady(function(){wp.data.dispatch("core/notices").createInfoNotice(' . wp_json_encode( $notice ) . ',{isDismissible:false});});', 'after' );
+} );

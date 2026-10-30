@@ -126,13 +126,17 @@ function soleil_render_site_footer() {
 		. '<a href="' . esc_url( soleil_setting( 'facebook' ) ) . '"' . soleil_blank() . '>Facebook</a></p>'
 		. '</div></div>'
 		. '<div class="wrap ft-base"><span>© ' . esc_html( wp_date( 'Y' ) ) . ' Instituut Soleil, btw ' . esc_html( soleil_setting( 'vat' ) ) . '</span>'
-		. '<span><a href="' . esc_url( home_url( '/nieuw/' ) ) . '">Nieuw</a>, <a href="' . esc_url( home_url( '/journaal/' ) ) . '">Journaal</a>, <a href="' . esc_url( soleil_setting( 'privacy' ) ) . '">Privacybeleid</a></span>'
+		. '<span><a href="' . esc_url( home_url( '/nieuw/' ) ) . '">Nieuw</a>, <a href="' . esc_url( home_url( '/journaal/' ) ) . '">Journaal</a>, <a href="' . esc_url( soleil_site_url( soleil_setting( 'privacy' ) ) ) . '">Privacybeleid</a></span>'
 		. '</div></footer>';
 }
 
 /* ---------- Nieuwsbrief ---------- */
 
 function soleil_render_newsletter() {
+	// Uit te zetten op Soleil > Praktisch, zolang de inschrijvingen nergens naartoe gaan.
+	if ( '0' === soleil_setting( 'newsletter' ) ) {
+		return '';
+	}
 	return '<aside class="nl" id="nieuwsbrief" aria-labelledby="nl-title" hidden data-nl>'
 		. '<button class="nl-x" type="button" aria-label="Sluiten" data-nl-close><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></button>'
 		. '<form data-nl-form>'
@@ -141,7 +145,7 @@ function soleil_render_newsletter() {
 		. '<div class="nl-row"><label class="nl-sr" for="nl-email">E-mailadres</label>'
 		. '<input id="nl-email" type="email" name="email" required autocomplete="email" placeholder="Je e-mailadres" />'
 		. '<button type="submit">Inschrijven</button></div>'
-		. '<p class="nl-fine">Uitschrijven kan altijd. <a href="' . esc_url( soleil_setting( 'privacy' ) ) . '">Privacybeleid</a></p>'
+		. '<p class="nl-fine">Uitschrijven kan altijd. <a href="' . esc_url( soleil_site_url( soleil_setting( 'privacy' ) ) ) . '">Privacybeleid</a></p>'
 		. '<p class="nl-msg" role="status" data-nl-msg></p>'
 		. '</form></aside>';
 }
@@ -268,4 +272,11 @@ function soleil_media_by_source( $source ) {
 		$cache[ $source ] = $ids ? (int) $ids[0] : 0;
 	}
 	return $cache[ $source ];
+}
+
+/**
+ * Een pad op deze site (/privacy-policy/) als volledige url; een externe url blijft.
+ */
+function soleil_site_url( $href ) {
+	return str_starts_with( (string) $href, '/' ) ? home_url( $href ) : (string) $href;
 }

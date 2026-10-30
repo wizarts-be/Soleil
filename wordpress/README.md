@@ -46,7 +46,8 @@ node wordpress/bin/build-js.mjs
 Saskia heeft een account met de rol **Redacteur**: ze past alle inhoud en de instellingenpagina aan, maar ziet geen
 thema's, plugins, gebruikers of WordPress-instellingen.
 
-- **Soleil** (menu links): praktische gegevens, openingsuren, footer (ook de lijst behandelingen), verzorging in de kijker
+- **Soleil** (menu links): praktische gegevens (ook de nieuwsbrief aan/uit), openingsuren, footer (ook de lijst behandelingen), verzorging in de kijker
+- **Privacybeleid** (pagina): titel en opbouw vast, de tekst vrij (alinea's, tussentitels, lijsten)
 - **Behandelingen**: één invulkaart per behandeling (foto, teksten, prijzen, onderdelen, extra vak); de pagina bouwt zichzelf op
 - **Journaal**: artikels met een berichtkaart (foto, categorie, samenvatting); in de tekst ook het blok Openingsuren
 - **Activiteiten, Producten, Merken, Reviews**: een eenvoudig formulier; voorbije data van activiteiten verdwijnen vanzelf

@@ -67,10 +67,12 @@ function soleil_import_media( $source ) {
 /* ---------------------------------------------------------------- Posts */
 
 function soleil_upsert( $type, $slug, $fields, $meta = array() ) {
+	// Expliciete statussen: met "any" slaat WP-CLI (zonder ingelogde gebruiker) privé- en conceptpagina's over,
+	// en dan zou elke import een nieuwe kopie maken.
 	$existing = get_posts( array(
 		'post_type'   => $type,
 		'name'        => $slug,
-		'post_status' => 'any',
+		'post_status' => array( 'publish', 'private', 'draft', 'pending', 'future' ),
 		'numberposts' => 1,
 	) );
 	$postarr = array_merge( array(
@@ -278,6 +280,24 @@ foreach ( $pages as $slug => list( $title, $seo, $excerpt ) ) {
 update_option( 'show_on_front', 'page' );
 update_option( 'page_on_front', $page_ids['home'] );
 update_option( 'page_for_posts', $page_ids['journaal'] );
+
+// Privacybeleid: de huidige pagina op instituutsoleil.be is de Engelse standaardtekst van WordPress (reacties, Gravatar, …),
+// geen beleid van Soleil. Daarom een duidelijke placeholder; de echte tekst komt er vóór de livegang (zie LIVE.md).
+$privacy = get_posts( array( 'post_type' => 'page', 'name' => 'privacy-policy', 'post_status' => array( 'publish', 'private', 'draft' ), 'numberposts' => 1 ) )[0] ?? null;
+if ( ! $privacy || 'publish' !== $privacy->post_status || str_contains( $privacy->post_content, 'Voorbeeldinhoud' ) || str_contains( $privacy->post_content, 'wp-block-group' ) ) {
+	$privacy_id = soleil_upsert( 'page', 'privacy-policy', array(
+		'post_title'   => 'Privacybeleid',
+		'post_excerpt' => 'Hoe Instituut Soleil omgaat met je persoonsgegevens.',
+		'post_content' => "<!-- wp:paragraph -->\n<p>Voorbeeldinhoud: het privacybeleid van Instituut Soleil volgt hier nog. Aan te vullen vóór de site live gaat.</p>\n<!-- /wp:paragraph -->",
+		'menu_order'   => 99,
+	) );
+} else {
+	$privacy_id = $privacy->ID; // Echte tekst staat er al: niet overschrijven.
+}
+// Niet als WordPress-privacypagina instellen: die vraagt het recht manage_privacy_options, en dan kan een redacteur
+// (Saskia) ze niet bewerken. Het thema herkent de pagina aan de slug privacy-policy.
+update_option( 'wp_page_for_privacy_policy', 0 );
+soleil_log( '  Privacybeleid' );
 
 // Testinhoud van de ontwikkeling en voorbeeldinhoud van een verse installatie.
 foreach ( array( 'test', 'sample-page', 'voorbeeld-pagina' ) as $slug ) {

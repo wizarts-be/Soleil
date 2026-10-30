@@ -41,7 +41,8 @@ function soleil_settings_fields() {
 				'instagram'  => array( 'Instagram', 'url', '' ),
 				'facebook'   => array( 'Facebook', 'url', '' ),
 				'vat'        => array( 'Btw-nummer', 'text', '' ),
-				'privacy'    => array( 'Privacybeleid', 'url', 'Link in de footer en bij de nieuwsbrief.' ),
+				'privacy'    => array( 'Privacybeleid', 'url', 'Link in de footer en bij de nieuwsbrief. Standaard de pagina Privacybeleid van deze site: /privacy-policy/.' ),
+				'newsletter' => array( 'Nieuwsbrief', 'checkbox', 'Het kaartje rechtsonder om in te schrijven. Zet het uit zolang de inschrijvingen nergens naartoe gaan (geen koppeling met een mailprogramma).' ),
 			),
 		),
 		'uren'      => array(
@@ -139,7 +140,11 @@ function soleil_sanitize_settings( $input ) {
 					);
 					break;
 				case 'url':
-					$out[ $key ] = esc_url_raw( trim( $value ) );
+					// Een pad op deze site (/privacy-policy/) mag ook.
+					$out[ $key ] = str_starts_with( trim( $value ), '/' ) ? sanitize_text_field( trim( $value ) ) : esc_url_raw( trim( $value ) );
+					break;
+				case 'checkbox':
+					$out[ $key ] = '1' === (string) $value ? '1' : '0';
 					break;
 				case 'email':
 					$out[ $key ] = sanitize_email( $value );
@@ -269,6 +274,12 @@ function soleil_settings_field( $key, $type ) {
 		})();
 		</script>
 		<?php
+		return;
+	}
+
+	if ( 'checkbox' === $type ) {
+		// Het verborgen veld zorgt dat "uit" ook bewaard wordt. Nog niets ingesteld = aan, zoals de statische site.
+		printf( '<input type="hidden" name="%1$s" value="0"><label><input type="checkbox" id="%2$s" name="%1$s" value="1"%3$s> Tonen</label>', esc_attr( $name ), esc_attr( $id ), checked( '0' !== $value, true, false ) );
 		return;
 	}
 

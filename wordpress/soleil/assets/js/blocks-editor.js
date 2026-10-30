@@ -35,7 +35,8 @@
     "contactformulier": { title: "Contactformulier", icon: "email-alt", description: "Het formulier opent het mailprogramma van de bezoeker.", manage: ["Soleil > Praktisch", "admin.php?page=soleil"] },
     "journaal": { title: "Alle artikels", icon: "excerpt-view", description: "Alle artikels uit het journaal.", manage: ["Journaal", "edit.php"] },
     "pagina-inhoud": { title: "Inhoud van een pagina", icon: "admin-page", description: "Toont de inhoud van een vaste pagina in een template." },
-    "icoon": { title: "Icoon", icon: "star-empty", description: "Een icoon van de site." }
+    "icoon": { title: "Icoon", icon: "star-empty", description: "Een icoon van de site." },
+    "tekstpagina": { title: "Tekstpagina", icon: "text-page", description: "Titel, kruimelpad en tekst van een pagina zoals het privacybeleid." }
   };
 
   Object.keys(blocks).forEach(function (name) {

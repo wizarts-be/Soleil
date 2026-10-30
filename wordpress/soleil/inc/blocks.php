@@ -19,6 +19,7 @@ function soleil_blocks() {
 		'berichtkaart' => array( 'render' => '__return_empty_string' ),
 		'artikel'      => array( 'render' => 'soleil_block_article' ),
 		'journaal-meer' => array( 'render' => 'soleil_block_more_posts' ),
+		'tekstpagina'  => array( 'render' => 'soleil_block_text_page' ),
 		'behandeling-switch' => array( 'render' => 'soleil_block_treatment_switch' ),
 		'behandeling'  => array( 'render' => 'soleil_block_treatment' ),
 		'behandeling-pager' => array( 'render' => 'soleil_block_treatment_pager' ),
@@ -293,6 +294,25 @@ function soleil_block_article() {
 		. '<a class="btn" href="' . esc_url( soleil_setting( 'booking' ) ) . '"' . soleil_blank() . '>Afspraak maken' . soleil_icon( 'arrow-up-right' ) . '</a>'
 		. '<a class="link" href="' . esc_url( soleil_treatment_url( 'skin-discovery' ) ) . '">Nieuw? Start met een Skin Discovery' . soleil_icon( 'arrow-right' ) . '</a>'
 		. '</div></div></article>';
+}
+
+/**
+ * Tekstpagina (privacybeleid): kruimelpad en titel vast, de tekst in de leeskolom van een artikel.
+ * Geen ontwerp van de statische site: dezelfde klassen als een journaalartikel, zonder datum, foto en knoppen.
+ */
+function soleil_block_text_page() {
+	$post = get_post();
+	if ( ! $post ) {
+		return '';
+	}
+	$GLOBALS['soleil_in_article'] = true;
+	$content                      = apply_filters( 'the_content', $post->post_content );
+	$GLOBALS['soleil_in_article'] = false;
+
+	return '<article class="wrap article"><header class="ph-head">'
+		. '<ol class="crumbs" role="list"><li><a href="' . esc_url( home_url( '/' ) ) . '">Home</a></li><li aria-current="page">' . esc_html( get_the_title( $post ) ) . '</li></ol>'
+		. '<h1 class="h1">' . esc_html( get_the_title( $post ) ) . '</h1>'
+		. '</header><div class="prose">' . $content . '</div></article>';
 }
 
 /**

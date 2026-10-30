@@ -2,6 +2,25 @@
 
 Werk van boven naar onder. Vink af in de pull request of in een kopie van dit bestand.
 
+## 0. Beslissingen die nog nodig zijn
+
+- [ ] **Nieuwsbrief.** De popup werkt zoals op de huidige site, maar de inschrijvingen gaan nergens naartoe: er is geen
+  koppeling met een mailprogramma. Te kiezen:
+  - koppelen aan een dienst (Mailchimp, Brevo, MailerLite, …): de keuze ligt bij Saskia, de koppeling is extra werk; of
+  - de popup uitzetten tot dat zo is: Soleil > Praktisch > Nieuwsbrief, vinkje "Tonen" uit. Geen code nodig.
+  Beslissing: ______________________
+- [ ] **Privacybeleid.** De huidige pagina op instituutsoleil.be/privacy-policy/ is de Engelse standaardtekst van WordPress
+  (over reacties, Gravatar en accounts, met lege rubrieken), geen beleid van Soleil. Die is daarom niet overgenomen.
+  De pagina Privacybeleid (`/privacy-policy/`) staat klaar met een placeholder ("Voorbeeldinhoud: …").
+  Nodig: een echte tekst in het Nederlands (wie, welke gegevens: contactformulier via e-mail, nieuwsbrief als die blijft,
+  de online agenda van Optios, de webshop), en die in de pagina zetten. Titel en opbouw liggen vast, de tekst is vrij.
+  Beslissing / wie levert de tekst: ______________________
+- [ ] **Cache.** Gebruikt de hosting een pagina-cache? Het thema leegt elke nacht om middernacht de cache van `/nieuw/` en
+  `/behandelingen/laser/` (`inc/cache.php`), voor WP Rocket, LiteSpeed Cache, W3 Total Cache, WP Super Cache,
+  Cache Enabler, SiteGround Speed Optimizer en WP Fastest Cache. Een andere cache (bv. van de hosting zelf) koppel je
+  met `add_action( 'soleil_purge_url', … )`.
+  Cache bij de hosting: ______________________
+
 ## 1. Server
 
 - [ ] **PHP 8.2 of nieuwer.** Getest met 8.2.29.
@@ -37,8 +56,12 @@ Werk van boven naar onder. Vink af in de pull request of in een kopie van dit be
            /behandelingen/microneedling/ /behandelingen/neo-lift/ /v2/tarieven/; do
     curl -s -o /dev/null -w "$u %{http_code} %{redirect_url}\n" https://instituutsoleil.be$u; done
   ```
-- [ ] **Privacybeleid:** de link in de footer en bij de nieuwsbrief gaat naar `https://instituutsoleil.be/privacy-policy/`.
-  Op de nieuwe site bestaat die pagina niet vanzelf. Maak ze aan (of zet de link goed onder Soleil > Praktisch).
+- [ ] **Privacybeleid:** de pagina `/privacy-policy/` bevat de echte tekst, niet meer de placeholder (zie 0). De link in de
+  footer en bij de nieuwsbrief wijst ernaar (Soleil > Praktisch > Privacybeleid: `/privacy-policy/`).
+- [ ] **WP-cron als echte cron.** WordPress voert geplande taken pas uit bij het eerste bezoek. Voor het legen van de cache
+  om middernacht beter een cron op de server: in `wp-config.php` `define( 'DISABLE_WP_CRON', true );` en in de crontab
+  `*/15 * * * * wp --path=<pad naar WordPress> cron event run --due-now >/dev/null 2>&1`.
+  Controle: `wp cron event list --hook=soleil_clear_dated_pages` toont de volgende run om 00:00.
 - [ ] Instellingen > Lezen: **niet** "Zoekmachines ontmoedigen".
 
 ## 4. Inhoud importeren
@@ -55,8 +78,7 @@ Werk van boven naar onder. Vink af in de pull request of in een kopie van dit be
   ```
   Verwacht: alle pagina's gelijk.
 - [ ] Een paar pagina's op een gsm bekijken: home, een behandeling, tarieven, contact (formulier versturen opent het mailprogramma).
-- [ ] Een pagina-cache, als die er is, moet minstens dagelijks verlopen: anders blijven voorbije laser- en workshopdata staan
-  op `/nieuw/` en `/behandelingen/laser/`.
+- [ ] Is er een pagina-cache: na middernacht `/nieuw/` bekijken, de voorbije data van gisteren zijn weg.
 
 ## 5. Account van Saskia
 

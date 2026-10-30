@@ -88,7 +88,9 @@ const data = {
     facebook: site.info.facebook,
     vat: site.info.vat,
     // Uit Footer.astro en Newsletter.astro.
-    privacy: 'https://instituutsoleil.be/privacy-policy/',
+    // Link naar de pagina Privacybeleid op deze site (de statische site linkte naar dezelfde url op instituutsoleil.be).
+    privacy: '/privacy-policy/',
+    newsletter: '1',
     footer_slogan: 'Gun je huid de aandacht die ze verdient.',
     footer_note: 'Tijdens behandelingen wordt de telefoon niet beantwoord, ik contacteer je zo vlug mogelijk.',
     hours_note: site.hoursNote,
