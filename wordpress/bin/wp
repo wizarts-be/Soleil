@@ -1,0 +1,22 @@
+#!/bin/bash
+# WP-CLI voor de Local-site "soleil", zonder Local's site shell te openen.
+# Gebruik: wordpress/bin/wp <commando>   (bv. wordpress/bin/wp post list)
+# Vereist: Local draait en de site is gestart.
+
+SITE_PATH="$HOME/Local Sites/soleil"
+LOCAL_DATA="$HOME/Library/Application Support/Local"
+
+SITE_ID=$(python3 -c "
+import json,sys
+d=json.load(open('$LOCAL_DATA/sites.json'))
+print(next(k for k,v in d.items() if v.get('path','').rstrip('/').lower().endswith('local sites/soleil')))
+") || { echo "Local-site niet gevonden" >&2; exit 1; }
+
+PHP_VERSION=$(python3 -c "import json;print(json.load(open('$LOCAL_DATA/sites.json'))['$SITE_ID']['services']['php']['version'])")
+PHP_BIN=$(ls -d "$LOCAL_DATA"/lightning-services/php-"$PHP_VERSION"*/bin/*/bin 2>/dev/null | head -1)/php
+SOCKET="$LOCAL_DATA/run/$SITE_ID/mysql/mysqld.sock"
+
+[ -S "$SOCKET" ] || { echo "Database draait niet: start de site in Local." >&2; exit 1; }
+
+exec "$PHP_BIN" -d mysqli.default_socket="$SOCKET" -d pdo_mysql.default_socket="$SOCKET" -d memory_limit=512M \
+  "/Applications/Local.app/Contents/Resources/extraResources/bin/wp-cli/wp-cli.phar" --path="$SITE_PATH/app/public" "$@"
