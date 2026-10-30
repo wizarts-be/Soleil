@@ -7,6 +7,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/inc/helpers.php';
 require_once __DIR__ . '/inc/settings.php';
+require_once __DIR__ . '/inc/content-model.php';
 require_once __DIR__ . '/inc/site-chrome.php';
 require_once __DIR__ . '/inc/blocks.php';
 require_once __DIR__ . '/inc/admin.php';

@@ -19,4 +19,7 @@ node wordpress/bin/build-js.mjs
 
 ## Wat Saskia zelf beheert
 - **Soleil** (menu links): praktische gegevens, openingsuren, footer, verzorging in de kijker
+- **Behandelingen**: één invulkaart per behandeling (foto, teksten, prijzen, onderdelen, extra vak); de pagina bouwt zichzelf op
+- **Journaal**: artikels met een berichtkaart (foto, categorie, samenvatting); in de tekst ook het blok Openingsuren
+- **Activiteiten, Producten, Merken, Reviews**: een eenvoudig formulier; voorbije data van activiteiten verdwijnen vanzelf
 - **Weergave > Menu's**: de lijst behandelingen in de footer

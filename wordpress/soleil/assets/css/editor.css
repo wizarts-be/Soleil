@@ -20,3 +20,64 @@
 .soleil-manage strong { font-weight: 600; }
 .soleil-manage__btn { padding: .45rem .9rem; border-radius: 4px; border: 1px solid #1e1e1e; background: #fff; color: #1e1e1e !important; font-weight: 600; text-decoration: none !important; white-space: nowrap; }
 .soleil-manage__btn.is-primary { background: #1e1e1e; color: #fff !important; }
+
+/* ==========================================================================
+   Invulkaarten (behandeling, artikel). Gewone editorletters, in de kleuren van Soleil.
+   ========================================================================== */
+.soleil-card {
+  max-width: 1080px; margin: 24px auto 48px !important; background: var(--paper);
+  box-shadow: 0 0 0 1px var(--line), 0 24px 40px -28px rgb(75 58 47 / .35);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; line-height: 1.5; color: #1e1e1e;
+}
+.soleil-card__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem 1rem; padding: 18px 24px; background: var(--mist); border-bottom: 1px solid var(--line); }
+.soleil-card__head strong { font: 300 var(--fs-h2)/1.2 var(--sans); color: var(--ink); }
+.soleil-card__head span { color: var(--moss); }
+.soleil-card__section { padding: 24px; border-bottom: 1px solid var(--line); }
+.soleil-card__section:last-child { border-bottom: 0; }
+.soleil-card__section--quiet { background: var(--bone); }
+.soleil-card__title { margin: 0 0 4px; font: 500 var(--fs-label)/1.4 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--tan-ink); }
+.soleil-card__help { margin: 0 0 16px; color: #757575; font-size: 13px; }
+.soleil-card__fields { display: grid; gap: 16px; align-content: start; }
+.soleil-card__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 24px; align-items: start; }
+.soleil-card__grid--even { grid-template-columns: 1fr 1fr; gap: 16px; }
+.soleil-card__grid--three { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 900px) { .soleil-card__grid, .soleil-card__grid--three { grid-template-columns: 1fr; } }
+.soleil-card__sub { margin: 8px 0 0; font: 500 15px/1.4 inherit; }
+.soleil-card__label { display: block; margin-bottom: 8px; font-size: 11px; font-weight: 500; text-transform: uppercase; }
+.soleil-card__pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.soleil-card__pill { appearance: none; cursor: pointer; padding: 8px 16px; border: 1px solid var(--line); background: var(--paper); font: inherit; color: var(--ink); }
+.soleil-card__pill:hover { border-color: var(--forest); }
+.soleil-card__pill.is-on { background: var(--forest); border-color: var(--forest); color: #fff; }
+.soleil-card__warn { margin: 8px 0 0; color: #b32d2e; font-size: 13px; }
+.soleil-card__photo { background: var(--mist); }
+.soleil-card__photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.soleil-card__photo-actions { display: flex; gap: 8px; padding: 10px 0 0; background: var(--paper); }
+.soleil-card .components-placeholder { min-height: 220px; background: var(--mist); box-shadow: none; }
+.soleil-card__item { display: grid; gap: 16px; padding: 18px; background: var(--bone); box-shadow: inset 0 0 0 1px var(--line); }
+.soleil-card__item-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.soleil-card__item-head strong { font-size: 15px; font-weight: 600; }
+.soleil-card__tools { display: flex; gap: 2px; flex: none; }
+
+/* Prijstabellen */
+.soleil-prices { display: grid; gap: 16px; justify-items: start; }
+.soleil-prices__group { display: grid; gap: 12px; justify-self: stretch; padding: 16px; background: var(--bone); box-shadow: inset 0 0 0 1px var(--line); }
+.soleil-card__item .soleil-prices__group { background: var(--paper); }
+.soleil-prices__head { display: flex; align-items: flex-end; gap: 12px; }
+.soleil-prices__head > :first-child { flex: 1; }
+.soleil-prices__rows { display: grid; gap: 6px; justify-items: start; }
+.soleil-prices__row { display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, .8fr) minmax(0, .8fr) minmax(0, 2.2fr) auto; gap: 6px; align-items: center; justify-self: stretch; }
+.soleil-prices__row--head span { font-size: 11px; font-weight: 500; text-transform: uppercase; color: #757575; }
+@media (max-width: 900px) { .soleil-prices__row { grid-template-columns: 1fr 1fr; } .soleil-prices__row--head { display: none; } }
+
+/* Behandeling: enkel de kaart, geen tekstvak eronder. */
+.post-type-behandeling .is-root-container { padding-inline: var(--gutter); padding-bottom: 64px; }
+
+/* Artikel: titel en tekst in de leeskolom van de site (.article, .prose). */
+.post-type-post .editor-post-title, .post-type-post .is-root-container { max-width: calc(760px + 2 * var(--gutter)); margin-inline: auto; padding-inline: var(--gutter); }
+.post-type-post .editor-post-title { width: auto; margin-top: clamp(40px, 6vw, 88px); font-size: var(--fs-h1); }
+.post-type-post .is-root-container { padding-bottom: 96px; }
+.post-type-post .is-root-container > * + * { margin-top: 1.1em; }
+.post-type-post .is-root-container > h2 { margin-top: 2em; font-size: var(--fs-lg); font-weight: 500; line-height: 1.4; }
+.post-type-post .is-root-container > ul { padding-left: 1.2em; list-style: disc; }
+.post-type-post .is-root-container li + li { margin-top: 0.4em; }
+.post-type-post .soleil-card { margin: 24px calc(-1 * clamp(0px, 6vw, 120px)) 40px !important; max-width: none; }

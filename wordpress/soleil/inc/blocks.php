@@ -15,6 +15,10 @@ function soleil_blocks() {
 			'render'     => 'soleil_block_hours',
 			'attributes' => array( 'ruimte' => array( 'type' => 'boolean', 'default' => true ) ),
 		),
+		'behandelingkaart' => array( 'render' => '__return_empty_string' ),
+		'berichtkaart' => array( 'render' => '__return_empty_string' ),
+		'artikel'      => array( 'render' => 'soleil_block_article' ),
+		'journaal-meer' => array( 'render' => 'soleil_block_more_posts' ),
 		'el'           => array(
 			'render'     => 'soleil_block_el',
 			'attributes' => array(
@@ -136,3 +140,105 @@ add_filter( 'render_block_core/template-part', function ( $html ) {
 add_filter( 'render_block_core/post-content', function ( $html ) {
 	return preg_replace( '#^\s*<div[^>]*>(.*)</div>\s*$#s', '$1', $html );
 } );
+
+/* ---------- Journaal ---------- */
+
+function soleil_post_category( $post ) {
+	foreach ( get_the_category( $post->ID ) as $term ) {
+		if ( (int) get_option( 'default_category' ) !== $term->term_id ) {
+			return $term->name;
+		}
+	}
+	return '';
+}
+
+/**
+ * Datum zoals Intl.DateTimeFormat('nl-BE', { day: 'numeric', month: 'long', year: 'numeric' }): "28 augustus 2026".
+ */
+function soleil_post_date( $post ) {
+	return '<time datetime="' . esc_attr( get_the_date( 'Y-m-d', $post ) ) . '">' . esc_html( get_the_date( 'j F Y', $post ) ) . '</time>';
+}
+
+/**
+ * Kaartje van een artikel, zoals PostCard.astro.
+ */
+function soleil_post_card( $post ) {
+	$post  = get_post( $post );
+	$image = has_post_thumbnail( $post )
+		? get_the_post_thumbnail( $post, 'large', array( 'alt' => '', 'loading' => 'lazy', 'sizes' => '(max-width: 560px) 100vw, (max-width: 860px) 50vw, 440px' ) )
+		: '';
+	return '<a class="post rv" href="' . esc_url( get_permalink( $post ) ) . '">'
+		. '<figure class="ph">' . $image . '</figure>'
+		. '<p class="post-meta"><span class="label">' . esc_html( soleil_post_category( $post ) ) . '</span>' . soleil_post_date( $post ) . '</p>'
+		. '<h3 class="h3">' . esc_html( get_the_title( $post ) ) . '</h3>'
+		. '<p>' . esc_html( get_the_excerpt( $post ) ) . '</p>'
+		. '</a>';
+}
+
+/**
+ * Het artikel, zoals journaal/[slug].astro: kruimelpad, categorie en datum, titel, foto, tekst en knoppen.
+ */
+function soleil_block_article() {
+	$post = get_post();
+	if ( ! $post || 'post' !== $post->post_type ) {
+		return '<article class="wrap article"><header class="ph-head"><h1 class="h1">Titel van het artikel</h1></header></article>';
+	}
+	$cat   = soleil_post_category( $post );
+	$image = has_post_thumbnail( $post )
+		? '<figure class="ph article-hero">' . get_the_post_thumbnail( $post, 'full', array( 'alt' => '', 'loading' => false, 'fetchpriority' => 'high', 'sizes' => '(max-width: 760px) 100vw, 760px' ) ) . '</figure>'
+		: '';
+
+	$GLOBALS['soleil_in_article'] = true;
+	$content                      = apply_filters( 'the_content', $post->post_content );
+	$GLOBALS['soleil_in_article'] = false;
+
+	return '<article class="wrap article"><header class="ph-head">'
+		. '<ol class="crumbs" role="list"><li><a href="' . esc_url( home_url( '/' ) ) . '">Home</a></li><li><a href="' . esc_url( home_url( '/journaal/' ) ) . '">Journaal</a></li><li aria-current="page">' . esc_html( $cat ) . '</li></ol>'
+		. '<p class="post-meta" style="margin-top:24px"><span class="label">' . esc_html( $cat ) . '</span>' . soleil_post_date( $post ) . '</p>'
+		. '<h1 class="h1">' . esc_html( get_the_title( $post ) ) . '</h1>'
+		. '</header>' . $image
+		. '<div class="prose">' . $content
+		. '<div class="actions" style="margin-top:56px">'
+		. '<a class="btn" href="' . esc_url( soleil_setting( 'booking' ) ) . '"' . soleil_blank() . '>Afspraak maken' . soleil_icon( 'arrow-up-right' ) . '</a>'
+		. '<a class="link" href="' . esc_url( soleil_treatment_url( 'skin-discovery' ) ) . '">Nieuw? Start met een Skin Discovery' . soleil_icon( 'arrow-right' ) . '</a>'
+		. '</div></div></article>';
+}
+
+/**
+ * "Meer uit het journaal": de 3 nieuwste andere artikels.
+ */
+function soleil_block_more_posts() {
+	$post  = get_post();
+	$posts = get_posts( array(
+		'numberposts'  => 3,
+		'post__not_in' => $post ? array( $post->ID ) : array(),
+	) );
+	return '<section class="section wrap" aria-labelledby="meer">'
+		. '<div class="sec-head"><h2 id="meer" class="h2">Meer uit het journaal</h2><a class="link" href="' . esc_url( home_url( '/journaal/' ) ) . '">Alle artikels' . soleil_icon( 'arrow-right' ) . '</a></div>'
+		. '<div class="posts">' . implode( '', array_map( 'soleil_post_card', $posts ) ) . '</div></section>';
+}
+
+/* ---------- Tekst in artikels: dezelfde markup als nu ---------- */
+
+// Tussentitels in een artikel zijn <h2 class="h3">, lijsten <ul role="list">, alinea's zonder klasse.
+// Via de filters per blok, met prioriteit 20: die lopen na de klassen die WordPress zelf toevoegt.
+function soleil_article_markup( $html, $block ) {
+	if ( empty( $GLOBALS['soleil_in_article'] ) ) {
+		return $html;
+	}
+	$p = new WP_HTML_Tag_Processor( $html );
+	if ( ! $p->next_tag() ) {
+		return $html;
+	}
+	$p->remove_class( 'wp-block-' . substr( $block['blockName'], 5 ) );
+	if ( 'H2' === $p->get_tag() ) {
+		$p->add_class( 'h3' );
+	}
+	if ( 'core/list' === $block['blockName'] ) {
+		$p->set_attribute( 'role', 'list' );
+	}
+	return $p->get_updated_html();
+}
+foreach ( array( 'core/paragraph', 'core/heading', 'core/list' ) as $soleil_block ) {
+	add_filter( 'render_block_' . $soleil_block, 'soleil_article_markup', 20, 2 );
+}

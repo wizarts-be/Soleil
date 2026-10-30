@@ -257,7 +257,7 @@ function soleil_default_image_url() {
  */
 function soleil_media_by_source( $source ) {
 	static $cache = array();
-	if ( ! isset( $cache[ $source ] ) ) {
+	if ( empty( $cache[ $source ] ) ) {
 		$ids              = get_posts( array(
 			'post_type'   => 'attachment',
 			'post_status' => 'inherit',
