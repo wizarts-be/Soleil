@@ -30,6 +30,7 @@
     "voorbeeld-noot": { title: "Melding voorbeeldinhoud", icon: "info", description: "Verschijnt enkel zolang er iets als voorbeeld gemarkeerd is." },
     "merken": { title: "Merken", icon: "tag", description: "Merken waar je mee werkt.", manage: ["Merken", "edit.php?post_type=merk"] },
     "producten": { title: "Nieuwe producten", icon: "products", description: "Producten op de pagina Nieuw.", manage: ["Producten", "edit.php?post_type=product"] },
+    "product": { title: "Product: pagina", icon: "products", description: "De eigen pagina van een product, opgebouwd uit het formulier van het product." },
     "activiteiten": { title: "Nieuwe data", icon: "calendar-alt", description: "Activiteiten met hun komende data.", manage: ["Activiteiten", "edit.php?post_type=activiteit"] },
     "contact-kaart": { title: "Contactgegevens", icon: "location", description: "Adres, telefoon en e-mail.", manage: ["Soleil > Praktisch", "admin.php?page=soleil"] },
     "contactformulier": { title: "Contactformulier", icon: "email-alt", description: "Het formulier opent het mailprogramma van de bezoeker.", manage: ["Soleil > Praktisch", "admin.php?page=soleil"] },
@@ -51,12 +52,16 @@
       supports: { html: false, inserter: !!def.inserter, className: false, customClassName: false },
       edit: function (props) {
         var blockProps = be.useBlockProps();
+        // Altijd zichtbaar: anders denkt Saskia dat ze geen rechten heeft, omdat er op de lijst klikken niets doet.
         var manage = def.manage ? el("div", { className: "soleil-manage" },
-          el("span", null, "Dit blok vult zich vanzelf uit ", el("strong", null, def.manage[0]), ". Aanpassen doe je daar, niet hier."),
-          el("a", { className: "soleil-manage__btn", target: "_top", href: admin() + def.manage[1] }, "Openen")
+          el("span", null,
+            "Dit blok pas je niet hier aan. ", el("strong", null, "Klik op de knop hiernaast"), " om het te bewerken.",
+            el("small", { className: "soleil-manage__where" }, "Je vindt het ook in het menu links, bij " + def.manage[0] + ".")
+          ),
+          el("a", { className: "soleil-manage__btn is-primary", target: "_top", href: admin() + def.manage[1] }, "Bewerk " + def.manage[0].split(" > ").pop() + " →")
         ) : null;
         return el("div", blockProps,
-          props.isSelected ? manage : null,
+          manage,
           el(c.Disabled, null, el(ServerSideRender, { block: full, attributes: props.attributes }))
         );
       },

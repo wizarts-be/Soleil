@@ -47,6 +47,7 @@ function soleil_blocks() {
 		),
 		'merken'       => array( 'render' => 'soleil_block_brands' ),
 		'producten'    => array( 'render' => 'soleil_block_products' ),
+		'product'      => array( 'render' => 'soleil_block_product' ),
 		'activiteiten' => array( 'render' => 'soleil_block_activities' ),
 		'contact-kaart' => array( 'render' => 'soleil_block_contact_card' ),
 		'contactformulier' => array( 'render' => 'soleil_block_contact_form' ),
@@ -402,18 +403,87 @@ function soleil_block_brands() {
 	return '<ul class="btiles" role="list">' . $html . '</ul>';
 }
 
+function soleil_product_shop_url( $post ) {
+	$href = (string) get_post_meta( $post->ID, 'link_url', true );
+	return '' !== $href ? soleil_link( $href ) : soleil_setting( 'webshop' );
+}
+
+function soleil_product_has_detail( $post ) {
+	return '' !== trim( wp_strip_all_tags( (string) get_post_meta( $post->ID, 'detail', true ) ) );
+}
+
+/**
+ * Kaartjes op de pagina Nieuw. Met info over het product gaat het kaartje naar de eigen pagina,
+ * zonder info meteen naar de webshop (zoals vroeger).
+ */
+function soleil_product_card( $post, $i ) {
+	$detail = soleil_product_has_detail( $post );
+	$href   = $detail ? get_permalink( $post ) : soleil_product_shop_url( $post );
+	return '<li class="rv" style="--d:' . $i . '"><a href="' . esc_url( $href ) . '"' . ( $detail ? '' : soleil_blank() ) . '>'
+		. '<figure class="ph">' . soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => '', 'loading' => 'lazy' ) ) . '</figure>'
+		. '<p class="label">' . esc_html( get_post_meta( $post->ID, 'merk', true ) ) . '</p>'
+		. '<h3>' . esc_html( get_the_title( $post ) ) . soleil_icon( $detail ? 'arrow-right' : 'arrow-up-right' ) . '</h3>'
+		. '<p>' . esc_html( get_post_meta( $post->ID, 'tekst', true ) ) . '</p></a></li>';
+}
+
 function soleil_block_products() {
 	$html = '';
 	foreach ( soleil_items( 'product' ) as $i => $post ) {
-		$href  = (string) get_post_meta( $post->ID, 'link_url', true );
-		$href  = '' !== $href ? soleil_link( $href ) : soleil_setting( 'webshop' );
-		$html .= '<li class="rv" style="--d:' . $i . '"><a href="' . esc_url( $href ) . '"' . soleil_blank() . '>'
-			. '<figure class="ph">' . soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => '', 'loading' => 'lazy' ) ) . '</figure>'
-			. '<p class="label">' . esc_html( get_post_meta( $post->ID, 'merk', true ) ) . '</p>'
-			. '<h3>' . esc_html( get_the_title( $post ) ) . soleil_icon( 'arrow-up-right' ) . '</h3>'
-			. '<p>' . esc_html( get_post_meta( $post->ID, 'tekst', true ) ) . '</p></a></li>';
+		$html .= soleil_product_card( $post, $i );
 	}
 	return '<ul class="btiles news" role="list">' . $html . '</ul>';
+}
+
+/**
+ * De eigen pagina van een product: foto, merk, naam, korte tekst, knop naar de webshop en de info.
+ */
+function soleil_block_product() {
+	$post = get_post();
+	if ( ! $post || 'product' !== $post->post_type ) {
+		return '<header class="wrap thead"><div><h1 class="display">Product</h1></div></header>';
+	}
+	$name   = get_the_title( $post );
+	$merk   = (string) get_post_meta( $post->ID, 'merk', true );
+	$tekst  = (string) get_post_meta( $post->ID, 'tekst', true );
+	$detail = (string) get_post_meta( $post->ID, 'detail', true );
+	$photo  = has_post_thumbnail( $post )
+		? '<figure class="framed rv-img">' . soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => $name, 'fetchpriority' => 'high' ) ) . '</figure>'
+		: '';
+	$nieuw  = home_url( '/nieuw/' );
+
+	$html = '<header class="wrap thead' . ( $photo ? '' : ' thead--solo' ) . '">' . $photo . '<div>'
+		. '<ol class="crumbs" role="list"><li><a href="' . esc_url( home_url( '/' ) ) . '">Home</a></li><li><a href="' . esc_url( $nieuw ) . '">Nieuw</a></li><li aria-current="page">' . esc_html( $name ) . '</li></ol>'
+		. ( '' !== $merk ? '<p class="label rv">' . esc_html( $merk ) . '</p>' : '' )
+		. '<h1 class="display rv">' . esc_html( $name ) . '</h1>'
+		. ( '' !== $tekst ? '<p class="lede rv" style="--d:1">' . esc_html( $tekst ) . '</p>' : '' )
+		. '<div class="actions rv" style="--d:2">'
+		. '<a class="btn" href="' . esc_url( soleil_product_shop_url( $post ) ) . '"' . soleil_blank() . '>Bekijk in de webshop' . soleil_icon( 'arrow-up-right' ) . '</a>'
+		. '</div></div></header>';
+
+	// De info naast een kleine titel, op hetzelfde raster als de header (foto links, tekst rechts).
+	if ( soleil_product_has_detail( $post ) ) {
+		$html .= '<section class="wrap pinfo" aria-labelledby="info">'
+			. '<div class="pinfo-head"><p class="label">Meer weten</p><h2 id="info" class="h2">Over dit product</h2></div>'
+			. '<div class="prose">' . wpautop( wp_kses_post( $detail ) )
+			. '<div class="actions">'
+			. '<a class="btn" href="' . esc_url( soleil_product_shop_url( $post ) ) . '"' . soleil_blank() . '>Bekijk in de webshop' . soleil_icon( 'arrow-up-right' ) . '</a>'
+			. '<a class="link" href="' . esc_url( soleil_setting( 'booking' ) ) . '"' . soleil_blank() . '>Liever eerst advies? Maak een afspraak' . soleil_icon( 'arrow-up-right' ) . '</a>'
+			. '</div></div></section>';
+	}
+
+	// Ook nieuw: de andere producten, zelfde kaartjes als op de pagina Nieuw.
+	$others = array_values( array_filter( soleil_items( 'product' ), fn( $p ) => $p->ID !== $post->ID ) );
+	if ( $others ) {
+		$cards = '';
+		foreach ( array_slice( $others, 0, 3 ) as $i => $p ) {
+			$cards .= soleil_product_card( $p, $i );
+		}
+		$html .= '<section class="wrap section pmore" aria-labelledby="ook-nieuw">'
+			. '<div class="sec-head"><h2 id="ook-nieuw" class="h1 rv">Ook nieuw</h2>'
+			. '<a class="link rv" href="' . esc_url( $nieuw ) . '">Alles wat nieuw is' . soleil_icon( 'arrow-right' ) . '</a></div>'
+			. '<ul class="btiles news" role="list">' . $cards . '</ul></section>';
+	}
+	return $html;
 }
 
 function soleil_block_activities() {

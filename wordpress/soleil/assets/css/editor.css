@@ -18,6 +18,7 @@
 }
 .soleil-manage > span { margin-right: auto; }
 .soleil-manage strong { font-weight: 600; }
+.soleil-manage__where { display: block; margin-top: .2rem; font-size: 12px; color: #50575e; }
 .soleil-manage__btn { padding: .45rem .9rem; border-radius: 4px; border: 1px solid #1e1e1e; background: #fff; color: #1e1e1e !important; font-weight: 600; text-decoration: none !important; white-space: nowrap; }
 .soleil-manage__btn.is-primary { background: #1e1e1e; color: #fff !important; }
 

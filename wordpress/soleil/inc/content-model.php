@@ -65,11 +65,17 @@ add_action( 'init', function () {
 		'supports'      => array( 'title', 'thumbnail', 'page-attributes' ),
 	) );
 
-	register_post_type( 'product', $simple + array(
-		'labels'        => soleil_labels( 'Product', 'Producten', 'Nieuw' ),
-		'menu_icon'     => 'dashicons-products',
-		'menu_position' => 22,
-		'supports'      => array( 'title', 'thumbnail', 'page-attributes' ),
+	// Producten hebben een eigen pagina onder /nieuw/<product>/ met de info en de knop naar de webshop.
+	register_post_type( 'product', array(
+		'labels'              => soleil_labels( 'Product', 'Producten', 'Nieuw' ),
+		'public'              => true,
+		'show_in_rest'        => true,
+		'has_archive'         => false,
+		'exclude_from_search' => true,
+		'rewrite'             => array( 'slug' => 'nieuw', 'with_front' => false ),
+		'menu_icon'           => 'dashicons-products',
+		'menu_position'       => 22,
+		'supports'            => array( 'title', 'thumbnail', 'page-attributes' ),
 	) );
 
 	register_post_type( 'merk', $simple + array(
@@ -89,6 +95,15 @@ add_action( 'init', function () {
 	// Pagina's krijgen een samenvatting: die tekst is de beschrijving in zoekmachines.
 	add_post_type_support( 'page', 'excerpt' );
 } );
+
+// Nieuwe adressen (bv. /nieuw/<product>/) werken na een thema-update zonder de permalinks opnieuw op te slaan.
+// Verhoog het nummer bij elke wijziging aan de adressen van een inhoudstype.
+add_action( 'init', function () {
+	if ( '2' !== get_option( 'soleil_rewrite_versie' ) ) {
+		flush_rewrite_rules( false );
+		update_option( 'soleil_rewrite_versie', '2' );
+	}
+}, 99 );
 
 /* ---------- Velden ---------- */
 
@@ -126,8 +141,9 @@ function soleil_fields() {
 		),
 		'product'     => array(
 			'merk'      => array( 'string', 'Merk', 'Staat klein boven de naam.' ),
-			'tekst'     => array( 'text', 'Tekst' ),
-			'link_url'  => array( 'url', 'Link', 'Leeg = de webshop.' ),
+			'tekst'     => array( 'text', 'Korte tekst', 'Staat op het kaartje op de pagina Nieuw en bovenaan de pagina van het product.' ),
+			'link_url'  => array( 'url', 'Link naar de webshop', 'De knop "Bekijk in de webshop" op de pagina van het product. Leeg = de webshop zelf.' ),
+			'detail'    => array( 'html', 'Info over dit product', 'Alles wat je hier schrijft, staat op de eigen pagina van dit product. Een klik op het kaartje op de pagina Nieuw brengt je daar. Laat je dit leeg, dan gaat het kaartje meteen naar de webshop.' ),
 			'voorbeeld' => array( 'boolean', 'Voorbeeldinhoud', 'Aan = op de pagina Nieuw staat dat de inhoud nog aangevuld wordt.' ),
 		),
 		'merk'        => array(
@@ -239,6 +255,25 @@ function soleil_meta_box( $post ) {
 		$help  = $field[2] ?? '';
 		$value = get_post_meta( $post->ID, $key, true );
 		$id    = 'soleil-' . $key;
+		if ( 'html' === $kind ) {
+			// Over de volle breedte, met een duidelijke tussentitel: dit is een apart deel van het formulier.
+			echo '<tr><td colspan="2" style="padding-left:0;padding-right:0">'
+				. '<h2 style="margin:24px 0 4px;padding:16px 0 0;border-top:1px solid #c3c4c7;font-size:16px">' . esc_html( $label ) . '</h2>'
+				. '<p class="description" style="margin:0 0 12px">' . esc_html( $help ) . '</p>';
+			wp_editor( (string) $value, 'soleil_' . $key, array(
+				'textarea_name' => 'soleil[' . $key . ']',
+				'textarea_rows' => 12,
+				'media_buttons' => false,
+				'quicktags'     => false,
+				'tinymce'       => array(
+					'toolbar1'      => 'formatselect,bold,italic,bullist,numlist,link,unlink,undo,redo',
+					'toolbar2'      => '',
+					'block_formats' => 'Alinea=p;Tussentitel=h2;Kleine titel=h3',
+				),
+			) );
+			echo '</td></tr>';
+			continue;
+		}
 		echo '<tr><th scope="row"><label for="' . esc_attr( $id ) . '">' . esc_html( $label ) . '</label></th><td>';
 		switch ( $kind ) {
 			case 'text':
@@ -298,6 +333,9 @@ add_action( 'save_post', function ( $post_id, $post ) {
 				break;
 			case 'text':
 				update_post_meta( $post_id, $key, sanitize_textarea_field( $value ) );
+				break;
+			case 'html':
+				update_post_meta( $post_id, $key, wp_kses_post( $value ) );
 				break;
 			case 'url':
 				update_post_meta( $post_id, $key, '' === trim( $value ) ? '' : ( str_starts_with( trim( $value ), '/' ) ? sanitize_text_field( $value ) : esc_url_raw( $value ) ) );
