@@ -1,0 +1,107 @@
+# Feedbackronde WordPress-staging (november 2026)
+
+Feedback van Saskia na haar eerste weken op https://soleil.staging.wizarts.be/. Gestart op 16 november 2026.
+Eén rij per punt. Status: ✅ klaar en gepusht · 🚀 ook op de staging · ⏳ bezig · ⬜ nog te doen · ❓ eerst vragen.
+
+## Werkwijze (lees dit eerst)
+
+**Regel nummer één: code gaat naar de staging, de inhoud blijft daar.** Saskia werkt zelf op de staging. Nooit de database
+van Local naar de staging zetten: dan zijn haar teksten, prijzen en foto's weg.
+
+- **Repo:** `~/WIZARTS/Soleil/Soleil-Hifi_V3`, branch `wordpress`, remote `origin` (= `wizarts-be/Soleil`). Remote `old` niet gebruiken.
+- **Local:** site `soleil` in Local starten → http://soleil.local. Het thema is een symlink naar `wordpress/soleil` in de repo.
+  WP-CLI: `wordpress/bin/wp <commando>`.
+- **Login lokaal:** dezelfde als op de staging (beheerder `wzbeheer-6dae`). Testen als Saskia: Gebruikers → `saskia.ferket` →
+  Switch To (plugin User Switching).
+- **Lokale database:** kopie van de staging van 16/11 12:18. Saskia werkt intussen verder op de staging, dus lokaal loopt achter.
+  Opnieuw binnenhalen: zie "Staging naar Local" onderaan.
+- **Slot op de import** (`soleil_opgeleverd = 1`) staat aan, op de staging en lokaal. `wordpress/bin/import` nooit met `--force` draaien.
+- **SSH staging:** `ssh stagingwizartsbe@ssh020.webhosting.be` (de naam `ssh.staging.wizarts.be` werkt nog niet). Login met SSH-sleutel.
+  Site: `~/subsites/soleil.staging.wizarts.be`, WP-CLI is er (`wp`).
+- **Back-ups:** staging-database van 16/11 in `~/private/backups/` op de server. Lokale bestanden in `~/WIZARTS/Soleil/staging-pull/`
+  (dump van de staging, de oude lokale database en de oude lokale uploads).
+- **Testdata lokaal:** bij het product "Zachte peeling voor thuis" (ID 31) staat lokaal testtekst in "Info over dit product".
+  Niet op de staging.
+
+### Thema naar de staging zetten
+
+Altijd eerst een back-up en een droge run (`-n`), dan pas echt:
+
+```sh
+ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.be && wp db export ~/private/backups/soleil-$(date +%F-%H%M).sql'
+cd ~/WIZARTS/Soleil/Soleil-Hifi_V3/wordpress
+rsync -rcn --delete --itemize-changes soleil/ stagingwizartsbe@ssh020.webhosting.be:subsites/soleil.staging.wizarts.be/wp-content/themes/soleil/
+# klopt de lijst? dan zonder -n
+```
+
+Daarna op de staging nakijken: home, /nieuw/, een behandeling, en de editor als Saskia.
+
+### Staging naar Local
+
+```sh
+ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.be && wp db export ~/private/backups/soleil-$(date +%F-%H%M).sql'
+# dump ophalen met scp, lokaal inladen met de mysql van Local (socket in ~/Library/Application Support/Local/run/<site-id>/mysql/),
+# dan: wordpress/bin/wp search-replace 'https://soleil.staging.wizarts.be' 'http://soleil.local' --all-tables --precise
+# uploads: rsync van wp-content/uploads/ naar ~/Local Sites/soleil/app/public/wp-content/uploads/
+```
+
+## Stand van zaken
+
+**Gepusht maar nog niet op de staging:** commits `f385c74` en `ddaa217`. Bij de volgende keer uitrollen gaan ze mee.
+
+## Punten
+
+### Algemeen en typografie
+
+| # | Feedback | Actie | Status |
+|---|---|---|---|
+| 1 | "Nieuw bij Soleil" → eyebrow iets groter | Alle eyebrows boven een titel 13px en semi-bold (600). Menukopjes en tags op kaarten blijven 11px | ✅ `f385c74` |
+| 2 | Logo in de nav met "instituut" in de zon (logo) | | ⬜ |
+| 3 | Activiteit bewerken → titel moet bold staan | | ⬜ |
+| 4 | Blok ook kapot na tekst aan te passen (bij activiteit?) | Eerst nabootsen als Saskia | ⬜ |
+| 5 | Saskia heeft op sommige pagina's "geen rechten" | Oorzaak: vaste pagina's zijn vergrendeld en lijsten vullen zich uit Producten, Reviews, … De gele balk met uitleg en de knop "Bewerk …" staat nu altijd zichtbaar in de editor. Per pagina nakijken wat ze nog echt mist | ⏳ deels `ddaa217` |
+
+### Home
+
+| # | Feedback | Actie | Status |
+|---|---|---|---|
+| 6 | "Stralen begint met een huid in balans?" | Geen actie in de feedback | ❓ |
+| 7 | Tussen behandelingen / 4 USP's: goudachtige quote bij de foto's | | ⬜ |
+| 8 | Journaal op home: 1 blogpost + knop naar het overzicht ("seizoenstips"); de sectie "Ik ben Saskia" weg, daar het journaal | Inhoud op de staging mee aanpassen (geen database-import) | ⬜ |
+| 9 | Blok boven de footer "Even helemaal tijd voor jezelf" weg | | ⬜ |
+
+### Nieuw
+
+| # | Feedback | Actie | Status |
+|---|---|---|---|
+| 10 | Product in de kijker → detailpagina over het nieuwe product | Eigen pagina per product op `/nieuw/<product>/`, nieuw veld "Info over dit product", knop naar de webshop, "Ook nieuw" onderaan. Info leeg = kaartje gaat naar de webshop | ✅ `ddaa217` |
+| 11 | Nieuw bij Soleil: geen toegang om tekst en dingen aan te passen | Zie 5: de gele balk wijst nu naar Producten / Activiteiten / In de kijker. Nakijken of er nog vaste tekst is die ze niet kan aanpassen | ⏳ |
+
+### Behandelingen
+
+| # | Feedback | Actie | Status |
+|---|---|---|---|
+| 12 | Arrangementen: foto niet aanpasbaar, blok mag kleiner (geen rechten) | | ⬜ |
+| 13 | Make-up (4 blokken): zelfde als andere pagina's met meerdere prijzen. Meer of minder dan 4 → gewoon prijskaart; 4 kaarten, en zelf kaarten kunnen toevoegen | | ⬜ |
+| 14 | Prijzenblok hiernaast weg bij behandelingen → gewoon "In de kijker deze winter" | | ⬜ |
+| 15 | Handen en voeten: extra blokje met meer info ("geen pedicure zonder gelaatsverzorging"); staat nu 2 keer onder de prijzenlijst | | ⬜ |
+| 16 | Skincare make-up behandelingen: geen opsomming, gewoon een tekstblokje; blokjes meteen onder de hero | | ⬜ |
+| 17 | Laserontharing: tekst is weg; 4 blokjes kunnen toevoegen | | ⬜ |
+| 18 | Laserontharing: H2-titel boven de tekst ("Actie van de maand") | | ⬜ |
+| 19 | Make-up: standaard "Behandelingen" boven de blokken, maar zelf aan te passen | | ❓ alleen make-up of alle pagina's met kaarten? |
+
+### Over Soleil en merken
+
+| # | Feedback | Actie | Status |
+|---|---|---|---|
+| 20 | Merken waar ik achter sta → blokjes klikbaar, Saskia kan per merk een link toevoegen | Veld "Link" bij Merken | ⬜ |
+| 21 | Over Soleil: vermelding van Facebook en Instagram | Links staan al in Soleil > Praktisch | ⬜ |
+| 22 | Over Soleil: popup "nieuwsbrief ontvangen", net zoals op home? | | ❓ |
+
+## Open vragen voor Saskia / PM
+
+- Punt 6: wat moet er gebeuren met "Stralen begint met een huid in balans"?
+- Punt 8: is "Seizoenstips" de titel van de sectie op home of een categorie in het journaal?
+- Punt 19: "Behandelingen" boven de blokken: alleen voor make-up of voor alle pagina's met kaarten?
+- Punt 22: nieuwsbriefpopup op Over Soleil ook, of alleen op home?
+- Product zonder info: kaartje naar de webshop (nu) of altijd naar een eigen pagina?
