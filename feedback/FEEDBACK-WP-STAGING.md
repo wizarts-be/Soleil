@@ -57,7 +57,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 
 ## Stand van zaken
 
-**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b` en `000b25f`. Bij de volgende keer uitrollen gaan ze mee.
+**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b`, `000b25f` en `74ee9f4`. Bij de volgende keer uitrollen gaan ze mee.
 
 ## Punten
 
@@ -92,7 +92,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 | # | Feedback | Actie | Status |
 |---|---|---|---|
 | 12 | Arrangementen (home): foto niet aanpasbaar, blok mag kleiner (geen rechten) | Het gaat om de band "Even helemaal tijd voor jezelf" (knop naar de arrangementen). In de editor was de achtergrondfoto 0x0 en lag de overloop erover: niets aan te klikken, leek vergrendeld. Opgelost voor elke achtergrondfoto (`soleil/foto` met tag img): foto zichtbaar, knop "Foto vervangen" altijd zichtbaar rechtsboven. Titel en knop blijven aanpasbaar. Ook: eigen kaart "Ontspanning" in Behandelingen nu altijd open en compact. "Blok kleiner" en punt 9 (blok weg) nog te bespreken | ⏳ ontgrendelen ✅, "kleiner" nog te doen |
-| 13 | Prijzen: bij precies 4 prijzen kaartjes zoals make-up, anders het prijzenvak; Saskia kan zelf kaartjes zetten/aanpassen/weghalen op elke behandeling | Kaartjes komen uit de prijsrijen (één bron). Per behandeling bij Prijzen: "Blokken of één prijskaart?": Automatisch (4 = blokken) / Blokken / Eén prijskaart, titel boven de blokken (leeg = Behandelingen, zie 19) en per prijs "Tekst in het blok" (leeg = toelichting). Kaartje weg = prijs weg. Het prijzenvak houdt dan enkel de naam, extra vak, tip en de knop. Lege prijsrijen en lege tabellen tellen niet mee en geven geen gat meer (Huidanalyse had een lege 2e tabel). Nu automatisch kaartjes: Huidanalyse en Lichaam. Tarieven blijft de tabel | ⏳ lokaal klaar |
+| 13 | Prijzen: bij precies 4 prijzen kaartjes zoals make-up, anders het prijzenvak; Saskia kan zelf kaartjes zetten/aanpassen/weghalen op elke behandeling | Kaartjes komen uit de prijsrijen (één bron). Per behandeling bij Prijzen: "Blokken of één prijskaart?": Automatisch (4 = blokken) / Blokken / Eén prijskaart, titel boven de blokken (leeg = Behandelingen, zie 19) en per prijs "Tekst in het blok" (leeg = toelichting). Kaartje weg = prijs weg. Het prijzenvak houdt dan enkel de naam, extra vak, tip en de knop. Lege prijsrijen en lege tabellen tellen niet mee en geven geen gat meer (Huidanalyse had een lege 2e tabel). Nu automatisch kaartjes: Huidanalyse en Lichaam. Tarieven blijft de tabel | ✅ `74ee9f4` |
 | 14 | Prijzenblok hiernaast weg bij behandelingen → gewoon "In de kijker deze winter" | | ⬜ |
 | 15 | Handen en voeten: extra blokje met meer info ("geen pedicure zonder gelaatsverzorging"); staat nu 2 keer onder de prijzenlijst | | ⬜ |
 | 16 | Skincare make-up behandelingen: geen opsomming, gewoon een tekstblokje; blokjes meteen onder de hero | | ⬜ |
