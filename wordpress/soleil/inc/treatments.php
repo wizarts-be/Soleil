@@ -52,6 +52,7 @@ function soleil_treatment( $post ) {
 		'view'   => $m( 'prijzen_weergave' ),
 		'cards_title' => $m( 'kaartjes_titel' ),
 		'page'   => $makeup,
+		'action' => soleil_json( $post->ID, 'actie' ),
 	);
 }
 
@@ -116,16 +117,23 @@ function soleil_treatment_default( $t ) {
 		? '<a class="btn" href="' . esc_url( soleil_link( $t['link']['href'] ) ) . '"' . soleil_blank() . '>' . esc_html( $t['link']['label'] ) . soleil_icon( 'arrow-up-right' ) . '</a>'
 		: '';
 
+	// In de hero enkel de eerste alinea van de intro, zoals bij de andere behandelingen. Een langere intro
+	// (bv. laser: de uitleg over Cathy) staat verder links onder de hero als gewone tekst.
+	$intro = array_values( array_filter( array_map( 'trim', preg_split( '/\n\s*\n/', str_replace( "\r", '', (string) $t['intro'] ) ) ), 'strlen' ) ) ?: array( '' );
+
 	$html = '<header class="wrap thead">'
 		. '<figure class="framed rv-img">' . soleil_img( $t['img'], array( 'alt' => $t['alt'], 'fetchpriority' => 'high' ) ) . '</figure>'
 		. '<div>' . soleil_crumbs( $t )
 		. '<p class="label rv">' . esc_html( '' !== $t['kicker'] ? $t['kicker'] : $t['sub'] ) . '</p>'
 		. '<h1 class="display rv">' . esc_html( '' !== $t['title'] ? $t['title'] : $t['name'] ) . '</h1>'
-		. '<p class="lede rv" style="--d:1">' . esc_html( $t['intro'] ) . '</p>'
+		. '<div class="lede-wrap rv" style="--d:1">' . str_replace( '<p>', '<p class="lede">', soleil_paragraphs( $intro[0] ) ) . '</div>'
 		. '<div class="actions rv" style="--d:2">' . ( $link ? $link : soleil_book_button( 'btn', 'Boek hier' ) ) . '</div>'
 		. '</div></header>';
 
 	$html .= '<section class="wrap tbody"><div>';
+	if ( count( $intro ) > 1 ) {
+		$html .= '<div class="tbody-text rv">' . soleil_paragraphs( implode( "\n\n", array_slice( $intro, 1 ) ) ) . '</div>';
+	}
 	if ( $t['why'] ) {
 		$w      = $t['why'];
 		$titles = array_replace( array( 'Herken je dit?', 'Wat ik doe', 'Wat jij eraan hebt' ), array_filter( (array) ( $w['titels'] ?? array() ), 'strlen' ) );
@@ -184,14 +192,31 @@ function soleil_treatment_default( $t ) {
 	}
 	$panel .= ( $link ? $link : soleil_book_button() ) . '</aside>';
 
-	return $html . $panel . '</section>' . $cards;
+	return $html . $panel . '</section>' . $cards . soleil_action_block( $t['action'] );
 }
 
 /**
- * Tekst met lege regels als alinea's.
+ * Optioneel blok onderaan een behandeling: kleine regel, H2, tekst en foto (bv. "Actie van de maand" bij laser).
+ * Zelfde opmaak als het merkblok bij make-up.
+ */
+function soleil_action_block( $a ) {
+	if ( ! $a || ( '' === trim( (string) ( $a['titel'] ?? '' ) ) && '' === trim( (string) ( $a['tekst'] ?? '' ) ) ) ) {
+		return '';
+	}
+	$foto = (int) ( $a['foto'] ?? 0 );
+	return '<section class="wrap section brand-block' . ( $foto ? '' : ' brand-block--text' ) . '" aria-labelledby="actie">'
+		. ( $foto ? '<figure class="ph rv-img">' . soleil_img( $foto, array( 'alt' => $a['alt'] ?? '', 'loading' => 'lazy' ) ) . '</figure>' : '' )
+		. '<div class="rv">' . ( '' !== trim( (string) ( $a['label'] ?? '' ) ) ? '<p class="label">' . esc_html( $a['label'] ) . '</p>' : '' )
+		. '<h2 id="actie" class="h2">' . esc_html( '' !== trim( (string) ( $a['titel'] ?? '' ) ) ? $a['titel'] : 'Actie van de maand' ) . '</h2>'
+		. soleil_paragraphs( $a['tekst'] ?? '' )
+		. '</div></section>';
+}
+
+/**
+ * Tekst met lege regels als alinea's; een gewone regeleinde blijft een nieuwe regel.
  */
 function soleil_paragraphs( $text ) {
-	return implode( '', array_map( fn( $x ) => '<p>' . esc_html( $x ) . '</p>', array_filter( array_map( 'trim', preg_split( '/\n\s*\n/', (string) $text ) ), 'strlen' ) ) );
+	return implode( '', array_map( fn( $x ) => '<p>' . nl2br( esc_html( $x ), false ) . '</p>', array_filter( array_map( 'trim', preg_split( '/\n\s*\n/', str_replace( "\r", '', (string) $text ) ) ), 'strlen' ) ) );
 }
 
 /**

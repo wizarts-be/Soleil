@@ -132,6 +132,7 @@ function soleil_fields() {
 			'extra'            => array( 'json' ),
 			'delen'            => array( 'json' ),
 			'makeup'           => array( 'json' ),
+			'actie'            => array( 'json' ), // optioneel blok met H2, tekst en foto, bv. "Actie van de maand" (laser)
 		),
 		'activiteit'  => array(
 			'tekst'      => array( 'text', 'Tekst' ),
@@ -385,6 +386,16 @@ add_action( 'manage_activiteit_posts_custom_column', function ( $col, $id ) {
 }, 10, 2 );
 
 /**
+ * "Donderdag 29 oktober 2026", altijd in het Nederlands: de taal van WordPress staat op Engels (en_US),
+ * waardoor wp_date() "Thursday 29 October 2026" gaf.
+ */
+function soleil_date_nl( DateTimeInterface $time ) {
+	$days   = array( 'zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag' );
+	$months = array( 1 => 'januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december' );
+	return ucfirst( $days[ (int) $time->format( 'w' ) ] ) . ' ' . $time->format( 'j' ) . ' ' . $months[ (int) $time->format( 'n' ) ] . ' ' . $time->format( 'Y' );
+}
+
+/**
  * Komende data als "Donderdag 29 oktober 2026", zoals in site.ts. Een datum telt mee tot het einde van die dag.
  * $limit 0 = alle.
  */
@@ -396,7 +407,7 @@ function soleil_upcoming( $dates, $limit = 3 ) {
 			continue;
 		}
 		$time  = DateTimeImmutable::createFromFormat( 'Y-m-d H:i', $date . ' 12:00', wp_timezone() );
-		$out[] = ucfirst( wp_date( 'l j F Y', $time->getTimestamp() ) );
+		$out[] = soleil_date_nl( $time );
 	}
 	return $limit ? array_slice( $out, 0, $limit ) : $out;
 }

@@ -430,7 +430,28 @@
       ) : null
     ]);
 
-    var makeupBlock = section("Eigen paginaopbouw", "Voor make-up: tekst bovenaan, daaronder de diensten als blokjes, dan een merkblok. In plaats van het prijzenvak.", [
+    var action = json("actie", null);
+    var setA = function (key) { return function (v) { setJson("actie", merge(action, key, v)); }; };
+    var actionBlock = makeup ? null : section("Actie", "Een blok onderaan de pagina met een titel, tekst en foto, bv. Actie van de maand. Zet het uit als er geen actie loopt.", [
+      el(c.ToggleControl, { key: "t", label: "Tonen", checked: !!action, __nextHasNoMarginBottom: true,
+        onChange: function (on) { setJson("actie", on ? { label: "", titel: "Actie van de maand", tekst: "", foto: 0, alt: "" } : null); } }),
+      action ? el(Fragment, { key: "f" },
+        el("div", { className: "soleil-card__grid soleil-card__grid--even" },
+          text("Titel", action.titel, setA("titel"), "Grote titel (H2). Leeg = Actie van de maand."),
+          text("Kleine regel boven de titel", action.label, setA("label"), "Bv. 4+1 gratis. Mag leeg blijven.")
+        ),
+        area("Tekst", action.tekst, setA("tekst"), "Een lege regel begint een nieuwe alinea.", 8),
+        el("div", { className: "soleil-card__grid" },
+          el("div", null, el(Photo, { id: action.foto || 0, label: "Foto (mag leeg blijven)", onChange: setA("foto") })),
+          el("div", { className: "soleil-card__fields" },
+            action.foto ? text("Beschrijving van de foto", action.alt, setA("alt"), "Voor wie de foto niet ziet.") : null
+          )
+        )
+      ) : null
+    ]);
+
+    // Enkel voor make-up. Op andere behandelingen verborgen: aangezet verbergt hij de hele gewone pagina (zo ging laser stuk).
+    var makeupBlock = !makeup ? null : section("Eigen paginaopbouw", "Voor make-up: tekst bovenaan, daaronder de diensten als blokjes, dan een merkblok. In plaats van het prijzenvak.", [
       el(c.ToggleControl, { key: "t", label: "Eigen paginaopbouw gebruiken", checked: !!makeup, __nextHasNoMarginBottom: true,
         onChange: function (on) { setJson("makeup", on ? { titel: "", vragen: [], cta: "", verhaal: { label: "", titel: "", tekst: [], foto: 0, alt: "" }, diensten: [] } : null); } }),
       makeup ? (function () {
@@ -477,7 +498,7 @@
         el("strong", null, "Behandeling"),
         el("span", null, "Vul de velden in en klik op Opslaan. De pagina wordt vanzelf opgebouwd, zoals de andere behandelingen.")
       ),
-      head, whyBlock, priceBlock, partsBlock, extraBlock, makeupBlock
+      head, whyBlock, priceBlock, partsBlock, extraBlock, actionBlock, makeupBlock
     );
   }
 

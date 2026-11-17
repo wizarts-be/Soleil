@@ -566,6 +566,9 @@ em { font-style: italic; font-weight: 400; }
 
 /* Make-up: intro questions, brand block next to a photo, simple service blocks */
 .thero .intro { display: grid; gap: 12px; margin-top: 8px; }
+.lede-wrap { display: grid; gap: 12px; }
+.tbody-text { max-width: 62ch; margin-bottom: clamp(32px, 4vw, 48px); color: var(--moss); }
+.tbody-text p + p { margin-top: 1em; }
 .thero .intro .lede { font-size: var(--fs-lg); color: var(--moss); max-width: 52ch; }
 .asks { display: grid; gap: 10px; font-size: var(--fs-lg); color: var(--moss); }
 .asks li { padding-left: 22px; position: relative; }
@@ -583,6 +586,7 @@ em { font-style: italic; font-weight: 400; }
 .services .link { align-self: flex-start; font-size: var(--fs-small); }
 @media (max-width: 1080px) { .services { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 860px) { .brand-block { grid-template-columns: 1fr; } }
+.brand-block--text { grid-template-columns: minmax(0, 1fr); max-width: 760px; }
 @media (max-width: 560px) { .services { grid-template-columns: 1fr; } }
 
 /* ==========================================================================
