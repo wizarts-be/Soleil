@@ -47,7 +47,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 
 ## Stand van zaken
 
-**Gepusht maar nog niet op de staging:** commits `f385c74` en `ddaa217`. Bij de volgende keer uitrollen gaan ze mee.
+**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217` en `b6d36e2`. Bij de volgende keer uitrollen gaan ze mee.
 
 ## Punten
 
@@ -56,7 +56,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 | # | Feedback | Actie | Status |
 |---|---|---|---|
 | 1 | "Nieuw bij Soleil" → eyebrow iets groter | Alle eyebrows boven een titel 13px en semi-bold (600). Menukopjes en tags op kaarten blijven 11px | ✅ `f385c74` |
-| 2 | "Het logo in de navigatie vervangen door het logo van Instituut in de Zon" + als favicon | Nav: officieel logo LOGO-SOLEIL-2026-COLOR (media ID 306) als `assets/logo-soleil.webp`, krimpt mee bij scrollen; oude svg-zon + woordmerk weg. Favicon: `assets/favicon.png`, zon + "instituut" zonder SOLEIL op crème vierkant, ook apple-touch-icon. Site-pictogram in WP staat op 0 (anders overschrijft dat het favicon) | ⏳ lokaal klaar |
+| 2 | "Het logo in de navigatie vervangen door het logo van Instituut in de Zon" + als favicon | Nav: officieel logo LOGO-SOLEIL-2026-COLOR (media ID 306) als `assets/logo-soleil.webp`, krimpt mee bij scrollen; oude svg-zon + woordmerk weg. Favicon: `assets/favicon.png`, zon + "instituut" zonder SOLEIL op crème vierkant, ook apple-touch-icon. Site-pictogram in WP staat op 0 (anders overschrijft dat het favicon) | ✅ `b6d36e2` |
 | 3 | Activiteit bewerken → titel moet bold staan | | ⬜ |
 | 4 | Blok ook kapot na tekst aan te passen (bij activiteit?) | Eerst nabootsen als Saskia | ⬜ |
 | 5 | Saskia heeft op sommige pagina's "geen rechten" | Oorzaak: vaste pagina's zijn vergrendeld en lijsten vullen zich uit Producten, Reviews, … De gele balk met uitleg en de knop "Bewerk …" staat nu altijd zichtbaar in de editor. Per pagina nakijken wat ze nog echt mist | ⏳ deels `ddaa217` |
