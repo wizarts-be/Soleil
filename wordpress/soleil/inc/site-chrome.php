@@ -79,8 +79,7 @@ function soleil_render_site_header() {
 
 	return '<a class="skip" href="#main">Naar de inhoud</a>'
 		. '<header class="hd" data-header><div class="wrap hd-main">'
-		. '<a class="brand" href="' . esc_url( home_url( '/' ) ) . '" aria-label="Instituut Soleil, naar de homepagina">' . soleil_logo()
-		. '<span class="brand-word" aria-hidden="true"><small>instituut</small><span>SOLEIL</span></span></a>'
+		. '<a class="brand" href="' . esc_url( home_url( '/' ) ) . '" aria-label="Instituut Soleil, naar de homepagina">' . soleil_logo() . '</a>'
 		. '<nav class="nv" aria-label="Hoofdmenu">'
 		. '<button class="nv-item" type="button" aria-expanded="false" aria-controls="mega" data-dd-btn' . ( str_starts_with( $path, '/behandelingen/' ) ? ' data-current="true"' : '' ) . '>Behandelingen' . soleil_icon( 'caret-down' ) . '</button>'
 		. $nav
@@ -235,7 +234,8 @@ add_action( 'wp_head', function () {
 	}
 	echo '<meta name="theme-color" content="#fbf9f6">' . "\n";
 	if ( ! has_site_icon() ) {
-		echo '<link rel="icon" href="' . esc_url( soleil_asset( 'favicon.svg' ) ) . '" type="image/svg+xml">' . "\n";
+		echo '<link rel="icon" href="' . esc_url( soleil_asset( 'favicon.png' ) ) . '" type="image/png" sizes="512x512">' . "\n";
+		echo '<link rel="apple-touch-icon" href="' . esc_url( soleil_asset( 'favicon.png' ) ) . '">' . "\n";
 	}
 	echo '<meta property="og:type" content="website">' . "\n";
 	echo '<meta property="og:title" content="' . esc_attr( $title ) . '">' . "\n";

@@ -26,18 +26,10 @@ function soleil_icon( $name, $class = '' ) {
 }
 
 /**
- * Het Soleil-beeldmerk, zoals Logo.astro.
+ * Het officiële logo: zon met "instituut", SOLEIL eronder. De link eromheen draagt de naam (aria-label).
  */
-function soleil_logo( $class = '' ) {
-	static $logo = null;
-	if ( null === $logo ) {
-		$logo = json_decode( (string) file_get_contents( get_theme_file_path( 'assets/logo.json' ) ), true );
-	}
-	$paths = '';
-	foreach ( $logo['paths'] as $d ) {
-		$paths .= '<path d="' . esc_attr( $d ) . '"></path>';
-	}
-	return '<svg class="' . esc_attr( trim( 'logo-mark ' . $class ) ) . '" viewBox="' . esc_attr( $logo['viewBox'] ) . '" fill="currentColor" aria-hidden="true">' . $paths . '</svg>';
+function soleil_logo() {
+	return '<img class="logo" src="' . esc_url( soleil_asset( 'logo-soleil.webp' ) ) . '" width="640" height="322" alt="">';
 }
 
 /**

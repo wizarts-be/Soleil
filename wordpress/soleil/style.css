@@ -129,13 +129,9 @@ em { font-style: italic; font-weight: 400; }
 .hd-main { display: flex; justify-content: space-between; align-items: center; height: var(--header-top); transition: padding-top 0.4s var(--ease); }
 .hd.is-scrolled .hd-main { padding-top: calc(var(--header-top) - var(--header-h)); }
 .brand { display: inline-flex; align-items: center; gap: 12px; }
-.brand .logo-mark { width: 84px; color: var(--tan); transition: width 0.4s var(--ease); }
-.hd.is-scrolled .brand .logo-mark { width: 54px; }
-.brand-word { transition: transform 0.4s var(--ease); transform-origin: left center; }
-.hd.is-scrolled .brand-word { transform: scale(0.82); }
-.brand-word { display: flex; flex-direction: column; line-height: 1; }
-.brand-word small { font: 400 var(--fs-label)/1 var(--serif); letter-spacing: 0.32em; margin-bottom: 4px; }
-.brand-word span { font: 400 1.5rem/1 var(--serif); letter-spacing: 0.28em; color: var(--tan-ink); margin-right: -0.28em; }
+/* Official logo (sun with 'instituut', SOLEIL below), 2:1. Height follows the header. */
+.brand .logo { display: block; height: 76px; width: auto; transition: height 0.4s var(--ease); }
+.hd.is-scrolled .brand .logo { height: 54px; }
 .hd { border-bottom: 1px solid var(--line); }
 .nv { display: flex; align-items: center; gap: clamp(20px, 2.4vw, 36px); font-size: var(--fs-small); }
 .nv-item { position: relative; display: inline-flex; align-items: center; gap: 6px; padding-block: 10px; }
@@ -190,9 +186,8 @@ em { font-style: italic; font-weight: 400; }
   .nv, .mega { display: none; }
   .menu-btn { display: inline-flex; }
   .menu-in, .menu-treat { grid-template-columns: 1fr; }
-  .brand .logo-mark { width: 64px; }
-  .hd.is-scrolled .brand .logo-mark { width: 44px; }
-  .brand-word span { font-size: 1.2rem; }
+  .brand .logo { height: 64px; }
+  .hd.is-scrolled .brand .logo { height: 48px; }
 }
 
 /* ==========================================================================

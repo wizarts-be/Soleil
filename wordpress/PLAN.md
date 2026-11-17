@@ -20,7 +20,7 @@ een herhaalbaar importscript via WP-CLI.
   zodat `--sans` en `--serif` niet veranderen. Hanken Grotesk staat in package.json maar wordt niet gebruikt: niet meenemen.
 - **Iconen**: de 13 Phosphor-iconen (light) die de site gebruikt, als svg in `assets/icons/`. `soleil_icon()` zet er
   `aria-hidden="true" focusable="false"` op, net als `Icon.astro`.
-- **Logo**: `src/assets/logo-data.json` naar `assets/logo.json`, `soleil_logo()` bouwt dezelfde svg als `Logo.astro`. Favicon = `public/favicon.svg`.
+- **Logo**: `assets/logo-soleil.webp` = officieel logo (zon met "instituut", SOLEIL eronder) uit de media, `soleil_logo()` geeft de img (feedback nov 2026; vroeger een svg zoals `Logo.astro`). Favicon = `assets/favicon.png` (logo met "instituut" in de zon, feedback nov 2026).
 - **URL's**: `/behandelingen/<slug>/` (CPT, `with_front: false`), `/journaal/<slug>/` (permalinkstructuur `/journaal/%postname%/`),
   pagina's `/tarieven/`, `/nieuw/`, `/over-soleil/`, `/contact/`, `/behandelingen/`, `/journaal/`. De redirects uit `public/_redirects` als `wp_redirect` in het thema.
 - **Head** zoals `Base.astro`: titel (`<titel> | Instituut Soleil Beervelde`, behalve als "Soleil" er al in staat), description,
@@ -167,7 +167,7 @@ wordpress/
       js/blocks-editor.js    editorkant van de blokken en kaarten
       fonts/*.woff2
       icons/*.svg
-      logo.json, favicon.svg
+      logo-soleil.webp, favicon.png
     parts/header.html, footer.html
     templates/front-page.html, page.html, home.html, single.html, single-behandeling.html, 404.html, index.html
   import/
