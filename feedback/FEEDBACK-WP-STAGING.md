@@ -36,6 +36,16 @@ rsync -rcn --delete --itemize-changes soleil/ stagingwizartsbe@ssh020.webhosting
 
 Daarna op de staging nakijken: home, /nieuw/, een behandeling, en de editor als Saskia.
 
+### Inhoud op de staging aanpassen
+
+Wijzigingen aan de inhoud (bv. een nieuwe sectie op de home) staan als script in `wordpress/content-updates/`.
+Na het uitrollen van het thema: script naar de server kopiëren en draaien. Elk script doet niets als het al gedraaid heeft.
+
+```sh
+scp wordpress/content-updates/<script>.php stagingwizartsbe@ssh020.webhosting.be:private/
+ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.be && wp eval-file ~/private/<script>.php'
+```
+
 ### Staging naar Local
 
 ```sh
@@ -66,7 +76,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 | # | Feedback | Actie | Status |
 |---|---|---|---|
 | 6 | "Stralen begint met een huid in balans?" | Geen actie in de feedback. In de media staat TAGLINE-SOLEIL-2026-COLOR (ID 308) met die zin, misschien gaat het daarover | ❓ |
-| 7 | Tussen behandelingen / 4 USP's: goudachtige quote bij de foto's | | ⬜ |
+| 7 | Goudachtige quote: TAGLINE-SOLEIL-2026-COLOR ("Stralen begint bij een huid in balans") als aparte sectie | Op de home na Merken, boven de laatste band. Beige vak op de breedte van de kolom, zoals Skin Discovery. Foto aanpasbaar in de editor. **Inhoud:** op de staging nog draaien: `content-updates/2026-11-17-tagline-home.php` (zie "Inhoud op de staging aanpassen") | ⏳ lokaal klaar |
 | 8 | Journaal op home: 1 blogpost + knop naar het overzicht ("seizoenstips"); de sectie "Ik ben Saskia" weg, daar het journaal | Inhoud op de staging mee aanpassen (geen database-import) | ⬜ |
 | 9 | Blok boven de footer "Even helemaal tijd voor jezelf" weg | | ⬜ |
 
