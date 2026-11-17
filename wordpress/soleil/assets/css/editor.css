@@ -67,6 +67,7 @@
 .soleil-prices__head > :first-child { flex: 1; }
 .soleil-prices__rows { display: grid; gap: 6px; justify-items: start; }
 .soleil-prices__row { display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, .8fr) minmax(0, .8fr) minmax(0, 2.2fr) auto; gap: 6px; align-items: center; justify-self: stretch; }
+.soleil-prices__card-text { grid-column: 1 / -1; margin: 0 0 10px; }
 .soleil-prices__row--head span { font-size: 11px; font-weight: 500; text-transform: uppercase; color: #757575; }
 @media (max-width: 900px) { .soleil-prices__row { grid-template-columns: 1fr 1fr; } .soleil-prices__row--head { display: none; } }
 

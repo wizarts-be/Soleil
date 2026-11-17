@@ -23,7 +23,7 @@ function soleil_treatment( $post ) {
 		$extra['lijst'] = soleil_upcoming( (array) get_post_meta( $activity, 'data', true ), 0 );
 	}
 
-	$prices = soleil_json( $post->ID, 'prijzen' );
+	$prices = soleil_clean_prices( soleil_json( $post->ID, 'prijzen' ) );
 	// Make-up: de tarieven komen uit de diensten, zoals in site.ts.
 	if ( $makeup ) {
 		$prices = array( array( 'rijen' => array_map( fn( $s ) => array( 'naam' => $s['naam'] ?? '', 'duur' => $s['duur'] ?? '', 'prijs' => $s['prijs'] ?? '' ), $makeup['diensten'] ?? array() ) ) );
@@ -49,6 +49,8 @@ function soleil_treatment( $post ) {
 		'extra'  => $extra,
 		'parts'  => soleil_json( $post->ID, 'delen' ),
 		'prices' => $prices,
+		'view'   => $m( 'prijzen_weergave' ),
+		'cards_title' => $m( 'kaartjes_titel' ),
 		'page'   => $makeup,
 	);
 }
@@ -142,15 +144,18 @@ function soleil_treatment_default( $t ) {
 			$html .= '<article class="part rv"' . ( ! empty( $p['id'] ) ? ' id="' . esc_attr( $p['id'] ) . '"' : '' ) . '>'
 				. '<figure class="ph">' . soleil_img( $p['foto'] ?? 0, array( 'alt' => $p['alt'] ?? '', 'loading' => 'lazy' ) ) . '</figure>'
 				. '<div><h2 class="h3">' . esc_html( $p['naam'] ?? '' ) . '</h2><p>' . esc_html( $p['tekst'] ?? '' ) . '</p>'
-				. soleil_price_groups( $p['prijzen'] ?? array() )
+				. soleil_price_groups( soleil_clean_prices( $p['prijzen'] ?? array() ) )
 				. '</div></article>';
 		}
 		$html .= '</div>';
 	}
 	$html .= '</div>';
 
+	$cards = soleil_price_cards( $t );
 	$panel = '<aside class="panel rv" aria-labelledby="prijzen">';
-	if ( soleil_has_prices( $t['prices'] ) ) {
+	if ( $cards ) {
+		$panel .= '<h2 id="prijzen">' . esc_html( $t['name'] ) . '</h2>';
+	} elseif ( soleil_has_prices( $t['prices'] ) ) {
 		$panel .= '<h2 id="prijzen">Prijzen</h2>' . soleil_price_groups( $t['prices'] )
 			. ( '' !== $t['note'] ? '<p class="price-note">' . esc_html( $t['note'] ) . '</p>' : '' );
 	} elseif ( $t['parts'] ) {
@@ -171,7 +176,61 @@ function soleil_treatment_default( $t ) {
 	}
 	$panel .= ( $link ? $link : soleil_book_button() ) . '</aside>';
 
-	return $html . $panel . '</section>';
+	return $html . $panel . '</section>' . $cards;
+}
+
+/**
+ * Lege prijsrijen (geen naam en geen prijs) en lege tabellen weglaten. In de editor blijft er soms een lege rij
+ * of tabel staan; die mag geen gat in het prijzenvak geven en niet meetellen voor de kaartjes.
+ */
+function soleil_clean_prices( $groups ) {
+	$out = array();
+	foreach ( (array) $groups as $g ) {
+		$g['rijen'] = array_values( array_filter( (array) ( $g['rijen'] ?? array() ), fn( $r ) => '' !== trim( (string) ( $r['naam'] ?? '' ) ) || '' !== trim( (string) ( $r['prijs'] ?? '' ) ) ) );
+		if ( $g['rijen'] || '' !== trim( (string) ( $g['noot'] ?? '' ) ) ) {
+			$out[] = $g;
+		}
+	}
+	return $out;
+}
+
+/**
+ * Alle prijsrijen van een behandeling, over de tabellen heen.
+ */
+function soleil_price_rows( $groups ) {
+	$rows = array();
+	foreach ( (array) $groups as $g ) {
+		foreach ( (array) ( $g['rijen'] ?? array() ) as $r ) {
+			$rows[] = $r;
+		}
+	}
+	return $rows;
+}
+
+/**
+ * De prijzen als kaartjes, zoals de diensten bij make-up. Automatisch bij precies 4 prijzen; per behandeling
+ * kan Saskia kiezen voor altijd kaartjes of altijd het prijzenvak. Geeft '' als het prijzenvak blijft.
+ */
+function soleil_price_cards( $t ) {
+	$rows = soleil_price_rows( $t['prices'] );
+	$on   = 'kaartjes' === $t['view'] ? (bool) $rows : ( 'vak' !== $t['view'] && 4 === count( $rows ) );
+	if ( ! $on ) {
+		return '';
+	}
+	$items = '';
+	foreach ( $rows as $i => $r ) {
+		$text   = trim( (string) ( $r['kaart'] ?? '' ) );
+		$text   = '' !== $text ? $text : trim( (string) ( $r['toelichting'] ?? '' ) );
+		$items .= '<li class="rv" style="--d:' . $i . '"><h3 class="h3">' . esc_html( $r['naam'] ?? '' ) . '</h3>'
+			. ( '' !== $text ? '<p>' . esc_html( $text ) . '</p>' : '<p></p>' )
+			. '<div class="services-foot"><span>' . esc_html( $r['duur'] ?? '' ) . '</span><strong>' . esc_html( soleil_euro( $r['prijs'] ?? '' ) ) . '</strong></div>'
+			. soleil_book_button( 'link', 'Boek nu' ) . '</li>';
+	}
+	$title = '' !== $t['cards_title'] ? $t['cards_title'] : 'Behandelingen';
+	return '<section class="wrap section" style="padding-top:clamp(48px,6vw,80px)" aria-labelledby="aanbod"><h2 id="aanbod" class="h2 rv" style="margin-bottom:clamp(28px,4vw,48px)">' . esc_html( $title ) . '</h2>'
+		. '<ul class="services" role="list">' . $items . '</ul>'
+		. ( '' !== $t['note'] ? '<p class="price-note">' . esc_html( $t['note'] ) . '</p>' : '' )
+		. '</section>';
 }
 
 function soleil_has_prices( $groups ) {
@@ -281,7 +340,7 @@ function soleil_block_rates( $a ) {
 			. soleil_price_groups( $t['prices'] );
 		foreach ( $t['parts'] as $p ) {
 			$rows = array();
-			foreach ( (array) ( $p['prijzen'] ?? array() ) as $g ) {
+			foreach ( soleil_clean_prices( $p['prijzen'] ?? array() ) as $g ) {
 				$rows = array_merge( $rows, (array) ( $g['rijen'] ?? array() ) );
 			}
 			$html .= soleil_prices( $rows, $p['naam'] ?? '' );

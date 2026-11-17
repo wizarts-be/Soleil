@@ -291,7 +291,10 @@
                 el(c.TextControl, Object.assign({ hideLabelFromVision: true, label: "Duur", value: r.duur || "", placeholder: "60 min", onChange: setRow("duur") }, ctl)),
                 el(c.TextControl, Object.assign({ hideLabelFromVision: true, label: "Prijs", value: r.prijs == null ? "" : String(r.prijs), placeholder: "70", onChange: setRow("prijs") }, ctl)),
                 el(c.TextControl, Object.assign({ hideLabelFromVision: true, label: "Toelichting", value: r.toelichting || "", onChange: setRow("toelichting") }, ctl)),
-                tools(rows, ri, function (v) { setGroup("rijen", v); }, "Rij verwijderen")
+                tools(rows, ri, function (v) { setGroup("rijen", v); }, "Rij verwijderen"),
+                props.cardText ? el("div", { className: "soleil-prices__card-text" },
+                  el(c.TextControl, Object.assign({ label: "Tekst in het blok", value: r.kaart || "", placeholder: "Leeg = de toelichting", onChange: setRow("kaart") }, ctl))
+                ) : null
               );
             }),
             el(c.Button, { variant: "secondary", onClick: function () { setGroup("rijen", rows.concat([{ naam: "", duur: "", prijs: "" }])); } }, "Rij toevoegen")
@@ -365,8 +368,22 @@
       ) : null
     ]);
 
-    var priceBlock = makeup ? null : section("Prijzen", "Het prijzenvak rechts op de pagina en de kaart op Tarieven.", [
-      el(Prices, { key: "p", value: prices, onChange: function (v) { setJson("prijzen", v); } }),
+    var rowCount = prices.reduce(function (n, g) { return n + (g.rijen || []).filter(function (r) { return String(r.naam || "").trim() || String(r.prijs == null ? "" : r.prijs).trim(); }).length; }, 0); // lege rijen tellen niet mee, zoals soleil_clean_prices()
+    var view = m.prijzen_weergave || "";
+    var asCards = view === "kaartjes" ? rowCount > 0 : view !== "vak" && rowCount === 4;
+    var priceBlock = makeup ? null : section("Prijzen", "Op de pagina als één prijskaart rechts of als blokken onder de tekst, en altijd op de pagina Tarieven.", [
+      el(c.RadioControl, { key: "w", label: "Blokken of één prijskaart?", selected: view,
+        options: [
+          { value: "", label: "Automatisch: bij precies 4 prijzen blokken, anders één prijskaart" },
+          { value: "kaartjes", label: "Blokken" },
+          { value: "vak", label: "Eén prijskaart" }
+        ],
+        onChange: function (v) { set("prijzen_weergave", v); } }),
+      el("p", { key: "n", className: "soleil-card__sub" }, asCards
+        ? "Nu op de pagina: blokken onder de tekst (" + rowCount + (rowCount === 1 ? " prijs" : " prijzen") + "). Een blok weg = de prijs hieronder verwijderen."
+        : "Nu op de pagina: één prijskaart rechts (" + rowCount + (rowCount === 1 ? " prijs" : " prijzen") + ")."),
+      asCards ? text("Titel boven de blokken", m.kaartjes_titel, function (v) { set("kaartjes_titel", v); }, "Leeg = Behandelingen.") : null,
+      el(Prices, { key: "p", value: prices, cardText: asCards, onChange: function (v) { setJson("prijzen", v); } }),
       area("Noot onder de prijzen", m.noot, function (v) { set("noot", v); }, "Mag leeg blijven."),
       area("Tip", m.tip, function (v) { set("tip", v); }, "Kleine tekst onderaan het prijzenvak, bv. een verwijzing naar de Skin Discovery.")
     ]);

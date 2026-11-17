@@ -126,6 +126,8 @@ function soleil_fields() {
 			'link_label'       => array( 'string' ),
 			'extra_activiteit' => array( 'integer' ),
 			'prijzen'          => array( 'json' ),
+			'prijzen_weergave' => array( 'string' ), // '' = automatisch (precies 4 prijzen = kaartjes), 'kaartjes' of 'vak'
+			'kaartjes_titel'   => array( 'string' ),
 			'waarom'           => array( 'json' ),
 			'extra'            => array( 'json' ),
 			'delen'            => array( 'json' ),
