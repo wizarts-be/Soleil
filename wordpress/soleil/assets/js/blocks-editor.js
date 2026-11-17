@@ -430,7 +430,7 @@
       ) : null
     ]);
 
-    var makeupBlock = section("Eigen paginaopbouw", "Voor make-up: vragen bovenaan, een merkblok en losse diensten in plaats van het prijzenvak.", [
+    var makeupBlock = section("Eigen paginaopbouw", "Voor make-up: tekst bovenaan, daaronder de diensten als blokjes, dan een merkblok. In plaats van het prijzenvak.", [
       el(c.ToggleControl, { key: "t", label: "Eigen paginaopbouw gebruiken", checked: !!makeup, __nextHasNoMarginBottom: true,
         onChange: function (on) { setJson("makeup", on ? { titel: "", vragen: [], cta: "", verhaal: { label: "", titel: "", tekst: [], foto: 0, alt: "" }, diensten: [] } : null); } }),
       makeup ? (function () {
@@ -440,7 +440,8 @@
         var setStory = function (key) { return function (v) { setJson("makeup", merge(makeup, "verhaal", merge(story, key, v))); }; };
         return el(Fragment, { key: "f" },
           text("Titel op de pagina", makeup.titel, setM("titel")),
-          lines("Vragen", makeup.vragen, setM("vragen"), "Eén vraag per regel."),
+          area("Tekst onder de titel", makeup.tekst != null && makeup.tekst !== "" ? makeup.tekst : (makeup.vragen || []).join(" "),
+            function (v) { setJson("makeup", Object.assign({}, makeup, { tekst: v, vragen: [] })); }, "Gewone tekst. Een lege regel begint een nieuwe alinea."),
           text("Zin onder de vragen", makeup.cta, setM("cta")),
           el("h4", { className: "soleil-card__sub" }, "Merkblok"),
           el("div", { className: "soleil-card__grid" },

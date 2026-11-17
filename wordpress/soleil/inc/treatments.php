@@ -274,21 +274,19 @@ function soleil_has_prices( $groups ) {
 function soleil_treatment_makeup( $t ) {
 	$p     = $t['page'];
 	$story = $p['verhaal'] ?? array();
-	$asks  = implode( '', array_map( fn( $q ) => '<li>' . esc_html( $q ) . '</li>', (array) ( $p['vragen'] ?? array() ) ) );
+	// Gewone tekst onder de titel (vroeger een opsomming van vragen; die lopen nu als tekst achter elkaar).
+	$intro = trim( (string) ( $p['tekst'] ?? '' ) );
+	if ( '' === $intro ) {
+		$intro = implode( ' ', array_filter( array_map( 'trim', (array) ( $p['vragen'] ?? array() ) ), 'strlen' ) );
+	}
+	$intro = str_replace( '<p>', '<p class="lede">', soleil_paragraphs( $intro ) );
 
 	$html = '<header class="wrap thero"><div>' . soleil_crumbs( $t )
 		. '<h1 class="h1 rv">' . esc_html( $p['titel'] ?? '' ) . '</h1>'
-		. '<ul class="asks rv" style="--d:1" role="list">' . $asks . '</ul>'
+		. ( '' !== $intro ? '<div class="intro rv" style="--d:1">' . $intro . '</div>' : '' )
 		. '<p class="rv" style="--d:2;margin-top:24px;font-weight:500">' . esc_html( $p['cta'] ?? '' ) . '</p>'
 		. '<div class="actions rv" style="--d:2;margin-top:24px">' . soleil_book_button() . '</div>'
 		. '</div><figure class="ph rv-img">' . soleil_img( $t['img'], array( 'alt' => $t['alt'], 'fetchpriority' => 'high' ) ) . '</figure></header>';
-
-	$html .= '<section class="wrap section brand-block" aria-labelledby="merk">'
-		. '<figure class="ph rv-img">' . soleil_img( $story['foto'] ?? 0, array( 'alt' => $story['alt'] ?? '', 'loading' => 'lazy' ) ) . '</figure>'
-		. '<div class="rv"><p class="label">' . esc_html( $story['label'] ?? '' ) . '</p>'
-		. '<h2 id="merk" class="h2">' . esc_html( $story['titel'] ?? '' ) . '</h2>'
-		. implode( '', array_map( fn( $x ) => '<p>' . esc_html( $x ) . '</p>', (array) ( $story['tekst'] ?? array() ) ) )
-		. '</div></section>';
 
 	$services = '';
 	foreach ( (array) ( $p['diensten'] ?? array() ) as $i => $s ) {
@@ -298,8 +296,17 @@ function soleil_treatment_makeup( $t ) {
 			. '<div class="services-foot"><span>' . esc_html( $s['duur'] ?? '' ) . '</span><strong>' . esc_html( soleil_euro( $s['prijs'] ?? '' ) ) . '</strong></div>'
 			. soleil_book_button( 'link', 'Boek nu' ) . '</li>';
 	}
-	return $html . '<section class="wrap" aria-labelledby="aanbod"><h2 id="aanbod" class="h2 rv" style="margin-bottom:clamp(28px,4vw,48px)">Make-up behandelingen</h2>'
+	// De blokjes komen meteen onder de hero, het merkblok daarna.
+	$html .= '<section class="wrap" style="padding-top:clamp(40px,5vw,72px)" aria-labelledby="aanbod"><h2 id="aanbod" class="h2 rv" style="margin-bottom:clamp(28px,4vw,48px)">Make-up behandelingen</h2>'
 		. '<ul class="services" role="list">' . $services . '</ul></section>';
+	$html .= '<section class="wrap section brand-block" aria-labelledby="merk">'
+		. '<figure class="ph rv-img">' . soleil_img( $story['foto'] ?? 0, array( 'alt' => $story['alt'] ?? '', 'loading' => 'lazy' ) ) . '</figure>'
+		. '<div class="rv"><p class="label">' . esc_html( $story['label'] ?? '' ) . '</p>'
+		. '<h2 id="merk" class="h2">' . esc_html( $story['titel'] ?? '' ) . '</h2>'
+		. implode( '', array_map( fn( $x ) => '<p>' . esc_html( $x ) . '</p>', (array) ( $story['tekst'] ?? array() ) ) )
+		. '</div></section>';
+
+	return $html;
 }
 
 /* ---------- Vorige en volgende ---------- */
