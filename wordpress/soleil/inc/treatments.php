@@ -149,12 +149,19 @@ function soleil_treatment_default( $t ) {
 		}
 		$html .= '</div>';
 	}
+	$cards        = soleil_price_cards( $t );
+	$extra        = $t['extra'] && '' !== trim( (string) ( $t['extra']['titel'] ?? '' ) ) ? $t['extra'] : null;
+	$panel_prices = ! $cards && soleil_has_prices( $t['prices'] );
+	if ( $extra && $panel_prices ) {
+		// Prijzen in het vak rechts: het extra vak komt links onder de tekst, als eigen blok met eventueel een foto
+		// (bv. "Pedicure" bij Handen & voeten), zodat er links geen lege ruimte is en het vak rechts kort blijft.
+		$html .= soleil_extra_block( $extra );
+		$extra = null;
+	}
 	$html .= '</div>';
 
-	$cards = soleil_price_cards( $t );
-	$extra = $t['extra'] && '' !== trim( (string) ( $t['extra']['titel'] ?? '' ) ) ? $t['extra'] : null;
 	$panel = '<aside class="panel rv" aria-labelledby="prijzen">';
-	if ( ! $cards && soleil_has_prices( $t['prices'] ) ) {
+	if ( $panel_prices ) {
 		$panel .= '<h2 id="prijzen">Prijzen</h2>' . soleil_price_groups( $t['prices'] )
 			. ( '' !== $t['note'] ? '<p class="price-note">' . esc_html( $t['note'] ) . '</p>' : '' );
 	} elseif ( ! $extra ) {
@@ -168,7 +175,7 @@ function soleil_treatment_default( $t ) {
 		$list   = array_filter( (array) ( $extra['lijst'] ?? array() ), 'strlen' );
 		$panel .= '<div class="panel-extra' . ( $first ? ' panel-extra--first' : '' ) . '">'
 			. ( $first ? '<h2 id="prijzen" class="label label--sunset">' : '<p class="label label--sunset">' ) . esc_html( $extra['titel'] ) . ( $first ? '</h2>' : '</p>' )
-			. ( ! empty( $extra['tekst'] ) ? '<p>' . esc_html( $extra['tekst'] ) . '</p>' : '' )
+			. soleil_paragraphs( $extra['tekst'] ?? '' )
 			. ( $list ? '<ul role="list">' . implode( '', array_map( fn( $x ) => '<li>' . esc_html( $x ) . '</li>', $list ) ) . '</ul>' : '' )
 			. '</div>';
 	}
@@ -178,6 +185,27 @@ function soleil_treatment_default( $t ) {
 	$panel .= ( $link ? $link : soleil_book_button() ) . '</aside>';
 
 	return $html . $panel . '</section>' . $cards;
+}
+
+/**
+ * Tekst met lege regels als alinea's.
+ */
+function soleil_paragraphs( $text ) {
+	return implode( '', array_map( fn( $x ) => '<p>' . esc_html( $x ) . '</p>', array_filter( array_map( 'trim', preg_split( '/\n\s*\n/', (string) $text ) ), 'strlen' ) ) );
+}
+
+/**
+ * Het extra vak als eigen blok in de linkerkolom: beige, met de foto links als die er is.
+ */
+function soleil_extra_block( $e ) {
+	$list = array_filter( (array) ( $e['lijst'] ?? array() ), 'strlen' );
+	$foto = (int) ( $e['foto'] ?? 0 );
+	return '<aside class="extra-block rv' . ( $foto ? ' has-photo' : '' ) . '" aria-labelledby="extra">'
+		. ( $foto ? '<figure class="ph">' . soleil_img( $foto, array( 'alt' => $e['alt'] ?? '', 'loading' => 'lazy' ) ) . '</figure>' : '' )
+		. '<div><h2 id="extra" class="label label--sunset">' . esc_html( $e['titel'] ?? '' ) . '</h2>'
+		. soleil_paragraphs( $e['tekst'] ?? '' )
+		. ( $list ? '<ul role="list">' . implode( '', array_map( fn( $x ) => '<li>' . esc_html( $x ) . '</li>', $list ) ) . '</ul>' : '' )
+		. '</div></aside>';
 }
 
 /**

@@ -409,11 +409,17 @@
     ]);
 
     var activities = (data.activiteiten || []).map(function (a) { return { label: a.title && a.title.raw ? a.title.raw : (a.title && a.title.rendered) || "", value: String(a.id) }; });
-    var extraBlock = makeup ? null : section("Extra vak", "In het vak rechts op de pagina, bv. In de kijker deze winter of de data van de laserspecialist. Staan de prijzen niet in dat vak (blokken of onderdelen), dan staat dit er bovenaan.", [
+    var extraBlock = makeup ? null : section("Extra vak", "Bv. In de kijker deze winter, de data van de laserspecialist of meer info over pedicure. Staan de prijzen rechts in het prijzenvak, dan komt dit links onder de tekst als eigen blok (met foto als je er een kiest). Anders staat het bovenaan het vak rechts.", [
       el(c.ToggleControl, { key: "t", label: "Tonen", checked: !!extra, onChange: function (on) { setJson("extra", on ? { titel: "", tekst: "", lijst: [] } : null); if (!on) set("extra_activiteit", 0); }, __nextHasNoMarginBottom: true }),
       extra ? el(Fragment, { key: "f" },
         text("Titel", extra.titel, function (v) { setJson("extra", merge(extra, "titel", v)); }),
-        area("Tekst", extra.tekst, function (v) { setJson("extra", merge(extra, "tekst", v)); }, "Mag leeg blijven."),
+        area("Tekst", extra.tekst, function (v) { setJson("extra", merge(extra, "tekst", v)); }, "Mag leeg blijven. Een lege regel begint een nieuwe alinea."),
+        el("div", { className: "soleil-card__grid" },
+          el("div", null, el(Photo, { id: extra.foto || 0, label: "Foto (mag leeg blijven)", help: "Alleen te zien als het blok links onder de tekst staat, dus bij een behandeling met het prijzenvak rechts.", onChange: function (v) { setJson("extra", merge(extra, "foto", v)); } })),
+          el("div", { className: "soleil-card__fields" },
+            extra.foto ? text("Beschrijving van de foto", extra.alt, function (v) { setJson("extra", merge(extra, "alt", v)); }, "Voor wie de foto niet ziet.") : null
+          )
+        ),
         el(c.SelectControl, Object.assign({
           label: "Data van een activiteit", value: String(m.extra_activiteit || ""),
           options: [{ label: "Geen: eigen lijst hieronder", value: "" }].concat(activities),

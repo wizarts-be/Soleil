@@ -441,6 +441,15 @@ em { font-style: italic; font-weight: 400; }
 .parts { display: grid; gap: clamp(40px, 5vw, 64px); }
 .part { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 28px; }
 .part .ph { aspect-ratio: 1; }
+/* Extra block in the left column when the prices sit in the panel (e.g. "Pedicure" on Handen & voeten) */
+.extra-block { display: grid; gap: 28px; margin-top: clamp(40px, 5vw, 64px); padding: clamp(24px, 3vw, 36px); background: var(--mist); }
+.extra-block.has-photo { grid-template-columns: 220px minmax(0, 1fr); align-items: center; }
+.extra-block .ph { aspect-ratio: 1; }
+.extra-block h2 { font-size: var(--fs-small); margin-bottom: 12px; }
+.extra-block p:not(.label) { font-size: var(--fs-lg); color: var(--moss); }
+.extra-block p + p { margin-top: 0.8em; }
+.extra-block ul { display: grid; gap: 4px; margin-top: 12px; color: var(--moss); }
+@media (max-width: 600px) { .extra-block.has-photo { grid-template-columns: 1fr; } .extra-block .ph { width: 160px; } }
 .part h3 { margin-bottom: 6px; }
 .part > div > p { color: var(--moss); }
 @media (max-width: 600px) { .part { grid-template-columns: 1fr; } .part .ph { width: 160px; } }
