@@ -47,7 +47,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 
 ## Stand van zaken
 
-**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217` en `b6d36e2`. Bij de volgende keer uitrollen gaan ze mee.
+**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2` en `8a8015b`. Bij de volgende keer uitrollen gaan ze mee.
 
 ## Punten
 
