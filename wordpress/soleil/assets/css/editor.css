@@ -99,13 +99,22 @@
 
 /* Foto's: vervangen en beschrijven als de foto geselecteerd is. */
 .soleil-photo { position: relative; }
-.soleil-photo--bare { position: absolute; inset: 0; z-index: -2; }
+/* Achtergrondfoto: de editor zet elk blok op position: relative, waardoor de foto 0x0 werd en onvindbaar was.
+   De donkere overloop van de band komt hier op de foto zelf, zodat hij de knop en het klikken niet afdekt. */
+.editor-styles-wrapper .soleil-photo.soleil-photo--bare { position: absolute; inset: 0; z-index: -2; margin: 0; max-width: none; }
+.editor-styles-wrapper .band::after { content: none; }
+.editor-styles-wrapper .band .soleil-photo--bare::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgb(64 44 28 / 0.78), rgb(64 44 28 / 0.15) 70%); }
+.soleil-photo--bare .soleil-photo__tools { left: auto; right: 16px; top: 16px; bottom: auto; width: max-content; }
 .soleil-photo--bare img { width: 100%; height: 100%; object-fit: cover; }
 .soleil-photo img { width: 100%; height: 100%; object-fit: cover; }
 .soleil-photo__empty { display: grid; place-items: center; min-height: 160px; height: 100%; color: var(--moss); font-size: var(--fs-small); }
 .soleil-photo__tools { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 5; display: grid; gap: 8px; max-width: 360px; padding: 12px; background: #fff; box-shadow: 0 8px 24px rgb(0 0 0 / .2); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; color: #1e1e1e; }
 .soleil-photo__tools .components-button { justify-content: center; }
 .soleil-card--inline { max-width: none; margin: 0 0 16px !important; }
+/* Compact: kleine foto links, de velden ernaast op een rij (eigen kaart op de home) */
+.soleil-card--compact .soleil-card__section { padding: 16px; }
+.soleil-card--compact .soleil-card__grid { grid-template-columns: 180px minmax(0, 1fr); gap: 20px; }
+@media (max-width: 900px) { .soleil-card--compact .soleil-card__grid { grid-template-columns: 1fr; } .soleil-card--compact .soleil-card__photo { max-width: 180px; } }
 
 /* In de editor krijgt elk blok role="document", dus de reset voor [role=list] uit style.css werkt daar niet.
    Alle lijsten die als vak (soleil/el) gebouwd zijn, hebben op de site role="list". */

@@ -75,24 +75,25 @@
     var items = props.attributes.items || [];
     var custom = items.map(function (item, i) { return [item, i]; }).filter(function (x) { return !x[0].behandeling; });
     var setItem = function (i, key, value) { props.setAttributes({ items: put(items, i, merge(items[i], key, value)) }); };
+    // Altijd zichtbaar en compact: Saskia zag de foto-knop niet, omdat die pas na een klik op de kaarten verscheen.
     return el("div", blockProps,
-      props.isSelected ? el("div", { className: "soleil-manage" },
-        el("span", null, "De eerste kaarten volgen vanzelf de ", el("strong", null, "Behandelingen"), " (naam, korte omschrijving en foto). De eigen kaart pas je hieronder aan."),
+      el("div", { className: "soleil-manage" },
+        el("span", null, "De eerste kaarten volgen vanzelf de ", el("strong", null, "Behandelingen"), " (naam, korte omschrijving en foto). De laatste kaart pas je hieronder aan: klik op ", el("strong", null, "Andere foto"), " om de foto te vervangen."),
         el("a", { className: "soleil-manage__btn", target: "_top", href: admin() + "edit.php?post_type=behandeling" }, "Behandelingen")
-      ) : null,
-      props.isSelected ? custom.map(function (x) {
+      ),
+      custom.map(function (x) {
         var item = x[0], i = x[1];
-        return el("div", { key: i, className: "soleil-card soleil-card--inline" },
+        return el("div", { key: i, className: "soleil-card soleil-card--inline soleil-card--compact" },
           el("div", { className: "soleil-card__section soleil-card__grid" },
             el(Photo, { id: item.foto, removable: false, onChange: function (v) { setItem(i, "foto", v); } }),
-            el("div", { className: "soleil-card__fields" },
+            el("div", { className: "soleil-card__fields soleil-card__grid--three" },
               text("Naam", item.naam, function (v) { setItem(i, "naam", v); }),
               text("Korte omschrijving", item.sub, function (v) { setItem(i, "sub", v); }),
               text("Link", item.href, function (v) { setItem(i, "href", v); }, "Bv. /behandelingen/#ontspanning.")
             )
           )
         );
-      }) : null,
+      }),
       el(c.Disabled, null, el(ServerSideRender, { block: "soleil/home-kaarten", attributes: props.attributes }))
     );
   }
@@ -109,12 +110,15 @@
     var media = useSelect(function (select) { return a.id ? select("core").getEntityRecord("postType", "attachment", a.id) : null; }, [a.id]);
     var img = media ? el("img", { src: media.source_url, alt: a.alt }) : el("span", { className: "soleil-photo__empty" }, "Nog geen foto");
     var blockProps = be.useBlockProps({ className: a.tag === "img" ? "soleil-photo soleil-photo--bare" : "soleil-photo " + (a.className || "") });
-    var tools = props.isSelected ? el("div", { className: "soleil-photo__tools" },
+    // Een achtergrondfoto (tag img, bv. de band "Even helemaal tijd voor jezelf") ligt achter de tekst en is moeilijk
+    // aan te klikken: daar staat de knop altijd zichtbaar. De beschrijving komt erbij zodra de foto geselecteerd is.
+    var bare = a.tag === "img";
+    var tools = props.isSelected || bare ? el("div", { className: "soleil-photo__tools" },
       el(be.MediaUploadCheck, null, el(be.MediaUpload, {
         onSelect: function (m) { props.setAttributes({ id: m.id }); }, allowedTypes: ["image"], value: a.id,
         render: function (o) { return el(c.Button, { variant: "primary", onClick: o.open }, a.id ? "Foto vervangen" : "Foto kiezen"); }
       })),
-      el(c.TextControl, Object.assign({ label: "Beschrijving van de foto", hideLabelFromVision: false, value: a.alt, placeholder: "Leeg = decoratief", onChange: function (v) { props.setAttributes({ alt: v }); } }, ctl))
+      props.isSelected ? el(c.TextControl, Object.assign({ label: "Beschrijving van de foto", hideLabelFromVision: false, value: a.alt, placeholder: "Leeg = decoratief", onChange: function (v) { props.setAttributes({ alt: v }); } }, ctl)) : null
     ) : null;
     return el(a.tag === "span" ? "span" : (a.tag === "img" ? "div" : "figure"), blockProps, img, tools);
   }
