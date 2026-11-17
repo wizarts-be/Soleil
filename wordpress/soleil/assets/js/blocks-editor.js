@@ -409,7 +409,7 @@
     ]);
 
     var activities = (data.activiteiten || []).map(function (a) { return { label: a.title && a.title.raw ? a.title.raw : (a.title && a.title.rendered) || "", value: String(a.id) }; });
-    var extraBlock = makeup ? null : section("Extra vak", "Onder de prijzen, bv. de verzorging in de kijker of de data van de laserspecialist.", [
+    var extraBlock = makeup ? null : section("Extra vak", "In het vak rechts op de pagina, bv. In de kijker deze winter of de data van de laserspecialist. Staan de prijzen niet in dat vak (blokken of onderdelen), dan staat dit er bovenaan.", [
       el(c.ToggleControl, { key: "t", label: "Tonen", checked: !!extra, onChange: function (on) { setJson("extra", on ? { titel: "", tekst: "", lijst: [] } : null); if (!on) set("extra_activiteit", 0); }, __nextHasNoMarginBottom: true }),
       extra ? el(Fragment, { key: "f" },
         text("Titel", extra.titel, function (v) { setJson("extra", merge(extra, "titel", v)); }),

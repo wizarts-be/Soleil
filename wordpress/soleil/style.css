@@ -412,6 +412,8 @@ em { font-style: italic; font-weight: 400; }
 .panel .btn { width: 100%; justify-content: center; margin-top: 20px; }
 .panel-extra { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
 .panel-extra p:not(.label) { margin-top: 8px; color: var(--moss); }
+.panel-extra--first { margin-top: 0; padding-top: 0; border-top: 0; }
+.panel h2.label { font-size: var(--fs-small); margin-bottom: 0; }
 .panel-extra ul { display: grid; gap: 4px; margin-top: 10px; font-size: var(--fs-small); color: var(--moss); }
 @media (max-width: 900px) { .thero, .tbody { grid-template-columns: 1fr; } .panel { position: static; } }
 

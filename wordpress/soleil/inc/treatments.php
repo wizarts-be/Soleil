@@ -152,22 +152,23 @@ function soleil_treatment_default( $t ) {
 	$html .= '</div>';
 
 	$cards = soleil_price_cards( $t );
+	$extra = $t['extra'] && '' !== trim( (string) ( $t['extra']['titel'] ?? '' ) ) ? $t['extra'] : null;
 	$panel = '<aside class="panel rv" aria-labelledby="prijzen">';
-	if ( $cards ) {
-		$panel .= '<h2 id="prijzen">' . esc_html( $t['name'] ) . '</h2>';
-	} elseif ( soleil_has_prices( $t['prices'] ) ) {
+	if ( ! $cards && soleil_has_prices( $t['prices'] ) ) {
 		$panel .= '<h2 id="prijzen">Prijzen</h2>' . soleil_price_groups( $t['prices'] )
 			. ( '' !== $t['note'] ? '<p class="price-note">' . esc_html( $t['note'] ) . '</p>' : '' );
-	} elseif ( $t['parts'] ) {
-		$panel .= '<h2 id="prijzen">' . esc_html( $t['name'] ) . '</h2><p class="muted">De prijzen staan bij elke behandeling hiernaast.</p>';
-	} else {
+	} elseif ( ! $extra ) {
+		// Geen prijzen in het vak (blokken of onderdelen) en geen extra vak: enkel de naam boven de knop.
 		$panel .= '<h2 id="prijzen">' . esc_html( $t['name'] ) . '</h2>';
 	}
-	if ( $t['extra'] ) {
-		$e      = $t['extra'];
-		$list   = array_filter( (array) ( $e['lijst'] ?? array() ), 'strlen' );
-		$panel .= '<div class="panel-extra"><p class="label label--sunset">' . esc_html( $e['titel'] ?? '' ) . '</p>'
-			. ( ! empty( $e['tekst'] ) ? '<p>' . esc_html( $e['tekst'] ) . '</p>' : '' )
+	if ( $extra ) {
+		// Staan de prijzen niet in het vak (blokken of onderdelen, bv. Skin Expert), dan begint het vak meteen
+		// met het extra vak ("In de kijker deze winter") in plaats van "De prijzen staan bij elke behandeling hiernaast".
+		$first  = ! str_contains( $panel, 'id="prijzen"' );
+		$list   = array_filter( (array) ( $extra['lijst'] ?? array() ), 'strlen' );
+		$panel .= '<div class="panel-extra' . ( $first ? ' panel-extra--first' : '' ) . '">'
+			. ( $first ? '<h2 id="prijzen" class="label label--sunset">' : '<p class="label label--sunset">' ) . esc_html( $extra['titel'] ) . ( $first ? '</h2>' : '</p>' )
+			. ( ! empty( $extra['tekst'] ) ? '<p>' . esc_html( $extra['tekst'] ) . '</p>' : '' )
 			. ( $list ? '<ul role="list">' . implode( '', array_map( fn( $x ) => '<li>' . esc_html( $x ) . '</li>', $list ) ) . '</ul>' : '' )
 			. '</div>';
 	}
