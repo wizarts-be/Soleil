@@ -76,6 +76,19 @@ function soleil_settings_fields() {
 				'spot_href'   => array( 'Waar de link naartoe gaat', 'text', 'Bv. /behandelingen/skin-expert/#peel. Leeg = geen link.' ),
 			),
 		),
+		'tips'      => array(
+			'title'  => 'Seizoenstips',
+			'intro'  => 'De vaste teksten rond de seizoenstips. De tips zelf schrijf je in het menu links bij Seizoenstips. Laat je een veld leeg, dan staat er de tekst die erbij vermeld is.',
+			'fields' => array(
+				'tip_read'      => array( 'Link op de home', 'text', 'Leeg = Lees deze tip.' ),
+				'tip_toc'       => array( 'Titel boven de inhoud van een tip', 'text', 'Leeg = In deze tip. De inhoud verschijnt vanzelf bij een tip met minstens 3 tussentitels.' ),
+				'tip_cta_title' => array( 'Titel van het blok onderaan een tip', 'text', 'Leeg = Benieuwd wat jouw huid nodig heeft?' ),
+				'tip_cta_text'  => array( 'Tekst van het blok onderaan een tip', 'text', 'Leeg = Ik bekijk je huid en geef je eerlijk advies op maat.' ),
+				'tip_cta_btn'   => array( 'Knop in een tip', 'text', 'Leeg = Afspraak maken.' ),
+				'tip_cta_link'  => array( 'Link naast de knop', 'text', 'Leeg = Nieuw? Start met een Skin Discovery.' ),
+				'tip_more'      => array( 'Titel boven de andere tips', 'text', 'Leeg = Meer seizoenstips. Staat onderaan een tip zodra er meer dan één tip is.' ),
+			),
+		),
 		'product'   => array(
 			'title'  => 'Pagina van een product',
 			'intro'  => 'De vaste teksten op de eigen pagina van elk product. Laat je een veld leeg, dan staat er de tekst die erbij vermeld is.',

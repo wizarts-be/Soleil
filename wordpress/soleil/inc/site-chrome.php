@@ -125,7 +125,7 @@ function soleil_render_site_footer() {
 		. '<a href="' . esc_url( soleil_setting( 'facebook' ) ) . '"' . soleil_blank() . '>Facebook</a></p>'
 		. '</div></div>'
 		. '<div class="wrap ft-base"><span>© ' . esc_html( wp_date( 'Y' ) ) . ' Instituut Soleil, btw ' . esc_html( soleil_setting( 'vat' ) ) . '</span>'
-		. '<span><a href="' . esc_url( home_url( '/nieuw/' ) ) . '">Nieuw</a>, <a href="' . esc_url( home_url( '/journaal/' ) ) . '">Journaal</a>, <a href="' . esc_url( soleil_site_url( soleil_setting( 'privacy' ) ) ) . '">Privacybeleid</a></span>'
+		. '<span><a href="' . esc_url( home_url( '/nieuw/' ) ) . '">Nieuw</a>, <a href="' . esc_url( soleil_tips_url() ) . '">' . esc_html( soleil_tips_title() ) . '</a>, <a href="' . esc_url( soleil_site_url( soleil_setting( 'privacy' ) ) ) . '">Privacybeleid</a></span>'
 		. '</div></footer>';
 }
 

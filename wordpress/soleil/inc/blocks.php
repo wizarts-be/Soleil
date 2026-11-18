@@ -19,6 +19,7 @@ function soleil_blocks() {
 		'berichtkaart' => array( 'render' => '__return_empty_string' ),
 		'artikel'      => array( 'render' => 'soleil_block_article' ),
 		'journaal-meer' => array( 'render' => 'soleil_block_more_posts' ),
+		'laatste-tip'  => array( 'render' => 'soleil_block_latest_tip' ),
 		'tekstpagina'  => array( 'render' => 'soleil_block_text_page' ),
 		'behandeling-switch' => array( 'render' => 'soleil_block_treatment_switch' ),
 		'behandeling'  => array( 'render' => 'soleil_block_treatment' ),
@@ -95,7 +96,7 @@ add_action( 'init', function () {
 
 	// Blokken die zich vullen uit een lijst of de instellingen. In een vergrendelde pagina kan je een blok enkel aanklikken
 	// als het een inhoudsattribuut heeft; zonder dat ziet Saskia nooit de melding "Aanpassen doe je bij …" met de knop Openen.
-	$managed = array( 'openingsuren', 'behandelingen-lijst', 'tarieven-chips', 'tarieven', 'in-de-kijker', 'reviews', 'merken', 'producten', 'activiteiten', 'contact-kaart', 'contactformulier', 'journaal' );
+	$managed = array( 'openingsuren', 'behandelingen-lijst', 'tarieven-chips', 'tarieven', 'in-de-kijker', 'reviews', 'merken', 'producten', 'activiteiten', 'contact-kaart', 'contactformulier', 'journaal', 'laatste-tip' );
 
 	foreach ( soleil_blocks() as $name => $block ) {
 		$render = $block['render'];
@@ -242,7 +243,39 @@ add_filter( 'render_block_core/post-content', function ( $html ) {
 	return preg_replace( '#^\s*<div[^>]*>(.*)</div>\s*$#s', '$1', $html );
 } );
 
-/* ---------- Journaal ---------- */
+/* ---------- Seizoenstips (de gewone berichten) ---------- */
+
+function soleil_tips_url() {
+	$id = (int) get_option( 'page_for_posts' );
+	return $id ? get_permalink( $id ) : home_url( '/seizoenstips/' );
+}
+
+function soleil_tips_title() {
+	$id = (int) get_option( 'page_for_posts' );
+	return $id ? get_the_title( $id ) : 'Seizoenstips';
+}
+
+// De oude adressen onder /journaal/ blijven werken.
+add_action( 'template_redirect', function () {
+	if ( is_404() && preg_match( '#^/journaal(/.*)?$#', soleil_current_path(), $m ) ) {
+		wp_safe_redirect( home_url( '/seizoenstips' . ( $m[1] ?? '/' ) ), 301 );
+		exit;
+	}
+}, 1 );
+
+// Er is geen apart overzicht: /seizoenstips/ opent meteen de nieuwste tip, de andere tips staan onderaan die pagina.
+add_action( 'template_redirect', function () {
+	$tip = is_home() ? soleil_latest_tip() : null;
+	if ( $tip ) {
+		wp_safe_redirect( get_permalink( $tip ), 302 );
+		exit;
+	}
+}, 2 );
+
+// Nog geen enkele tip gepubliceerd: de hele sectie op de home blijft weg.
+add_filter( 'render_block_soleil/el', function ( $html, $block ) {
+	return str_contains( (string) ( $block['attrs']['className'] ?? '' ), 'tips-home' ) && ! get_posts( array( 'numberposts' => 1, 'fields' => 'ids' ) ) ? '' : $html;
+}, 10, 2 );
 
 function soleil_post_category( $post ) {
 	foreach ( get_the_category( $post->ID ) as $term ) {
@@ -257,7 +290,8 @@ function soleil_post_category( $post ) {
  * Datum zoals Intl.DateTimeFormat('nl-BE', { day: 'numeric', month: 'long', year: 'numeric' }): "28 augustus 2026".
  */
 function soleil_post_date( $post ) {
-	return '<time datetime="' . esc_attr( get_the_date( 'Y-m-d', $post ) ) . '">' . esc_html( get_the_date( 'j F Y', $post ) ) . '</time>';
+	$time = get_post_datetime( $post );
+	return '<time datetime="' . esc_attr( $time->format( 'Y-m-d' ) ) . '">' . esc_html( $time->format( 'j' ) . ' ' . strtolower( soleil_month_nl( $time ) ) . ' ' . $time->format( 'Y' ) ) . '</time>';
 }
 
 /**
@@ -277,32 +311,89 @@ function soleil_post_card( $post ) {
 }
 
 /**
- * Het artikel, zoals journaal/[slug].astro: kruimelpad, categorie en datum, titel, foto, tekst en knoppen.
+ * De nieuwste echte tip: berichten in de categorie Nieuws of Nieuw (bv. nieuwe openingsuren) komen niet op de home,
+ * tenzij er niets anders is.
+ */
+function soleil_latest_tip() {
+	$news  = array_filter( array_map( fn( $slug ) => (int) ( get_category_by_slug( $slug )->term_id ?? 0 ), array( 'nieuws', 'nieuw' ) ) );
+	$posts = get_posts( array( 'numberposts' => 1, 'category__not_in' => $news ) ) ?: get_posts( array( 'numberposts' => 1 ) );
+	return $posts ? $posts[0] : null;
+}
+
+/**
+ * De nieuwste tip op de home: foto, categorie en datum, titel, korte tekst. Het hele blok is klikbaar.
+ */
+function soleil_block_latest_tip() {
+	$post = soleil_latest_tip();
+	if ( ! $post ) {
+		return '';
+	}
+	$photo = has_post_thumbnail( $post );
+	return '<a class="spot tip-card rv' . ( $photo ? '' : ' tip-card--text' ) . '" href="' . esc_url( get_permalink( $post ) ) . '">'
+		. ( $photo ? '<figure class="ph">' . soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => '', 'loading' => 'lazy' ) ) . '</figure>' : '' )
+		. '<div class="spot-copy"><p class="post-meta"><span class="label">' . esc_html( soleil_post_category( $post ) ) . '</span>' . soleil_post_date( $post ) . '</p>'
+		. '<h3 class="h1">' . esc_html( get_the_title( $post ) ) . '</h3>'
+		. '<p class="muted">' . esc_html( get_the_excerpt( $post ) ) . '</p>'
+		. '<span class="link">' . esc_html( soleil_text( 'tip_read', 'Lees deze tip' ) ) . soleil_icon( 'arrow-right' ) . '</span>'
+		. '</div></a>';
+}
+
+/**
+ * Geeft elke tussentitel in de tekst een anker en geeft de lijst van tussentitels terug voor "In deze tip".
+ */
+function soleil_tip_sections( $content ) {
+	$toc     = array();
+	$content = preg_replace_callback( '#<h2([^>]*)>(.*?)</h2>#s', function ( $m ) use ( &$toc ) {
+		$text = trim( wp_strip_all_tags( $m[2] ) );
+		if ( '' === $text ) {
+			return $m[0];
+		}
+		$id    = 'tip-' . ( count( $toc ) + 1 );
+		$toc[] = array( 'id' => $id, 'text' => $text );
+		return '<h2 id="' . $id . '"' . preg_replace( '#\sid="[^"]*"#', '', $m[1] ) . '>' . $m[2] . '</h2>';
+	}, $content );
+	return array( $content, $toc );
+}
+
+/**
+ * De pagina van een tip: kop zoals een behandeling (foto, titel), de tekst in een leeskolom met rechts de inhoud
+ * en een knop, en onderaan een afsluitend blok. Korte tips zonder tussentitels krijgen enkel de leeskolom.
  */
 function soleil_block_article() {
 	$post = get_post();
 	if ( ! $post || 'post' !== $post->post_type ) {
-		return '<article class="wrap article"><header class="ph-head"><h1 class="h1">Titel van het artikel</h1></header></article>';
+		return '<article class="wrap article"><header class="ph-head"><h1 class="h1">Titel van de tip</h1></header></article>';
 	}
 	$cat   = soleil_post_category( $post );
-	$image = has_post_thumbnail( $post )
-		? '<figure class="ph article-hero">' . soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => '', 'fetchpriority' => 'high' ) ) . '</figure>'
-		: '';
+	$photo = has_post_thumbnail( $post );
+	$book  = soleil_text( 'tip_cta_btn', 'Afspraak maken' );
 
 	$GLOBALS['soleil_in_article'] = true;
 	$content                      = apply_filters( 'the_content', $post->post_content );
 	$GLOBALS['soleil_in_article'] = false;
 
-	return '<article class="wrap article"><header class="ph-head">'
-		. '<ol class="crumbs" role="list"><li><a href="' . esc_url( home_url( '/' ) ) . '">Home</a></li><li><a href="' . esc_url( home_url( '/journaal/' ) ) . '">Journaal</a></li><li aria-current="page">' . esc_html( $cat ) . '</li></ol>'
-		. '<p class="post-meta" style="margin-top:24px"><span class="label">' . esc_html( $cat ) . '</span>' . soleil_post_date( $post ) . '</p>'
-		. '<h1 class="h1">' . esc_html( get_the_title( $post ) ) . '</h1>'
-		. '</header>' . $image
-		. '<div class="prose">' . $content
-		. '<div class="actions" style="margin-top:56px">'
-		. '<a class="btn" href="' . esc_url( soleil_setting( 'booking' ) ) . '"' . soleil_blank() . '>Afspraak maken' . soleil_icon( 'arrow-up-right' ) . '</a>'
-		. '<a class="link" href="' . esc_url( soleil_treatment_url( 'skin-discovery' ) ) . '">Nieuw? Start met een Skin Discovery' . soleil_icon( 'arrow-right' ) . '</a>'
-		. '</div></div></article>';
+	list( $content, $toc ) = soleil_tip_sections( $content );
+	$minutes               = max( 1, (int) ceil( str_word_count( wp_strip_all_tags( $content ) ) / 200 ) );
+	$side                  = '';
+	if ( count( $toc ) >= 3 ) {
+		$links = implode( '', array_map( fn( $t ) => '<li><a href="#' . esc_attr( $t['id'] ) . '">' . esc_html( $t['text'] ) . '</a></li>', $toc ) );
+		$side  = '<aside class="tip-side" aria-labelledby="tip-inhoud"><p class="label" id="tip-inhoud">' . esc_html( soleil_text( 'tip_toc', 'In deze tip' ) ) . '</p>'
+			. '<ol class="tip-toc" role="list">' . $links . '</ol>'
+			. '<a class="btn" href="' . esc_url( soleil_setting( 'booking' ) ) . '"' . soleil_blank() . '>' . esc_html( $book ) . soleil_icon( 'arrow-up-right' ) . '</a></aside>';
+	}
+
+	return '<article>'
+		. '<header class="wrap thead tip-head' . ( $photo ? '' : ' thead--solo' ) . '">'
+		. ( $photo ? '<figure class="framed rv-img">' . soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => '', 'fetchpriority' => 'high' ) ) . '</figure>' : '' )
+		. '<div><ol class="crumbs" role="list"><li><a href="' . esc_url( home_url( '/' ) ) . '">Home</a></li><li aria-current="page">' . esc_html( soleil_tips_title() ) . '</li></ol>'
+		. '<p class="post-meta">' . ( '' !== $cat ? '<span class="label">' . esc_html( $cat ) . '</span>' : '' ) . soleil_post_date( $post ) . '<span>' . $minutes . ' min lezen</span></p>'
+		. '<h1 class="display rv">' . esc_html( get_the_title( $post ) ) . '</h1></div></header>'
+		. '<div class="wrap tip-layout' . ( $side ? '' : ' tip-layout--plain' ) . '"><div class="prose tip-body">' . $content . '</div>' . $side . '</div>'
+		. '<section class="wrap" aria-labelledby="tip-cta"><div class="tip-cta rv"><div><h2 id="tip-cta" class="h2">' . esc_html( soleil_text( 'tip_cta_title', 'Benieuwd wat jouw huid nodig heeft?' ) ) . '</h2>'
+		. '<p>' . esc_html( soleil_text( 'tip_cta_text', 'Ik bekijk je huid en geef je eerlijk advies op maat.' ) ) . '</p></div>'
+		. '<div class="actions"><a class="btn" href="' . esc_url( soleil_setting( 'booking' ) ) . '"' . soleil_blank() . '>' . esc_html( $book ) . soleil_icon( 'arrow-up-right' ) . '</a>'
+		. '<a class="link" href="' . esc_url( soleil_treatment_url( 'skin-discovery' ) ) . '">' . esc_html( soleil_text( 'tip_cta_link', 'Nieuw? Start met een Skin Discovery' ) ) . soleil_icon( 'arrow-right' ) . '</a></div></div></section>'
+		. '</article>';
 }
 
 /**
@@ -325,16 +416,19 @@ function soleil_block_text_page() {
 }
 
 /**
- * "Meer uit het journaal": de 3 nieuwste andere artikels.
+ * "Meer seizoenstips": alle andere tips onder de tip, de nieuwste eerst. Is er maar één tip, dan valt dit weg.
  */
 function soleil_block_more_posts() {
 	$post  = get_post();
 	$posts = get_posts( array(
-		'numberposts'  => 3,
+		'numberposts'  => -1,
 		'post__not_in' => $post ? array( $post->ID ) : array(),
 	) );
+	if ( ! $posts ) {
+		return '';
+	}
 	return '<section class="section wrap" aria-labelledby="meer">'
-		. '<div class="sec-head"><h2 id="meer" class="h2">Meer uit het journaal</h2><a class="link" href="' . esc_url( home_url( '/journaal/' ) ) . '">Alle artikels' . soleil_icon( 'arrow-right' ) . '</a></div>'
+		. '<div class="sec-head"><h2 id="meer" class="h2">' . esc_html( soleil_text( 'tip_more', 'Meer seizoenstips' ) ) . '</h2></div>'
 		. '<div class="posts">' . implode( '', array_map( 'soleil_post_card', $posts ) ) . '</div></section>';
 }
 

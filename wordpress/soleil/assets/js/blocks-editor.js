@@ -34,7 +34,8 @@
     "activiteiten": { title: "Nieuwe data", icon: "calendar-alt", description: "Activiteiten met hun komende data.", manage: ["Activiteiten", "edit.php?post_type=activiteit"] },
     "contact-kaart": { title: "Contactgegevens", icon: "location", description: "Adres, telefoon en e-mail.", manage: ["Soleil > Praktisch", "admin.php?page=soleil"] },
     "contactformulier": { title: "Contactformulier", icon: "email-alt", description: "Het formulier opent het mailprogramma van de bezoeker.", manage: ["Soleil > Praktisch", "admin.php?page=soleil"] },
-    "journaal": { title: "Alle artikels", icon: "excerpt-view", description: "Alle artikels uit het journaal.", manage: ["Journaal", "edit.php"] },
+    "journaal": { title: "Alle seizoenstips", icon: "excerpt-view", description: "Alle seizoenstips.", manage: ["Seizoenstips", "edit.php"] },
+    "laatste-tip": { title: "Nieuwste seizoenstip", icon: "excerpt-view", description: "De nieuwste tip verschijnt hier vanzelf.", manage: ["Seizoenstips", "edit.php"] },
     "pagina-inhoud": { title: "Inhoud van een pagina", icon: "admin-page", description: "Toont de inhoud van een vaste pagina in een template." },
     "icoon": { title: "Icoon", icon: "star-empty", description: "Een icoon van de site." },
     "tekstpagina": { title: "Tekstpagina", icon: "text-page", description: "Titel, kruimelpad en tekst van een pagina zoals het privacybeleid." }
@@ -531,14 +532,14 @@
 
     return el("div", blockProps,
       el("div", { className: "soleil-card__head" },
-        el("strong", null, "Artikel"),
+        el("strong", null, "Seizoenstip"),
         el("span", null, "Kies een foto en categorie, schrijf je tekst eronder en klik op Publiceren.")
       ),
       el("div", { className: "soleil-card__grid soleil-card__section" },
-        el("div", null, el(Photo, { id: featured[0], onChange: featured[1], help: "Deze foto staat bovenaan het artikel en op de kaartjes in het journaal." })),
+        el("div", null, el(Photo, { id: featured[0], onChange: featured[1], help: "Deze foto staat bovenaan de tip, op de home en op de kaartjes bij Seizoenstips." })),
         el("div", { className: "soleil-card__fields" },
           el(Pills, { label: "Categorie", terms: usable, value: cats[0] || [], onChange: cats[1] }),
-          area("Korte samenvatting", typeof excerpt[0] === "string" ? excerpt[0] : "", excerpt[1], "Staat op de kaartjes in het journaal. Leeg = het begin van je tekst.", 4)
+          area("Korte samenvatting", typeof excerpt[0] === "string" ? excerpt[0] : "", excerpt[1], "Staat op de home en op de kaartjes bij Seizoenstips. Leeg = het begin van je tekst.", 4)
         )
       )
     );

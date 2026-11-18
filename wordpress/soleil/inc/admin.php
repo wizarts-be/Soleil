@@ -9,30 +9,30 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'admin_menu', fn() => remove_menu_page( 'edit-comments.php' ) );
 add_action( 'admin_bar_menu', fn( $bar ) => $bar->remove_node( 'comments' ), 999 );
 
-// Berichten heten hier "Journaal".
+// Berichten heten hier "Seizoenstips".
 add_action( 'init', function () {
 	$labels = get_post_type_object( 'post' )->labels;
 
-	$labels->name               = 'Journaal';
-	$labels->menu_name          = 'Journaal';
-	$labels->name_admin_bar     = 'Artikel';
-	$labels->singular_name      = 'Artikel';
-	$labels->all_items          = 'Alle artikels';
-	$labels->add_new            = 'Nieuw artikel';
-	$labels->add_new_item       = 'Nieuw artikel';
-	$labels->edit_item          = 'Artikel bewerken';
-	$labels->new_item           = 'Nieuw artikel';
-	$labels->view_item          = 'Artikel bekijken';
-	$labels->search_items       = 'Artikels zoeken';
-	$labels->not_found          = 'Geen artikels gevonden';
-	$labels->not_found_in_trash = 'Geen artikels in de prullenbak';
+	$labels->name               = 'Seizoenstips';
+	$labels->menu_name          = 'Seizoenstips';
+	$labels->name_admin_bar     = 'Seizoenstip';
+	$labels->singular_name      = 'Seizoenstip';
+	$labels->all_items          = 'Alle seizoenstips';
+	$labels->add_new            = 'Nieuwe tip';
+	$labels->add_new_item       = 'Nieuwe tip';
+	$labels->edit_item          = 'Tip bewerken';
+	$labels->new_item           = 'Nieuwe tip';
+	$labels->view_item          = 'Tip bekijken';
+	$labels->search_items       = 'Tips zoeken';
+	$labels->not_found          = 'Geen tips gevonden';
+	$labels->not_found_in_trash = 'Geen tips in de prullenbak';
 } );
 
 // Startopbouw van een nieuw artikel: de berichtkaart bovenaan, dan de tekst.
 add_action( 'init', function () {
 	get_post_type_object( 'post' )->template = array(
 		array( 'soleil/berichtkaart', array( 'lock' => array( 'move' => true, 'remove' => true ) ) ),
-		array( 'core/paragraph', array( 'placeholder' => 'Schrijf hier het artikel. Druk op Enter voor een nieuwe alinea, of op + voor een tussentitel, lijst, foto of de openingsuren.' ) ),
+		array( 'core/paragraph', array( 'placeholder' => 'Schrijf hier je tip. Druk op Enter voor een nieuwe alinea, of op + voor een tussentitel, lijst, foto of de openingsuren.' ) ),
 	);
 }, 20 );
 
@@ -63,7 +63,7 @@ add_filter( 'allowed_block_types_all', function ( $allowed, $context ) {
 
 /* ---------- Vaste pagina's: enkel tekst, links en foto's aanpassen ---------- */
 
-const SOLEIL_LOCKED_PAGES = array( 'home', 'over-soleil', 'contact', 'nieuw', 'tarieven', 'behandelingen', 'journaal', 'pagina-niet-gevonden' );
+const SOLEIL_LOCKED_PAGES = array( 'home', 'over-soleil', 'contact', 'nieuw', 'tarieven', 'behandelingen', 'journaal', 'seizoenstips', 'pagina-niet-gevonden' );
 
 function soleil_is_locked_page( $post ) {
 	$post = get_post( $post );
@@ -99,8 +99,8 @@ add_action( 'enqueue_block_editor_assets', function () {
 	$notice = 'Dit is een vaste pagina: je past de teksten, links en foto\'s aan door erop te klikken. De opbouw blijft zoals ze is. Lijsten zoals behandelingen, prijzen en reviews vullen zich vanzelf.';
 	$actions = array();
 	if ( (int) get_option( 'page_for_posts' ) === $post->ID ) {
-		$notice  = 'Deze pagina toont automatisch alle artikels uit het journaal. Hier pas je enkel de titel en de tekst bovenaan aan.';
-		$actions = array( array( 'label' => 'Artikels beheren', 'url' => admin_url( 'edit.php' ) ), array( 'label' => 'Nieuw artikel', 'url' => admin_url( 'post-new.php' ) ) );
+		$notice  = 'Bezoekers gaan via deze pagina meteen naar de nieuwste seizoenstip. Hier hoef je niets aan te passen: schrijf je tips bij Seizoenstips.';
+		$actions = array( array( 'label' => 'Tips beheren', 'url' => admin_url( 'edit.php' ) ), array( 'label' => 'Nieuwe tip', 'url' => admin_url( 'post-new.php' ) ) );
 	}
 	wp_add_inline_script( 'wp-edit-post', 'wp.domReady(function(){wp.data.dispatch("core/notices").createInfoNotice(' . wp_json_encode( $notice ) . ',{isDismissible:false,actions:' . wp_json_encode( $actions ) . '});});', 'after' );
 } );
