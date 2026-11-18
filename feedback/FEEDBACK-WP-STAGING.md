@@ -57,7 +57,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 
 ## Stand van zaken
 
-**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b`, `000b25f`, `74ee9f4`, `98db93c`, `3e0cbea`, `3d0da8b`, `c6f2e7b` en `d585f5e`. Bij de volgende keer uitrollen gaan ze mee. De staging draait nog het thema van 2 november: Saskia ziet deze aanpassingen pas na het uitrollen.
+**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b`, `000b25f`, `74ee9f4`, `98db93c`, `3e0cbea`, `3d0da8b`, `c6f2e7b`, `d585f5e` en `e72ea5b`. Bij de volgende keer uitrollen gaan ze mee. De staging draait nog het thema van 2 november: Saskia ziet deze aanpassingen pas na het uitrollen.
 
 ## Punten
 
@@ -67,8 +67,8 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 |---|---|---|---|
 | 1 | "Nieuw bij Soleil" → eyebrow iets groter | Alle eyebrows boven een titel 13px en semi-bold (600). Menukopjes en tags op kaarten blijven 11px | ✅ `f385c74` |
 | 2 | "Het logo in de navigatie vervangen door het logo van Instituut in de Zon" + als favicon | Nav: officieel logo LOGO-SOLEIL-2026-COLOR (media ID 306) als `assets/logo-soleil.webp`, krimpt mee bij scrollen; oude svg-zon + woordmerk weg. Favicon: `assets/favicon.png`, zon + "instituut" zonder SOLEIL op crème vierkant, ook apple-touch-icon. Site-pictogram in WP staat op 0 (anders overschrijft dat het favicon) | ✅ `b6d36e2` |
-| 3 | Activiteit bewerken → titel moet bold staan | | ⬜ |
-| 4 | Blok ook kapot na tekst aan te passen (bij activiteit?) | Eerst nabootsen als Saskia | ⬜ |
+| 3 | Activiteit bewerken → titel moet bold staan | Vinkje "Titel vet" per activiteit, standaard aan | ✅ `e72ea5b` |
+| 4 | Blok ook kapot na tekst aan te passen (bij activiteit?) | Nagebootst op de activiteitenkaarten op Nieuw: bij langere tekst groeide de foto over de tekst. Foto volgt nu de hoogte van de kaart, ook bij "In de kijker". Lege regels worden alinea's. Saskia wist de plaats niet meer: bevestigen dat dit het blok was | ✅ `e72ea5b` |
 | 5 | Saskia heeft op sommige pagina's "geen rechten" | Oorzaak: vaste pagina's zijn vergrendeld en lijsten vullen zich uit Producten, Reviews, … De gele balk met uitleg en de knop "Bewerk …" staat nu altijd zichtbaar in de editor. Per pagina nakijken wat ze nog echt mist | ⏳ deels `ddaa217` |
 
 ### Home
@@ -112,6 +112,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 
 - Punt 6: wat moet er gebeuren met "Stralen begint met een huid in balans"?
 - Punt 8: is "Seizoenstips" de titel van de sectie op home of een categorie in het journaal?
+- Nieuw: "In de kijker" staat twee keer op de pagina. Moet de onderste titel (de activiteiten) "Activiteiten" of "Acties & activiteiten" worden?
 - Laser: mag de lange intro over Cathy korter? Voorstel: "Cathy is verpleegkundige en gespecialiseerd lasertherapeute, met bijna 15 jaar dagelijkse ervaring met de LightSheer diodelaser. Of het nu om esthetische redenen of om een medische indicatie gaat: je krijgt een professionele, veilige en persoonlijke aanpak."
 - Punt 22: nieuwsbriefpopup op Over Soleil ook, of alleen op home?
 - Product zonder info: kaartje naar de webshop (nu) of altijd naar een eigen pagina?
