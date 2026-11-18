@@ -63,14 +63,29 @@ function soleil_settings_fields() {
 			'title'  => 'In de kijker',
 			'intro'  => 'De verzorging van het seizoen, op de homepagina en op de pagina Nieuw.',
 			'fields' => array(
-				'spot_season' => array( 'Seizoen', 'text', 'Staat klein boven de naam, bv. herfst.' ),
+				'spot_label'  => array( 'Kleine regel boven de naam', 'text', 'Leeg = Verzorging in de kijker. Het seizoen komt er vanzelf achter.' ),
+				'spot_season' => array( 'Seizoen', 'text', 'Staat klein boven de naam, bv. herfst. Mag leeg blijven.' ),
 				'spot_name'   => array( 'Naam van de verzorging', 'text', '' ),
 				'spot_text'   => array( 'Tekst', 'textarea', '' ),
 				'spot_image'  => array( 'Foto', 'image', '' ),
 				'spot_alt'    => array( 'Beschrijving van de foto', 'text', 'Voor wie de foto niet ziet, bv. "Een peeling wordt met een penseel aangebracht".' ),
 				'spot_dur'    => array( 'Duur', 'text', 'Bv. 60 min.' ),
 				'spot_price'  => array( 'Prijs', 'text', 'Enkel een getal (125) of een tekst (vanaf €95).' ),
-				'spot_href'   => array( 'Link "Meer info"', 'text', 'Bv. /behandelingen/skin-expert/#peel.' ),
+				'spot_book'   => array( 'Tekst op de knop', 'text', 'Leeg = Boek deze verzorging.' ),
+				'spot_more'   => array( 'Tekst van de link', 'text', 'Leeg = Meer info.' ),
+				'spot_href'   => array( 'Waar de link naartoe gaat', 'text', 'Bv. /behandelingen/skin-expert/#peel. Leeg = geen link.' ),
+			),
+		),
+		'product'   => array(
+			'title'  => 'Pagina van een product',
+			'intro'  => 'De vaste teksten op de eigen pagina van elk product. Laat je een veld leeg, dan staat er de tekst die erbij vermeld is.',
+			'fields' => array(
+				'prod_shop'   => array( 'Knop naar de webshop', 'text', 'Leeg = Bekijk in de webshop.' ),
+				'prod_label'  => array( 'Kleine regel boven de info', 'text', 'Leeg = Meer weten.' ),
+				'prod_title'  => array( 'Titel boven de info', 'text', 'Leeg = Over dit product.' ),
+				'prod_advice' => array( 'Link naar een afspraak', 'text', 'Leeg = Liever eerst advies? Maak een afspraak.' ),
+				'prod_more'   => array( 'Titel boven de andere producten', 'text', 'Leeg = Ook nieuw.' ),
+				'prod_all'    => array( 'Link naar de pagina Nieuw', 'text', 'Leeg = Alles wat nieuw is.' ),
 			),
 		),
 	);
@@ -87,6 +102,14 @@ function soleil_settings() {
 function soleil_setting( $key ) {
 	$value = soleil_settings()[ $key ] ?? '';
 	return is_array( $value ) ? $value : (string) $value;
+}
+
+/**
+ * Een tekst die Saskia zelf kan aanpassen. Leeg of nog nooit ingevuld = de standaardtekst.
+ */
+function soleil_text( $key, $default ) {
+	$value = trim( (string) soleil_setting( $key ) );
+	return '' !== $value ? $value : $default;
 }
 
 /**

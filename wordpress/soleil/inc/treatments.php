@@ -20,7 +20,7 @@ function soleil_treatment( $post ) {
 	// Het extra vak kan de komende data van een activiteit tonen (de laserpagina).
 	$activity = (int) get_post_meta( $post->ID, 'extra_activiteit', true );
 	if ( $extra && $activity ) {
-		$extra['lijst'] = soleil_upcoming( (array) get_post_meta( $activity, 'data', true ), 0 );
+		$extra['data'] = soleil_upcoming_times( (array) get_post_meta( $activity, 'data', true ) );
 	}
 
 	$prices = soleil_clean_prices( soleil_json( $post->ID, 'prijzen' ) );
@@ -130,7 +130,9 @@ function soleil_treatment_default( $t ) {
 		. '<div class="actions rv" style="--d:2">' . ( $link ? $link : soleil_book_button( 'btn', 'Boek hier' ) ) . '</div>'
 		. '</div></header>';
 
-	$html .= '<section class="wrap tbody"><div>';
+	// De kaartjes (als die er zijn) staan op elke behandeling meteen onder de hero, zoals bij make-up.
+	$cards = soleil_price_cards( $t );
+	$html .= $cards . '<section class="wrap tbody"><div>';
 	if ( count( $intro ) > 1 ) {
 		$html .= '<div class="tbody-text rv">' . soleil_paragraphs( implode( "\n\n", array_slice( $intro, 1 ) ) ) . '</div>';
 	}
@@ -157,7 +159,6 @@ function soleil_treatment_default( $t ) {
 		}
 		$html .= '</div>';
 	}
-	$cards        = soleil_price_cards( $t );
 	$extra        = $t['extra'] && '' !== trim( (string) ( $t['extra']['titel'] ?? '' ) ) ? $t['extra'] : null;
 	$panel_prices = ! $cards && soleil_has_prices( $t['prices'] );
 	if ( $extra && $panel_prices ) {
@@ -180,11 +181,10 @@ function soleil_treatment_default( $t ) {
 		// Staan de prijzen niet in het vak (blokken of onderdelen, bv. Skin Expert), dan begint het vak meteen
 		// met het extra vak ("In de kijker deze winter") in plaats van "De prijzen staan bij elke behandeling hiernaast".
 		$first  = ! str_contains( $panel, 'id="prijzen"' );
-		$list   = array_filter( (array) ( $extra['lijst'] ?? array() ), 'strlen' );
 		$panel .= '<div class="panel-extra' . ( $first ? ' panel-extra--first' : '' ) . '">'
 			. ( $first ? '<h2 id="prijzen" class="label label--sunset">' : '<p class="label label--sunset">' ) . esc_html( $extra['titel'] ) . ( $first ? '</h2>' : '</p>' )
 			. soleil_paragraphs( $extra['tekst'] ?? '' )
-			. ( $list ? '<ul role="list">' . implode( '', array_map( fn( $x ) => '<li>' . esc_html( $x ) . '</li>', $list ) ) . '</ul>' : '' )
+			. soleil_extra_list( $extra )
 			. '</div>';
 	}
 	if ( '' !== $t['tip'] ) {
@@ -192,24 +192,27 @@ function soleil_treatment_default( $t ) {
 	}
 	$panel .= ( $link ? $link : soleil_book_button() ) . '</aside>';
 
-	return $html . $panel . '</section>' . $cards . soleil_action_block( $t['action'] );
+	return $html . $panel . '</section>' . soleil_action_block( $t['action'] );
 }
 
 /**
  * Optioneel blok onderaan een behandeling: kleine regel, H2, tekst en foto (bv. "Actie van de maand" bij laser).
- * Zelfde opmaak als het merkblok bij make-up.
+ * Beige vak zoals het extra vak. De foto blijft heel (een actiebeeld heeft vaak tekst in de foto).
+ * De eerste alinea is de actie, de alinea's daarna staan kleiner (bv. de voorwaarden).
  */
 function soleil_action_block( $a ) {
 	if ( ! $a || ( '' === trim( (string) ( $a['titel'] ?? '' ) ) && '' === trim( (string) ( $a['tekst'] ?? '' ) ) ) ) {
 		return '';
 	}
-	$foto = (int) ( $a['foto'] ?? 0 );
-	return '<section class="wrap section brand-block' . ( $foto ? '' : ' brand-block--text' ) . '" aria-labelledby="actie">'
-		. ( $foto ? '<figure class="ph rv-img">' . soleil_img( $foto, array( 'alt' => $a['alt'] ?? '', 'loading' => 'lazy' ) ) . '</figure>' : '' )
-		. '<div class="rv">' . ( '' !== trim( (string) ( $a['label'] ?? '' ) ) ? '<p class="label">' . esc_html( $a['label'] ) . '</p>' : '' )
+	$foto  = (int) ( $a['foto'] ?? 0 );
+	$parts = preg_split( '/\n\s*\n/', trim( str_replace( "\r", '', (string) ( $a['tekst'] ?? '' ) ) ), 2 );
+	return '<section class="wrap action-wrap" aria-labelledby="actie"><div class="action-block rv' . ( $foto ? ' has-photo' : '' ) . '">'
+		. ( $foto ? '<figure>' . soleil_img( $foto, array( 'alt' => $a['alt'] ?? '', 'loading' => 'lazy' ) ) . '</figure>' : '' )
+		. '<div>' . ( '' !== trim( (string) ( $a['label'] ?? '' ) ) ? '<p class="label">' . esc_html( $a['label'] ) . '</p>' : '' )
 		. '<h2 id="actie" class="h2">' . esc_html( '' !== trim( (string) ( $a['titel'] ?? '' ) ) ? $a['titel'] : 'Actie van de maand' ) . '</h2>'
-		. soleil_paragraphs( $a['tekst'] ?? '' )
-		. '</div></section>';
+		. soleil_paragraphs( $parts[0] )
+		. ( isset( $parts[1] ) ? '<div class="action-small">' . soleil_paragraphs( $parts[1] ) . '</div>' : '' )
+		. '</div></div></section>';
 }
 
 /**
@@ -223,14 +226,47 @@ function soleil_paragraphs( $text ) {
  * Het extra vak als eigen blok in de linkerkolom: beige, met de foto links als die er is.
  */
 function soleil_extra_block( $e ) {
-	$list = array_filter( (array) ( $e['lijst'] ?? array() ), 'strlen' );
 	$foto = (int) ( $e['foto'] ?? 0 );
 	return '<aside class="extra-block rv' . ( $foto ? ' has-photo' : '' ) . '" aria-labelledby="extra">'
 		. ( $foto ? '<figure class="ph">' . soleil_img( $foto, array( 'alt' => $e['alt'] ?? '', 'loading' => 'lazy' ) ) . '</figure>' : '' )
 		. '<div><h2 id="extra" class="label label--sunset">' . esc_html( $e['titel'] ?? '' ) . '</h2>'
 		. soleil_paragraphs( $e['tekst'] ?? '' )
-		. ( $list ? '<ul role="list">' . implode( '', array_map( fn( $x ) => '<li>' . esc_html( $x ) . '</li>', $list ) ) . '</ul>' : '' )
+		. soleil_extra_list( $e )
 		. '</div></aside>';
+}
+
+/**
+ * De lijst in het extra vak: de data van een activiteit per maand, anders Saskia's eigen regels.
+ */
+function soleil_extra_list( $e ) {
+	if ( isset( $e['data'] ) ) {
+		return soleil_date_months( $e['data'] );
+	}
+	$list = array_filter( (array) ( $e['lijst'] ?? array() ), 'strlen' );
+	return $list ? '<ul role="list">' . implode( '', array_map( fn( $x ) => '<li>' . esc_html( $x ) . '</li>', $list ) ) . '</ul>' : '';
+}
+
+/**
+ * Komende data per maand. Zonder komende data een korte zin, zodat het vak nooit leeg staat.
+ */
+function soleil_date_months( $times ) {
+	if ( ! $times ) {
+		return '<p>Nieuwe data volgen binnenkort.</p>';
+	}
+	$months = array();
+	foreach ( $times as $time ) {
+		$months[ $time->format( 'Y-m' ) ][] = $time;
+	}
+	$html = '';
+	foreach ( $months as $days ) {
+		$html .= '<li><span class="date-month">' . esc_html( soleil_month_nl( $days[0] ) . ' ' . $days[0]->format( 'Y' ) ) . '</span><ul role="list">';
+		foreach ( $days as $time ) {
+			$html .= '<li' . ( $time === $times[0] ? ' class="date-next"' : '' ) . '><time datetime="' . esc_attr( $time->format( 'Y-m-d' ) ) . '">'
+				. esc_html( soleil_weekday_nl( $time ) . ' ' . $time->format( 'j' ) ) . '</time></li>';
+		}
+		$html .= '</ul></li>';
+	}
+	return '<ul class="date-months" role="list">' . $html . '</ul>';
 }
 
 /**
@@ -261,6 +297,11 @@ function soleil_price_rows( $groups ) {
 	return $rows;
 }
 
+/** De titel boven de blokken: zelf in te vullen per behandeling, standaard "Behandelingen". */
+function soleil_cards_title( $t ) {
+	return '' !== $t['cards_title'] ? $t['cards_title'] : 'Behandelingen';
+}
+
 /**
  * De prijzen als kaartjes, zoals de diensten bij make-up. Automatisch bij precies 4 prijzen; per behandeling
  * kan Saskia kiezen voor altijd kaartjes of altijd het prijzenvak. Geeft '' als het prijzenvak blijft.
@@ -280,8 +321,7 @@ function soleil_price_cards( $t ) {
 			. '<div class="services-foot"><span>' . esc_html( $r['duur'] ?? '' ) . '</span><strong>' . esc_html( soleil_euro( $r['prijs'] ?? '' ) ) . '</strong></div>'
 			. soleil_book_button( 'link', 'Boek nu' ) . '</li>';
 	}
-	$title = '' !== $t['cards_title'] ? $t['cards_title'] : 'Behandelingen';
-	return '<section class="wrap section" style="padding-top:clamp(48px,6vw,80px)" aria-labelledby="aanbod"><h2 id="aanbod" class="h2 rv" style="margin-bottom:clamp(28px,4vw,48px)">' . esc_html( $title ) . '</h2>'
+	return '<section class="wrap price-cards" aria-labelledby="aanbod"><h2 id="aanbod" class="h2 rv" style="margin-bottom:clamp(28px,4vw,48px)">' . esc_html( soleil_cards_title( $t ) ) . '</h2>'
 		. '<ul class="services" role="list">' . $items . '</ul>'
 		. ( '' !== $t['note'] ? '<p class="price-note">' . esc_html( $t['note'] ) . '</p>' : '' )
 		. '</section>';
@@ -322,7 +362,7 @@ function soleil_treatment_makeup( $t ) {
 			. soleil_book_button( 'link', 'Boek nu' ) . '</li>';
 	}
 	// De blokjes komen meteen onder de hero, het merkblok daarna.
-	$html .= '<section class="wrap" style="padding-top:clamp(40px,5vw,72px)" aria-labelledby="aanbod"><h2 id="aanbod" class="h2 rv" style="margin-bottom:clamp(28px,4vw,48px)">Make-up behandelingen</h2>'
+	$html .= '<section class="wrap" style="padding-top:clamp(40px,5vw,72px)" aria-labelledby="aanbod"><h2 id="aanbod" class="h2 rv" style="margin-bottom:clamp(28px,4vw,48px)">' . esc_html( soleil_cards_title( $t ) ) . '</h2>'
 		. '<ul class="services" role="list">' . $services . '</ul></section>';
 	$html .= '<section class="wrap section brand-block" aria-labelledby="merk">'
 		. '<figure class="ph rv-img">' . soleil_img( $story['foto'] ?? 0, array( 'alt' => $story['alt'] ?? '', 'loading' => 'lazy' ) ) . '</figure>'

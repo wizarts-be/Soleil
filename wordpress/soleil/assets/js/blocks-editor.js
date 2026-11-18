@@ -52,6 +52,8 @@
       supports: { html: false, inserter: !!def.inserter, className: false, customClassName: false },
       edit: function (props) {
         var blockProps = be.useBlockProps();
+        // Op de pagina Nieuw toont dit blok niets meer: geen "leeg blok"-melding in de editor.
+        if (name === "voorbeeld-noot" && props.attributes.soort === "nieuw") { return el("div", blockProps); }
         // Altijd zichtbaar: anders denkt Saskia dat ze geen rechten heeft, omdat er op de lijst klikken niets doet.
         var manage = def.manage ? el("div", { className: "soleil-manage" },
           el("span", null,
@@ -382,7 +384,9 @@
       el("p", { key: "n", className: "soleil-card__sub" }, asCards
         ? "Nu op de pagina: blokken onder de tekst (" + rowCount + (rowCount === 1 ? " prijs" : " prijzen") + "). Een blok weg = de prijs hieronder verwijderen."
         : "Nu op de pagina: één prijskaart rechts (" + rowCount + (rowCount === 1 ? " prijs" : " prijzen") + ")."),
-      asCards ? text("Titel boven de blokken", m.kaartjes_titel, function (v) { set("kaartjes_titel", v); }, "Leeg = Behandelingen.") : null,
+      text("Titel boven de blokken", m.kaartjes_titel, function (v) { set("kaartjes_titel", v); }, asCards
+        ? "Bv. Actie van de maand. Leeg = Behandelingen."
+        : "Bv. Actie van de maand. Leeg = Behandelingen. Je ziet deze titel pas op de pagina als je hierboven Blokken kiest."),
       el(Prices, { key: "p", value: prices, cardText: asCards, onChange: function (v) { setJson("prijzen", v); } }),
       area("Noot onder de prijzen", m.noot, function (v) { set("noot", v); }, "Mag leeg blijven."),
       area("Tip", m.tip, function (v) { set("tip", v); }, "Kleine tekst onderaan het prijzenvak, bv. een verwijzing naar de Skin Discovery.")
@@ -423,7 +427,7 @@
         el(c.SelectControl, Object.assign({
           label: "Data van een activiteit", value: String(m.extra_activiteit || ""),
           options: [{ label: "Geen: eigen lijst hieronder", value: "" }].concat(activities),
-          help: "Met een activiteit staan hier de komende data van die activiteit. Voorbije data verdwijnen vanzelf.",
+          help: "Met een activiteit staan hier de komende data van die activiteit, vanzelf per maand. Data aanpassen doe je bij Activiteiten. Voorbije data verdwijnen vanzelf.",
           onChange: function (v) { set("extra_activiteit", Number(v) || 0); }
         }, ctl)),
         m.extra_activiteit ? null : lines("Lijst", extra.lijst, function (v) { setJson("extra", merge(extra, "lijst", v)); }, "Eén regel per punt. Mag leeg blijven.")
@@ -440,7 +444,7 @@
           text("Titel", action.titel, setA("titel"), "Grote titel (H2). Leeg = Actie van de maand."),
           text("Kleine regel boven de titel", action.label, setA("label"), "Bv. 4+1 gratis. Mag leeg blijven.")
         ),
-        area("Tekst", action.tekst, setA("tekst"), "Een lege regel begint een nieuwe alinea.", 8),
+        area("Tekst", action.tekst, setA("tekst"), "Eerst de actie. Laat dan een lege regel: alles daaronder staat kleiner, bv. de voorwaarden.", 8),
         el("div", { className: "soleil-card__grid" },
           el("div", null, el(Photo, { id: action.foto || 0, label: "Foto (mag leeg blijven)", onChange: setA("foto") })),
           el("div", { className: "soleil-card__fields" },
@@ -475,6 +479,7 @@
           ),
           area("Tekst", (story.tekst || []).join("\n\n"), function (v) { setStory("tekst")(v.split(/\n\s*\n/).map(function (x) { return x.trim(); }).filter(Boolean)); }, "Een lege regel begint een nieuwe alinea.", 6),
           el("h4", { className: "soleil-card__sub" }, "Diensten"),
+          text("Titel boven de blokken", m.kaartjes_titel, function (v) { set("kaartjes_titel", v); }, "Leeg = Behandelingen."),
           services.map(function (s, i) {
             var setS = function (key) { return function (v) { setJson("makeup", merge(makeup, "diensten", put(services, i, merge(s, key, v)))); }; };
             return el("div", { key: i, className: "soleil-card__item" },

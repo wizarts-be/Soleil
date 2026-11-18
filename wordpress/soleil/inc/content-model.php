@@ -136,18 +136,16 @@ function soleil_fields() {
 		),
 		'activiteit'  => array(
 			'tekst'      => array( 'text', 'Tekst' ),
-			'data'       => array( 'dates', 'Data', 'Voorbije data verdwijnen vanzelf van de site. Er staan er hoogstens 3 op de pagina Nieuw.' ),
+			'data'       => array( 'dates', 'Data', 'De volgorde maakt niet uit: de site zet de data vanzelf juist. Voorbije data verdwijnen vanzelf. Er staan er hoogstens 3 op de pagina Nieuw.' ),
 			'geen_data'  => array( 'string', 'Tekst zonder data', 'Staat er als er geen komende data zijn, bv. "Datum volgt".' ),
 			'link_url'   => array( 'url', 'Link', 'Bv. /behandelingen/laser/.' ),
 			'link_label' => array( 'string', 'Tekst van de link', 'Bv. Meer over laserontharing.' ),
-			'voorbeeld'  => array( 'boolean', 'Voorbeeldinhoud', 'Aan = op de pagina Nieuw staat dat de inhoud nog aangevuld wordt.' ),
 		),
 		'product'     => array(
 			'merk'      => array( 'string', 'Merk', 'Staat klein boven de naam.' ),
 			'tekst'     => array( 'text', 'Korte tekst', 'Staat op het kaartje op de pagina Nieuw en bovenaan de pagina van het product.' ),
 			'link_url'  => array( 'url', 'Link naar de webshop', 'De knop "Bekijk in de webshop" op de pagina van het product. Leeg = de webshop zelf.' ),
 			'detail'    => array( 'html', 'Info over dit product', 'Alles wat je hier schrijft, staat op de eigen pagina van dit product. Een klik op het kaartje op de pagina Nieuw brengt je daar. Laat je dit leeg, dan gaat het kaartje meteen naar de webshop.' ),
-			'voorbeeld' => array( 'boolean', 'Voorbeeldinhoud', 'Aan = op de pagina Nieuw staat dat de inhoud nog aangevuld wordt.' ),
 		),
 		'merk'        => array(
 			'regel' => array( 'text', 'Korte regel', 'Staat onder de naam. De foto kies je hieronder; zonder foto staat de naam in de tegel.' ),
@@ -390,9 +388,17 @@ add_action( 'manage_activiteit_posts_custom_column', function ( $col, $id ) {
  * waardoor wp_date() "Thursday 29 October 2026" gaf.
  */
 function soleil_date_nl( DateTimeInterface $time ) {
-	$days   = array( 'zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag' );
-	$months = array( 1 => 'januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december' );
-	return ucfirst( $days[ (int) $time->format( 'w' ) ] ) . ' ' . $time->format( 'j' ) . ' ' . $months[ (int) $time->format( 'n' ) ] . ' ' . $time->format( 'Y' );
+	return soleil_weekday_nl( $time ) . ' ' . $time->format( 'j' ) . ' ' . strtolower( soleil_month_nl( $time ) ) . ' ' . $time->format( 'Y' );
+}
+
+function soleil_weekday_nl( DateTimeInterface $time ) {
+	$days = array( 'Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag' );
+	return $days[ (int) $time->format( 'w' ) ];
+}
+
+function soleil_month_nl( DateTimeInterface $time ) {
+	$months = array( 1 => 'Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December' );
+	return $months[ (int) $time->format( 'n' ) ];
 }
 
 /**
@@ -400,14 +406,21 @@ function soleil_date_nl( DateTimeInterface $time ) {
  * $limit 0 = alle.
  */
 function soleil_upcoming( $dates, $limit = 3 ) {
+	$out = array_map( 'soleil_date_nl', soleil_upcoming_times( $dates ) );
+	return $limit ? array_slice( $out, 0, $limit ) : $out;
+}
+
+/**
+ * De komende data als tijdstippen: op volgorde en elke datum één keer. Een onbestaande datum telt niet mee.
+ */
+function soleil_upcoming_times( $dates ) {
 	$today = wp_date( 'Y-m-d' );
 	$out   = array();
 	foreach ( soleil_sanitize_dates( $dates ) as $date ) {
-		if ( $date < $today ) {
-			continue;
+		$time = DateTimeImmutable::createFromFormat( 'Y-m-d H:i', $date . ' 12:00', wp_timezone() );
+		if ( $time && $time->format( 'Y-m-d' ) === $date && $date >= $today ) {
+			$out[] = $time;
 		}
-		$time  = DateTimeImmutable::createFromFormat( 'Y-m-d H:i', $date . ' 12:00', wp_timezone() );
-		$out[] = soleil_date_nl( $time );
 	}
-	return $limit ? array_slice( $out, 0, $limit ) : $out;
+	return $out;
 }

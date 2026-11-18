@@ -341,16 +341,18 @@ function soleil_block_more_posts() {
 /* ---------- Verzorging in de kijker (Spotlight.astro) ---------- */
 
 function soleil_block_spotlight( $a ) {
-	$href = soleil_setting( 'spot_href' );
+	$href   = trim( soleil_setting( 'spot_href' ) );
+	$season = trim( soleil_setting( 'spot_season' ) );
 	return '<div class="spot">'
 		. '<figure class="ph rv-img">' . soleil_img( soleil_setting( 'spot_image' ), array( 'alt' => soleil_setting( 'spot_alt' ), 'loading' => 'lazy' ) ) . '</figure>'
 		. '<div class="spot-copy rv">'
-		. '<p class="label label--sunset">Verzorging in de kijker · ' . esc_html( soleil_setting( 'spot_season' ) ) . '</p>'
+		. '<p class="label label--sunset">' . esc_html( soleil_text( 'spot_label', 'Verzorging in de kijker' ) . ( '' !== $season ? ' · ' . $season : '' ) ) . '</p>'
 		. '<h2 id="' . esc_attr( $a['kopId'] ) . '" class="h1">' . esc_html( soleil_setting( 'spot_name' ) ) . '</h2>'
 		. '<p class="muted">' . esc_html( soleil_setting( 'spot_text' ) ) . '</p>'
 		. '<p class="spot-price"><span>' . esc_html( soleil_setting( 'spot_dur' ) ) . '</span><strong>' . esc_html( soleil_euro( soleil_setting( 'spot_price' ) ) ) . '</strong></p>'
-		. '<div class="actions">' . soleil_book_button( 'btn', 'Boek deze verzorging' )
-		. '<a class="link" href="' . esc_url( str_starts_with( $href, '/' ) ? home_url( $href ) : $href ) . '">Meer info' . soleil_icon( 'arrow-right' ) . '</a></div>'
+		. '<div class="actions">' . soleil_book_button( 'btn', soleil_text( 'spot_book', 'Boek deze verzorging' ) )
+		. ( '' !== $href ? '<a class="link" href="' . esc_url( str_starts_with( $href, '/' ) ? home_url( $href ) : $href ) . '">' . esc_html( soleil_text( 'spot_more', 'Meer info' ) ) . soleil_icon( 'arrow-right' ) . '</a>' : '' )
+		. '</div>'
 		. '</div></div>';
 }
 
@@ -382,11 +384,12 @@ function soleil_block_reviews() {
 }
 
 /**
- * Melding dat een lijst nog voorbeeldinhoud bevat. Verdwijnt vanzelf als niets nog als voorbeeld gemarkeerd is.
+ * Melding dat de reviews nog voorbeelden zijn. Verdwijnt vanzelf als niets nog als voorbeeld gemarkeerd is.
+ * Op de pagina Nieuw staat geen melding meer: daar staat Saskia's eigen inhoud.
  */
 function soleil_block_example_note( $a ) {
 	if ( 'nieuw' === $a['soort'] ) {
-		return soleil_has_examples( array( 'product', 'activiteit' ) ) ? '<p class="muted" style="margin-top:12px">Voorbeeldinhoud: de producten en workshopdata vullen we nog aan.</p>' : '';
+		return '';
 	}
 	return soleil_has_examples( 'review' ) ? '<p class="muted rv">Voorbeeldreviews: deze vervangen we door echte reviews van klanten.</p>' : '';
 }
@@ -450,24 +453,22 @@ function soleil_block_product() {
 		? '<figure class="framed rv-img">' . soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => $name, 'fetchpriority' => 'high' ) ) . '</figure>'
 		: '';
 	$nieuw  = home_url( '/nieuw/' );
+	$shop   = '<a class="btn" href="' . esc_url( soleil_product_shop_url( $post ) ) . '"' . soleil_blank() . '>' . esc_html( soleil_text( 'prod_shop', 'Bekijk in de webshop' ) ) . soleil_icon( 'arrow-up-right' ) . '</a>';
 
 	$html = '<header class="wrap thead' . ( $photo ? '' : ' thead--solo' ) . '">' . $photo . '<div>'
 		. '<ol class="crumbs" role="list"><li><a href="' . esc_url( home_url( '/' ) ) . '">Home</a></li><li><a href="' . esc_url( $nieuw ) . '">Nieuw</a></li><li aria-current="page">' . esc_html( $name ) . '</li></ol>'
 		. ( '' !== $merk ? '<p class="label rv">' . esc_html( $merk ) . '</p>' : '' )
 		. '<h1 class="display rv">' . esc_html( $name ) . '</h1>'
 		. ( '' !== $tekst ? '<p class="lede rv" style="--d:1">' . esc_html( $tekst ) . '</p>' : '' )
-		. '<div class="actions rv" style="--d:2">'
-		. '<a class="btn" href="' . esc_url( soleil_product_shop_url( $post ) ) . '"' . soleil_blank() . '>Bekijk in de webshop' . soleil_icon( 'arrow-up-right' ) . '</a>'
-		. '</div></div></header>';
+		. '<div class="actions rv" style="--d:2">' . $shop . '</div></div></header>';
 
 	// De info naast een kleine titel, op hetzelfde raster als de header (foto links, tekst rechts).
 	if ( soleil_product_has_detail( $post ) ) {
 		$html .= '<section class="wrap pinfo" aria-labelledby="info">'
-			. '<div class="pinfo-head"><p class="label">Meer weten</p><h2 id="info" class="h2">Over dit product</h2></div>'
+			. '<div class="pinfo-head"><p class="label">' . esc_html( soleil_text( 'prod_label', 'Meer weten' ) ) . '</p><h2 id="info" class="h2">' . esc_html( soleil_text( 'prod_title', 'Over dit product' ) ) . '</h2></div>'
 			. '<div class="prose">' . wpautop( wp_kses_post( $detail ) )
-			. '<div class="actions">'
-			. '<a class="btn" href="' . esc_url( soleil_product_shop_url( $post ) ) . '"' . soleil_blank() . '>Bekijk in de webshop' . soleil_icon( 'arrow-up-right' ) . '</a>'
-			. '<a class="link" href="' . esc_url( soleil_setting( 'booking' ) ) . '"' . soleil_blank() . '>Liever eerst advies? Maak een afspraak' . soleil_icon( 'arrow-up-right' ) . '</a>'
+			. '<div class="actions">' . $shop
+			. '<a class="link" href="' . esc_url( soleil_setting( 'booking' ) ) . '"' . soleil_blank() . '>' . esc_html( soleil_text( 'prod_advice', 'Liever eerst advies? Maak een afspraak' ) ) . soleil_icon( 'arrow-up-right' ) . '</a>'
 			. '</div></div></section>';
 	}
 
@@ -479,8 +480,8 @@ function soleil_block_product() {
 			$cards .= soleil_product_card( $p, $i );
 		}
 		$html .= '<section class="wrap section pmore" aria-labelledby="ook-nieuw">'
-			. '<div class="sec-head"><h2 id="ook-nieuw" class="h1 rv">Ook nieuw</h2>'
-			. '<a class="link rv" href="' . esc_url( $nieuw ) . '">Alles wat nieuw is' . soleil_icon( 'arrow-right' ) . '</a></div>'
+			. '<div class="sec-head"><h2 id="ook-nieuw" class="h1 rv">' . esc_html( soleil_text( 'prod_more', 'Ook nieuw' ) ) . '</h2>'
+			. '<a class="link rv" href="' . esc_url( $nieuw ) . '">' . esc_html( soleil_text( 'prod_all', 'Alles wat nieuw is' ) ) . soleil_icon( 'arrow-right' ) . '</a></div>'
 			. '<ul class="btiles news" role="list">' . $cards . '</ul></section>';
 	}
 	return $html;
