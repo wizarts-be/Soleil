@@ -75,6 +75,8 @@ a { color: inherit; text-decoration: none; }
 button, input, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; background: none; border: 0; padding: 0; }
 :where(ul, ol)[role='list'] { list-style: none; padding: 0; }
+/* Text comes from the editor: only a word that cannot fit on its own line breaks */
+main, footer { overflow-wrap: break-word; }
 h1, h2, h3 { font-weight: 300; letter-spacing: 0; line-height: 1.25; text-wrap: balance; }
 strong, b { font-weight: 500; }
 p { text-wrap: pretty; }
@@ -298,7 +300,7 @@ em { font-style: italic; font-weight: 400; }
 /* The photo fills the height of the block but never sets it: longer text may not push the photo over the text */
 .spot .ph, .dates .ph { position: relative; }
 .spot .ph img, .dates .ph img { position: absolute; inset: 0; }
-.spot .ph { min-height: 360px; }
+.spot .ph { min-height: 360px; height: 100%; max-height: 640px; align-self: start; position: sticky; top: calc(var(--header-h) + 16px); }
 .spot-copy { align-self: center; padding: clamp(24px, 4vw, 56px); }
 .spot-copy .h1 { margin-block: 10px 16px; }
 .spot-copy .muted { max-width: 48ch; }
@@ -307,7 +309,7 @@ em { font-style: italic; font-weight: 400; }
 .spot-price span { color: var(--moss); font-size: var(--fs-small); }
 .spot-price strong { margin-left: auto; font-weight: 400; font-size: var(--fs-lg); }
 .spot-more { margin-top: 20px; }
-@media (max-width: 760px) { .spot { grid-template-columns: 1fr; } .spot .ph { min-height: 0; aspect-ratio: 4 / 3; } }
+@media (max-width: 760px) { .spot { grid-template-columns: minmax(0, 1fr); } .spot .ph { position: relative; top: auto; min-height: 0; height: auto; max-height: none; aspect-ratio: 4 / 3; } }
 
 /* /nieuw/: product tiles link to the webshop, date blocks link to their page */
 .news { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -319,16 +321,18 @@ em { font-style: italic; font-weight: 400; }
 .news h3 svg { width: 20px; height: 20px; flex: none; }
 .dates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .dates > li { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr); background: var(--mist); }
-.dates .ph { min-height: 340px; }
+/* Fills the card up to a maximum: with a very long text the photo stays in view instead of stretching */
+.dates .ph { min-height: 340px; height: 100%; max-height: 520px; align-self: start; position: sticky; top: calc(var(--header-h) + 16px); }
 .dates > li > div { display: grid; gap: 14px; align-content: start; padding: clamp(20px, 2.4vw, 32px); }
 .dates h3 { font-size: var(--fs-lg); overflow-wrap: anywhere; }
 .dates h3.is-bold { font-weight: 600; }
 .dates .link { justify-self: start; }
+.dates > li > div { grid-template-columns: minmax(0, 1fr); min-width: 0; } /* a very long word may not widen the text column */
 .dates-list { display: grid; gap: 6px; font-size: var(--fs-small); }
 .dates-list li { padding-bottom: 6px; border-bottom: 1px solid var(--line); }
-@media (max-width: 960px) { .dates { grid-template-columns: 1fr; } }
+@media (max-width: 960px) { .dates { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 860px) { .news { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 520px) { .dates > li { grid-template-columns: 1fr; } .dates .ph { min-height: 0; aspect-ratio: 16 / 9; } }
+@media (max-width: 520px) { .dates > li { grid-template-columns: minmax(0, 1fr); } .dates .ph { position: relative; top: auto; min-height: 0; height: auto; max-height: none; aspect-ratio: 16 / 9; } }
 
 /* Full-bleed CTA band (inside the max width, rounded) */
 .band { position: relative; isolation: isolate; overflow: hidden; border-radius: 0; min-height: clamp(420px, 52vw, 640px); display: flex; align-items: flex-end; padding: clamp(28px, 5vw, 64px); color: var(--bone); }
@@ -433,6 +437,7 @@ em { font-style: italic; font-weight: 400; }
 .prices th small { display: block; font-size: var(--fs-small); color: var(--moss); line-height: 1.45; margin-top: 2px; }
 .prices .dur { padding-inline: 16px; color: var(--moss); white-space: nowrap; text-align: right; width: 1%; font-size: var(--fs-small); }
 .prices .eur { white-space: nowrap; text-align: right; width: 1%; font-weight: 400; }
+.prices .is-long { white-space: normal; width: 30%; }
 .price-note { margin-top: 14px; font-size: var(--fs-small); color: var(--moss); }
 
 /* Problem / solution / benefit: three equal panels with icons */
@@ -493,7 +498,7 @@ ul.date-months ul { gap: 2px; margin-top: 0; }
 .story { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
 .story { padding-top: clamp(24px, 3vw, 40px); }
 .story .framed { position: sticky; top: calc(var(--header-h) + 40px); }
-.story-title { white-space: nowrap; margin-block: 10px 24px; }
+.story-title { margin-block: 10px 24px; }
 @media (max-width: 520px) { .story-title { white-space: normal; } }
 .story .prose p + p { margin-top: 1.1em; }
 .story .prose p:first-child { font-size: var(--fs-lg); line-height: 1.6; color: var(--ink); }

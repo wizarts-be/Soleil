@@ -118,8 +118,8 @@ function soleil_prices( $rows, $title = '', $note = '' ) {
 	foreach ( $rows as $r ) {
 		$sub   = trim( (string) ( $r['toelichting'] ?? '' ) );
 		$html .= '<tr><th scope="row">' . esc_html( $r['naam'] ?? '' ) . ( '' !== $sub ? '<small>' . esc_html( $sub ) . '</small>' : '' ) . '</th>'
-			. '<td class="dur">' . esc_html( $r['duur'] ?? '' ) . '</td>'
-			. '<td class="eur">' . esc_html( soleil_euro( $r['prijs'] ?? '' ) ) . '</td></tr>';
+			. '<td class="dur' . soleil_cell_class( $r['duur'] ?? '' ) . '">' . esc_html( $r['duur'] ?? '' ) . '</td>'
+			. '<td class="eur' . soleil_cell_class( soleil_euro( $r['prijs'] ?? '' ) ) . '">' . esc_html( soleil_euro( $r['prijs'] ?? '' ) ) . '</td></tr>';
 	}
 	$html .= '</tbody></table>';
 	return $html . ( '' !== (string) $note ? '<p class="price-note">' . esc_html( $note ) . '</p>' : '' );
@@ -134,4 +134,11 @@ function soleil_price_groups( $groups ) {
 		$html .= soleil_prices( $g['rijen'] ?? array(), $g['titel'] ?? '', $g['noot'] ?? '' );
 	}
 	return $html;
+}
+
+/**
+ * Duur en prijs blijven op één regel, behalve een lange tekst: die mag afbreken en duwt de prijstabel niet breder.
+ */
+function soleil_cell_class( $value ) {
+	return mb_strlen( (string) $value ) > 16 ? ' is-long' : '';
 }
