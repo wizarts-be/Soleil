@@ -135,7 +135,8 @@ function soleil_fields() {
 			'actie'            => array( 'json' ), // optioneel blok met H2, tekst en foto, bv. "Actie van de maand" (laser)
 		),
 		'activiteit'  => array(
-			'tekst'      => array( 'text', 'Tekst' ),
+			'titel_vet'  => array( 'boolean', 'Titel vet', 'Aan = de titel van deze activiteit staat vet op de pagina Nieuw. Uit = gewone letters.', true ),
+			'tekst'      => array( 'text', 'Tekst', 'Een lege regel begint een nieuwe alinea. De foto past zich aan de lengte van de tekst aan.' ),
 			'data'       => array( 'dates', 'Data', 'De volgorde maakt niet uit: de site zet de data vanzelf juist. Voorbije data verdwijnen vanzelf. Er staan er hoogstens 3 op de pagina Nieuw.' ),
 			'geen_data'  => array( 'string', 'Tekst zonder data', 'Staat er als er geen komende data zijn, bv. "Datum volgt".' ),
 			'link_url'   => array( 'url', 'Link', 'Bv. /behandelingen/laser/.' ),
@@ -176,7 +177,7 @@ add_action( 'init', function () {
 					$args += array( 'type' => 'number', 'default' => 0 );
 					break;
 				case 'boolean':
-					$args += array( 'type' => 'boolean', 'default' => false );
+					$args += array( 'type' => 'boolean', 'default' => (bool) ( $field[3] ?? false ) ); // vierde waarde = standaard aan
 					break;
 				case 'json':
 					$args += array( 'type' => 'string', 'default' => '', 'sanitize_callback' => 'soleil_sanitize_json' );

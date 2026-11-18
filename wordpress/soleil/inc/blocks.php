@@ -348,7 +348,7 @@ function soleil_block_spotlight( $a ) {
 		. '<div class="spot-copy rv">'
 		. '<p class="label label--sunset">' . esc_html( soleil_text( 'spot_label', 'Verzorging in de kijker' ) . ( '' !== $season ? ' · ' . $season : '' ) ) . '</p>'
 		. '<h2 id="' . esc_attr( $a['kopId'] ) . '" class="h1">' . esc_html( soleil_setting( 'spot_name' ) ) . '</h2>'
-		. '<p class="muted">' . esc_html( soleil_setting( 'spot_text' ) ) . '</p>'
+		. str_replace( '<p>', '<p class="muted">', soleil_paragraphs( soleil_setting( 'spot_text' ) ) )
 		. '<p class="spot-price"><span>' . esc_html( soleil_setting( 'spot_dur' ) ) . '</span><strong>' . esc_html( soleil_euro( soleil_setting( 'spot_price' ) ) ) . '</strong></p>'
 		. '<div class="actions">' . soleil_book_button( 'btn', soleil_text( 'spot_book', 'Boek deze verzorging' ) )
 		. ( '' !== $href ? '<a class="link" href="' . esc_url( str_starts_with( $href, '/' ) ? home_url( $href ) : $href ) . '">' . esc_html( soleil_text( 'spot_more', 'Meer info' ) ) . soleil_icon( 'arrow-right' ) . '</a>' : '' )
@@ -495,12 +495,13 @@ function soleil_block_activities() {
 			$dates = array( (string) get_post_meta( $post->ID, 'geen_data', true ) );
 		}
 		$href  = (string) get_post_meta( $post->ID, 'link_url', true );
+		$label = trim( (string) get_post_meta( $post->ID, 'link_label', true ) );
 		$html .= '<li class="rv" style="--d:' . $i . '">'
 			. '<figure class="ph">' . soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => '', 'loading' => 'lazy' ) ) . '</figure>'
-			. '<div><h3>' . esc_html( get_the_title( $post ) ) . '</h3>'
-			. '<p class="muted">' . esc_html( get_post_meta( $post->ID, 'tekst', true ) ) . '</p>'
-			. '<ul class="dates-list" role="list">' . implode( '', array_map( fn( $d ) => '<li>' . esc_html( $d ) . '</li>', $dates ) ) . '</ul>'
-			. ( '' !== $href ? '<a class="link" href="' . esc_url( str_starts_with( $href, '/' ) ? home_url( $href ) : $href ) . '">' . esc_html( get_post_meta( $post->ID, 'link_label', true ) ) . soleil_icon( 'arrow-right' ) . '</a>' : '' )
+			. '<div><h3' . ( get_post_meta( $post->ID, 'titel_vet', true ) ? ' class="is-bold"' : '' ) . '>' . esc_html( wp_strip_all_tags( get_the_title( $post ) ) ) . '</h3>'
+			. str_replace( '<p>', '<p class="muted">', soleil_paragraphs( get_post_meta( $post->ID, 'tekst', true ) ) ) // lege regel = nieuwe alinea
+			. ( $dates ? '<ul class="dates-list" role="list">' . implode( '', array_map( fn( $d ) => '<li>' . esc_html( $d ) . '</li>', $dates ) ) . '</ul>' : '' )
+			. ( '' !== $href && '' !== $label ? '<a class="link" href="' . esc_url( str_starts_with( $href, '/' ) ? home_url( $href ) : $href ) . '">' . esc_html( $label ) . soleil_icon( 'arrow-right' ) . '</a>' : '' )
 			. '</div></li>';
 	}
 	return '<ul class="dates" role="list">' . $html . '</ul>';

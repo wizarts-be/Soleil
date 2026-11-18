@@ -295,15 +295,19 @@ em { font-style: italic; font-weight: 400; }
 
 /* Treatment in the spotlight (home + /nieuw/): photo left, copy, price and booking right */
 .spot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); background: var(--mist); }
-.spot .ph { aspect-ratio: 4 / 3; height: 100%; }
+/* The photo fills the height of the block but never sets it: longer text may not push the photo over the text */
+.spot .ph, .dates .ph { position: relative; }
+.spot .ph img, .dates .ph img { position: absolute; inset: 0; }
+.spot .ph { min-height: 360px; }
 .spot-copy { align-self: center; padding: clamp(24px, 4vw, 56px); }
 .spot-copy .h1 { margin-block: 10px 16px; }
 .spot-copy .muted { max-width: 48ch; }
+.spot-copy .muted + .muted { margin-top: 0.8em; }
 .spot-price { display: flex; align-items: baseline; gap: 16px; margin-block: 20px 24px; padding-block: 12px; border-block: 1px solid var(--line); max-width: 48ch; }
 .spot-price span { color: var(--moss); font-size: var(--fs-small); }
 .spot-price strong { margin-left: auto; font-weight: 400; font-size: var(--fs-lg); }
 .spot-more { margin-top: 20px; }
-@media (max-width: 760px) { .spot { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .spot { grid-template-columns: 1fr; } .spot .ph { min-height: 0; aspect-ratio: 4 / 3; } }
 
 /* /nieuw/: product tiles link to the webshop, date blocks link to their page */
 .news { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -315,14 +319,16 @@ em { font-style: italic; font-weight: 400; }
 .news h3 svg { width: 20px; height: 20px; flex: none; }
 .dates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .dates > li { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr); background: var(--mist); }
-.dates .ph { aspect-ratio: 3 / 4; height: 100%; }
+.dates .ph { min-height: 340px; }
 .dates > li > div { display: grid; gap: 14px; align-content: start; padding: clamp(20px, 2.4vw, 32px); }
-.dates h3 { font-size: var(--fs-lg); }
+.dates h3 { font-size: var(--fs-lg); overflow-wrap: anywhere; }
+.dates h3.is-bold { font-weight: 600; }
+.dates .link { justify-self: start; }
 .dates-list { display: grid; gap: 6px; font-size: var(--fs-small); }
 .dates-list li { padding-bottom: 6px; border-bottom: 1px solid var(--line); }
 @media (max-width: 960px) { .dates { grid-template-columns: 1fr; } }
 @media (max-width: 860px) { .news { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 520px) { .dates > li { grid-template-columns: 1fr; } .dates .ph { aspect-ratio: 16 / 9; } }
+@media (max-width: 520px) { .dates > li { grid-template-columns: 1fr; } .dates .ph { min-height: 0; aspect-ratio: 16 / 9; } }
 
 /* Full-bleed CTA band (inside the max width, rounded) */
 .band { position: relative; isolation: isolate; overflow: hidden; border-radius: 0; min-height: clamp(420px, 52vw, 640px); display: flex; align-items: flex-end; padding: clamp(28px, 5vw, 64px); color: var(--bone); }
