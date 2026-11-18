@@ -57,7 +57,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 
 ## Stand van zaken
 
-**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b`, `000b25f`, `74ee9f4`, `98db93c`, `3e0cbea`, `3d0da8b`, `c6f2e7b`, `d585f5e`, `e72ea5b` en `1f9fc00`. Bij de volgende keer uitrollen gaan ze mee. De staging draait nog het thema van 2 november: Saskia ziet deze aanpassingen pas na het uitrollen.
+**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b`, `000b25f`, `74ee9f4`, `98db93c`, `3e0cbea`, `3d0da8b`, `c6f2e7b`, `d585f5e`, `e72ea5b`, `1f9fc00` en `e957ed3`. Bij de volgende keer uitrollen gaan ze mee. De staging draait nog het thema van 2 november: Saskia ziet deze aanpassingen pas na het uitrollen.
 
 ## Punten
 
@@ -104,7 +104,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 
 | # | Feedback | Actie | Status |
 |---|---|---|---|
-| 20 | Merken waar ik achter sta → blokjes klikbaar, Saskia kan per merk een link toevoegen | Veld "Link" bij Merken | ⬜ |
+| 20 | Merken waar ik achter sta → blokjes klikbaar, Saskia kan per merk een link toevoegen | Veld "Link" bij Merken: met een link is het hele blokje klikbaar (home en Over Soleil), een andere site opent in een nieuw tabblad, leeg = niet klikbaar. **Inhoud:** Saskia vult de echte links in op de staging. Lokaal staan er testlinks naar Google | ✅ `e957ed3` |
 | 21 | Over Soleil: vermelding van Facebook en Instagram | Links staan al in Soleil > Praktisch | ⬜ |
 | 22 | Over Soleil: popup "nieuwsbrief ontvangen", net zoals op home? | | ❓ |
 
