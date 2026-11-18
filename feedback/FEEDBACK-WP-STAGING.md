@@ -57,7 +57,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 
 ## Stand van zaken
 
-**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b`, `000b25f`, `74ee9f4`, `98db93c`, `3e0cbea`, `3d0da8b`, `c6f2e7b`, `d585f5e`, `e72ea5b`, `1f9fc00`, `e957ed3` en `b203bad`. Bij de volgende keer uitrollen gaan ze mee. De staging draait nog het thema van 2 november: Saskia ziet deze aanpassingen pas na het uitrollen.
+**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b`, `000b25f`, `74ee9f4`, `98db93c`, `3e0cbea`, `3d0da8b`, `c6f2e7b`, `d585f5e`, `e72ea5b`, `1f9fc00`, `e957ed3`, `b203bad` en `1f4b68d`. Bij de volgende keer uitrollen gaan ze mee. De staging draait nog het thema van 2 november: Saskia ziet deze aanpassingen pas na het uitrollen.
 
 ## Punten
 
@@ -77,7 +77,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 |---|---|---|---|
 | 6 | "Stralen begint met een huid in balans?" | Geen actie in de feedback. In de media staat TAGLINE-SOLEIL-2026-COLOR (ID 308) met die zin, misschien gaat het daarover | ❓ |
 | 7 | Goudachtige quote: TAGLINE-SOLEIL-2026-COLOR ("Stralen begint bij een huid in balans") als aparte sectie | Op de home na Merken, boven de laatste band. Beige vak op de breedte van de kolom, zoals Skin Discovery. Foto aanpasbaar in de editor. **Inhoud:** op de staging nog draaien: `content-updates/2026-11-17-tagline-home.php` (zie "Inhoud op de staging aanpassen") | ✅ `000b25f` (script nog draaien op de staging) |
-| 8 | Journaal op home: 1 blogpost + knop naar het overzicht ("seizoenstips"); de sectie "Ik ben Saskia" weg, daar het journaal | Inhoud op de staging mee aanpassen (geen database-import) | ⬜ |
+| 8 | Journaal op home: 1 blogpost + knop naar het overzicht ("seizoenstips"); de sectie "Ik ben Saskia" weg, daar het journaal | Journaal heet nu Seizoenstips (`/journaal/` stuurt door). Op de home de nieuwste tip, boven de laatste band. Geen apart overzicht: `/seizoenstips/` opent de nieuwste tip, de andere staan onderaan. Nieuwe opmaak voor de tip. **Inhoud:** op de staging na het thema en de tagline nog `content-updates/2026-11-18-seizoenstips.php` en daarna `2026-11-18-eerste-seizoenstip.php` draaien. Dat laatste zet de 4 bestaande posts in de prullenbak (30 dagen), dus eerst een back-up. "Ik ben Saskia" staat er nog: navragen | ✅ `1f4b68d` (scripts nog draaien op de staging) |
 | 9 | Blok boven de footer "Even helemaal tijd voor jezelf" weg | | ⬜ |
 
 ### Nieuw
@@ -111,7 +111,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 ## Open vragen voor Saskia / PM
 
 - Punt 6: wat moet er gebeuren met "Stralen begint met een huid in balans"?
-- Punt 8: is "Seizoenstips" de titel van de sectie op home of een categorie in het journaal?
+- Punt 8: moet de sectie "Ik ben Saskia" weg van de home?
 - Nieuw: "In de kijker" staat twee keer op de pagina. Moet de onderste titel (de activiteiten) "Activiteiten" of "Acties & activiteiten" worden?
 - Laser: mag de lange intro over Cathy korter? Voorstel: "Cathy is verpleegkundige en gespecialiseerd lasertherapeute, met bijna 15 jaar dagelijkse ervaring met de LightSheer diodelaser. Of het nu om esthetische redenen of om een medische indicatie gaat: je krijgt een professionele, veilige en persoonlijke aanpak."
 - Nieuwsbrief: welk mailprogramma gebruikt Saskia? Tot de koppeling er is, worden inschrijvingen nergens bewaard.
