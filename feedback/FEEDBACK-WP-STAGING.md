@@ -57,7 +57,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 
 ## Stand van zaken
 
-**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b`, `000b25f`, `74ee9f4`, `98db93c`, `3e0cbea`, `3d0da8b`, `c6f2e7b`, `d585f5e`, `e72ea5b`, `1f9fc00` en `e957ed3`. Bij de volgende keer uitrollen gaan ze mee. De staging draait nog het thema van 2 november: Saskia ziet deze aanpassingen pas na het uitrollen.
+**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b`, `000b25f`, `74ee9f4`, `98db93c`, `3e0cbea`, `3d0da8b`, `c6f2e7b`, `d585f5e`, `e72ea5b`, `1f9fc00`, `e957ed3` en `b203bad`. Bij de volgende keer uitrollen gaan ze mee. De staging draait nog het thema van 2 november: Saskia ziet deze aanpassingen pas na het uitrollen.
 
 ## Punten
 
@@ -105,8 +105,8 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 | # | Feedback | Actie | Status |
 |---|---|---|---|
 | 20 | Merken waar ik achter sta → blokjes klikbaar, Saskia kan per merk een link toevoegen | Veld "Link" bij Merken: met een link is het hele blokje klikbaar (home en Over Soleil), een andere site opent in een nieuw tabblad, leeg = niet klikbaar. **Inhoud:** Saskia vult de echte links in op de staging. Lokaal staan er testlinks naar Google | ✅ `e957ed3` |
-| 21 | Over Soleil: vermelding van Facebook en Instagram | Links staan al in Soleil > Praktisch | ⬜ |
-| 22 | Over Soleil: popup "nieuwsbrief ontvangen", net zoals op home? | | ❓ |
+| 21 | Over Soleil: vermelding van Facebook en Instagram | "Volg Soleil op Facebook" naast de Instagram-link onderaan bij Het instituut, adressen uit Soleil > Praktisch. **Inhoud:** op de staging nog `content-updates/2026-11-18-facebook-over-soleil.php` draaien | ✅ `b203bad` (script nog draaien op de staging) |
+| 22 | Over Soleil: popup "nieuwsbrief ontvangen", net zoals op home? | Staat op elke pagina: verschijnt na 5 seconden en komt na wegklikken terug op de volgende pagina. **Later:** koppelen aan een mailprogramma, inschrijvingen worden nu nergens bewaard | ✅ `b203bad` (koppeling nog te doen) |
 
 ## Open vragen voor Saskia / PM
 
@@ -114,5 +114,5 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 - Punt 8: is "Seizoenstips" de titel van de sectie op home of een categorie in het journaal?
 - Nieuw: "In de kijker" staat twee keer op de pagina. Moet de onderste titel (de activiteiten) "Activiteiten" of "Acties & activiteiten" worden?
 - Laser: mag de lange intro over Cathy korter? Voorstel: "Cathy is verpleegkundige en gespecialiseerd lasertherapeute, met bijna 15 jaar dagelijkse ervaring met de LightSheer diodelaser. Of het nu om esthetische redenen of om een medische indicatie gaat: je krijgt een professionele, veilige en persoonlijke aanpak."
-- Punt 22: nieuwsbriefpopup op Over Soleil ook, of alleen op home?
+- Nieuwsbrief: welk mailprogramma gebruikt Saskia? Tot de koppeling er is, worden inschrijvingen nergens bewaard.
 - Product zonder info: kaartje naar de webshop (nu) of altijd naar een eigen pagina?
