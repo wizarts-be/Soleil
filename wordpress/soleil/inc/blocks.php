@@ -401,7 +401,17 @@ function soleil_block_brands() {
 		$photo = has_post_thumbnail( $post )
 			? soleil_img( get_post_thumbnail_id( $post ), array( 'alt' => 'Producten van ' . $name, 'loading' => 'lazy' ) )
 			: '<span class="word" aria-hidden="true">' . esc_html( $name ) . '</span>';
-		$html .= '<li class="rv" style="--d:' . $i . '"><figure class="ph">' . $photo . '</figure><h3>' . esc_html( $name ) . '</h3><p>' . esc_html( get_post_meta( $post->ID, 'regel', true ) ) . '</p></li>';
+		$text  = '<p>' . esc_html( get_post_meta( $post->ID, 'regel', true ) ) . '</p>';
+		$href  = soleil_link( trim( (string) get_post_meta( $post->ID, 'link_url', true ) ) );
+		if ( '' === $href ) {
+			$html .= '<li class="rv" style="--d:' . $i . '"><figure class="ph">' . $photo . '</figure><h3>' . esc_html( $name ) . '</h3>' . $text . '</li>';
+			continue;
+		}
+		// Met een link is het hele blokje klikbaar. Een link naar een andere site opent in een nieuw tabblad.
+		$url   = str_starts_with( $href, '/' ) ? home_url( $href ) : $href;
+		$local = str_starts_with( $url, home_url() );
+		$html .= '<li class="rv" style="--d:' . $i . '"><a class="brand-link" href="' . esc_url( $url ) . '"' . ( $local ? '' : soleil_blank() ) . '>'
+			. '<figure class="ph">' . $photo . '</figure><h3>' . esc_html( $name ) . soleil_icon( $local ? 'arrow-right' : 'arrow-up-right' ) . '</h3>' . $text . '</a></li>';
 	}
 	return '<ul class="btiles" role="list">' . $html . '</ul>';
 }

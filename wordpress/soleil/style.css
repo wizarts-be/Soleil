@@ -288,12 +288,12 @@ em { font-style: italic; font-weight: 400; }
 
 /* Brands: four square tiles */
 .btiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-.btiles li { display: grid; gap: 14px; align-content: start; }
+.btiles li { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-content: start; }
 .btiles .ph { aspect-ratio: 1; }
 .btiles .word { display: grid; place-items: center; width: 100%; height: 100%; font-size: var(--fs-h2); letter-spacing: 0.3em; padding-left: 0.3em; color: var(--tan-ink); }
 .btiles h3 { font-size: var(--fs-lg); }
 .btiles p { font-size: var(--fs-small); color: var(--moss); margin-top: -8px; }
-@media (max-width: 860px) { .btiles { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 860px) { .btiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* Treatment in the spotlight (home + /nieuw/): photo left, copy, price and booking right */
 .spot { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); background: var(--mist); }
@@ -313,12 +313,12 @@ em { font-style: italic; font-weight: 400; }
 
 /* /nieuw/: product tiles link to the webshop, date blocks link to their page */
 .news { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.news a { display: grid; gap: 14px; align-content: start; }
-.news .ph img { transition: transform 1s var(--ease); }
-.news a:hover .ph img { transform: scale(1.04); }
+.news a, .brand-link { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-content: start; }
+.news .ph img, .brand-link .ph img { transition: transform 1s var(--ease); }
+.news a:hover .ph img, .brand-link:hover .ph img { transform: scale(1.04); }
 .news .label { margin-bottom: -10px; }
-.news h3 { display: flex; justify-content: space-between; gap: 12px; }
-.news h3 svg { width: 20px; height: 20px; flex: none; }
+.news h3, .brand-link h3 { display: flex; justify-content: space-between; gap: 12px; overflow-wrap: anywhere; }
+.news h3 svg, .brand-link h3 svg { width: 20px; height: 20px; flex: none; }
 .dates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .dates > li { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr); background: var(--mist); }
 /* Fills the card up to a maximum: with a very long text the photo stays in view instead of stretching */
@@ -331,7 +331,7 @@ em { font-style: italic; font-weight: 400; }
 .dates-list { display: grid; gap: 6px; font-size: var(--fs-small); }
 .dates-list li { padding-bottom: 6px; border-bottom: 1px solid var(--line); }
 @media (max-width: 960px) { .dates { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 860px) { .news { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 860px) { .news { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .dates > li { grid-template-columns: minmax(0, 1fr); } .dates .ph { position: relative; top: auto; min-height: 0; height: auto; max-height: none; aspect-ratio: 16 / 9; } }
 
 /* Full-bleed CTA band (inside the max width, rounded) */
@@ -504,12 +504,12 @@ ul.date-months ul { gap: 2px; margin-top: 0; }
 .story .prose p:first-child { font-size: var(--fs-lg); line-height: 1.6; color: var(--ink); }
 .story .prose p { color: var(--moss); }
 @media (max-width: 860px) { .story { grid-template-columns: 1fr; } .story .framed { position: static; max-width: 340px; } }
-.values { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 14px; }
+.values { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
 .values > div { padding: clamp(24px, 3vw, 36px); border-radius: 0; background: var(--mist); }
 .values > div:first-child { grid-row: span 2; display: flex; flex-direction: column; justify-content: space-between; }
 .values h3 { margin-bottom: 10px; }
 .values p { color: var(--moss); }
-@media (max-width: 860px) { .values { grid-template-columns: 1fr; } .values > div:first-child { grid-row: auto; } }
+@media (max-width: 860px) { .values { grid-template-columns: minmax(0, 1fr); } .values > div:first-child { grid-row: auto; } }
 .gallery { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
 .gallery .ph { aspect-ratio: 1; }
 .gallery .ph:nth-child(1) { grid-column: span 3; grid-row: span 2; aspect-ratio: auto; }

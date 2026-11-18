@@ -149,7 +149,8 @@ function soleil_fields() {
 			'detail'    => array( 'html', 'Info over dit product', 'Alles wat je hier schrijft, staat op de eigen pagina van dit product. Een klik op het kaartje op de pagina Nieuw brengt je daar. Laat je dit leeg, dan gaat het kaartje meteen naar de webshop.' ),
 		),
 		'merk'        => array(
-			'regel' => array( 'text', 'Korte regel', 'Staat onder de naam. De foto kies je hieronder; zonder foto staat de naam in de tegel.' ),
+			'regel'    => array( 'text', 'Korte regel', 'Staat onder de naam. De foto kies je hieronder; zonder foto staat de naam in de tegel.' ),
+			'link_url' => array( 'url', 'Link', 'Waar het blokje naartoe gaat als je erop klikt, bv. https://www.merk.be of /behandelingen/skin-expert/. Leeg = het blokje is niet klikbaar.' ),
 		),
 		'review'      => array(
 			'tekst'     => array( 'text', 'Review', 'Letterlijk zoals de klant ze schreef.' ),
