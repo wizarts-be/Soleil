@@ -57,7 +57,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 
 ## Stand van zaken
 
-**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b`, `000b25f`, `74ee9f4`, `98db93c`, `3e0cbea`, `3d0da8b`, `c6f2e7b`, `d585f5e` en `e72ea5b`. Bij de volgende keer uitrollen gaan ze mee. De staging draait nog het thema van 2 november: Saskia ziet deze aanpassingen pas na het uitrollen.
+**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b`, `000b25f`, `74ee9f4`, `98db93c`, `3e0cbea`, `3d0da8b`, `c6f2e7b`, `d585f5e`, `e72ea5b` en `1f9fc00`. Bij de volgende keer uitrollen gaan ze mee. De staging draait nog het thema van 2 november: Saskia ziet deze aanpassingen pas na het uitrollen.
 
 ## Punten
 
@@ -68,7 +68,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 | 1 | "Nieuw bij Soleil" → eyebrow iets groter | Alle eyebrows boven een titel 13px en semi-bold (600). Menukopjes en tags op kaarten blijven 11px | ✅ `f385c74` |
 | 2 | "Het logo in de navigatie vervangen door het logo van Instituut in de Zon" + als favicon | Nav: officieel logo LOGO-SOLEIL-2026-COLOR (media ID 306) als `assets/logo-soleil.webp`, krimpt mee bij scrollen; oude svg-zon + woordmerk weg. Favicon: `assets/favicon.png`, zon + "instituut" zonder SOLEIL op crème vierkant, ook apple-touch-icon. Site-pictogram in WP staat op 0 (anders overschrijft dat het favicon) | ✅ `b6d36e2` |
 | 3 | Activiteit bewerken → titel moet bold staan | Vinkje "Titel vet" per activiteit, standaard aan | ✅ `e72ea5b` |
-| 4 | Blok ook kapot na tekst aan te passen (bij activiteit?) | Nagebootst op de activiteitenkaarten op Nieuw: bij langere tekst groeide de foto over de tekst. Foto volgt nu de hoogte van de kaart, ook bij "In de kijker". Lege regels worden alinea's. Saskia wist de plaats niet meer: bevestigen dat dit het blok was | ✅ `e72ea5b` |
+| 4 | Blok ook kapot na tekst aan te passen (bij activiteit?) | Nagebootst op de activiteitenkaarten op Nieuw: bij langere tekst groeide de foto over de tekst. Foto volgt nu de hoogte van de kaart, ook bij "In de kijker". Lege regels worden alinea's. Bij veel tekst stopt de foto op een maximale hoogte en blijft ze in beeld; een heel lang woord breekt af binnen de kaart. Saskia wist de plaats niet meer: bevestigen dat dit het blok was | ✅ `e72ea5b`, `1f9fc00` |
 | 5 | Saskia heeft op sommige pagina's "geen rechten" | Oorzaak: vaste pagina's zijn vergrendeld en lijsten vullen zich uit Producten, Reviews, … De gele balk met uitleg en de knop "Bewerk …" staat nu altijd zichtbaar in de editor. Per pagina nakijken wat ze nog echt mist | ⏳ deels `ddaa217` |
 
 ### Home
