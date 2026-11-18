@@ -263,7 +263,7 @@
       el("div", { className: "soleil-card__pills", role: "group", "aria-label": props.label },
         props.terms ? props.terms.map(function (t) {
           var on = props.value.indexOf(t.id) !== -1;
-          return el("button", { key: t.id, type: "button", className: "soleil-card__pill" + (on ? " is-on" : ""), "aria-pressed": on, onClick: function () { props.onChange([t.id]); } }, t.name);
+          return el("button", { key: t.id, type: "button", className: "soleil-card__pill" + (on ? " is-on" : ""), "aria-pressed": on, onClick: function () { props.onChange([t.id]); } }, wp.htmlEntities.decodeEntities(t.name));
         }) : el(c.Spinner)
       ),
       props.warn && !props.value.length ? el("p", { className: "soleil-card__warn" }, props.warn) : null
@@ -520,25 +520,66 @@
   });
 
   /* ---------- Berichtkaart: foto, categorie, samenvatting ---------- */
+  var CATEGORY_QUERY = { per_page: -1, orderby: "id", order: "asc", hide_empty: false };
+
+  // Zelf een categorie maken. Bestaat de naam al, dan wordt die gewoon gekozen.
+  function NewCategory(props) {
+    var name = wp.element.useState("");
+    var busy = wp.element.useState(false);
+    var error = wp.element.useState("");
+    var value = name[0].trim();
+    var done = function (id) { props.onPick(id); name[1](""); error[1](""); };
+
+    function add() {
+      if (!value || busy[0]) { return; }
+      var same = (props.terms || []).filter(function (t) { return wp.htmlEntities.decodeEntities(t.name).toLowerCase() === value.toLowerCase(); })[0];
+      if (same) { done(same.id); return; }
+      busy[1](true);
+      error[1]("");
+      var core = wp.data.dispatch("core");
+      core.saveEntityRecord("taxonomy", "category", { name: value }, { throwOnError: true }).then(function (term) {
+        core.invalidateResolution("getEntityRecords", ["taxonomy", "category", CATEGORY_QUERY]);
+        done(term.id);
+      }).catch(function (e) {
+        if (e && e.code === "term_exists" && e.data && e.data.term_id) {
+          core.invalidateResolution("getEntityRecords", ["taxonomy", "category", CATEGORY_QUERY]);
+          done(e.data.term_id);
+        } else {
+          error[1]("Dit lukte niet. Probeer het nog eens.");
+        }
+      }).finally(function () { busy[1](false); });
+    }
+
+    return el("div", { className: "soleil-card__field" },
+      el("div", { className: "soleil-card__newcat", onKeyDown: function (e) { if (e.key === "Enter") { e.preventDefault(); e.stopPropagation(); add(); } } },
+        el(c.TextControl, { label: "Nieuwe categorie", value: name[0], maxLength: 40, onChange: name[1], placeholder: "Bv. Winterhuid", __next40pxDefaultSize: true, __nextHasNoMarginBottom: true }),
+        el(c.Button, { variant: "secondary", isBusy: busy[0], disabled: !value || busy[0], onClick: add, __next40pxDefaultSize: true }, "Toevoegen")
+      ),
+      error[0] ? el("p", { className: "soleil-card__warn", role: "alert" }, error[0]) : null,
+      el("p", { className: "soleil-card__hint" }, "Tips in de categorie Nieuws of Nieuw komen niet op de home.")
+    );
+  }
+
   function PostSetup() {
     var blockProps = be.useBlockProps({ className: "soleil-card soleil-card--post" });
     var featured = useEntityProp("postType", "post", "featured_media");
     var cats = useEntityProp("postType", "post", "categories");
     var excerpt = useEntityProp("postType", "post", "excerpt");
     var terms = useSelect(function (select) {
-      return select("core").getEntityRecords("taxonomy", "category", { per_page: -1, orderby: "id", order: "asc", hide_empty: false });
+      return select("core").getEntityRecords("taxonomy", "category", CATEGORY_QUERY);
     }, []);
     var usable = terms ? terms.filter(function (t) { return t.id !== 1; }) : null;
 
     return el("div", blockProps,
       el("div", { className: "soleil-card__head" },
         el("strong", null, "Seizoenstip"),
-        el("span", null, "Kies een foto en categorie, schrijf je tekst eronder en klik op Publiceren.")
+        el("span", null, "Kies een foto en categorie, schrijf je tekst eronder en klik op Publiceren. Je nieuwste tip staat vanzelf bovenaan, oudere tips komen eronder te staan.")
       ),
       el("div", { className: "soleil-card__grid soleil-card__section" },
         el("div", null, el(Photo, { id: featured[0], onChange: featured[1], help: "Deze foto staat bovenaan de tip, op de home en op de kaartjes bij Seizoenstips." })),
         el("div", { className: "soleil-card__fields" },
           el(Pills, { label: "Categorie", terms: usable, value: cats[0] || [], onChange: cats[1] }),
+          el(NewCategory, { terms: usable, onPick: function (id) { cats[1]([id]); } }),
           area("Korte samenvatting", typeof excerpt[0] === "string" ? excerpt[0] : "", excerpt[1], "Staat op de home en op de kaartjes bij Seizoenstips. Leeg = het begin van je tekst.", 4)
         )
       )

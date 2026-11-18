@@ -577,6 +577,7 @@ ul.date-months ul { gap: 2px; margin-top: 0; }
 .post > p:last-child { font-size: var(--fs-small); color: var(--moss); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .post-meta { display: flex; align-items: baseline; gap: 12px; font-size: var(--fs-small); color: var(--moss); }
 /* Newest tip on the home: same block as the spotlight, the whole block is the link */
+.tips-home { padding-bottom: 0; } /* last section of the home: the footer brings its own space */
 .tip-card { color: inherit; }
 .tip-card .ph img { transition: transform 1s var(--ease); }
 .tip-card:hover .ph img { transform: scale(1.04); }

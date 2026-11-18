@@ -88,7 +88,7 @@ add_action( 'init', function () {
 	wp_register_script(
 		'soleil-blocks-editor',
 		get_theme_file_uri( 'assets/js/blocks-editor.js' ),
-		array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-server-side-render', 'wp-data', 'wp-core-data', 'wp-dom-ready', 'wp-hooks', 'wp-compose' ),
+		array( 'wp-blocks', 'wp-element', 'wp-block-editor', 'wp-components', 'wp-server-side-render', 'wp-data', 'wp-core-data', 'wp-dom-ready', 'wp-hooks', 'wp-compose', 'wp-html-entities' ),
 		soleil_version( 'assets/js/blocks-editor.js' ),
 		true
 	);
