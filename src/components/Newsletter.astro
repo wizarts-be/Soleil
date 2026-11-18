@@ -55,26 +55,22 @@
   const msg = box?.querySelector<HTMLElement>('[data-nl-msg]');
   const get = () => { try { return localStorage.getItem(KEY); } catch { return 'x'; } };
   const set = (v: string) => { try { localStorage.setItem(KEY, v); } catch {} };
-  // Dismissed less than 60 days ago, or already signed up: stay away.
   const seen = get();
-  const quiet = seen === 'ingeschreven' || (seen && Date.now() - Number(seen) < 60 * 864e5);
+  // Wegklikken geldt enkel voor deze pagina: op de volgende pagina komt het kaartje terug. Wie zich inschreef, ziet het niet meer.
+  const quiet = seen === 'ingeschreven';
 
   if (box && form && !quiet) {
-    let shown = false;
+    // 5 seconden na het openen van de pagina. Staat het menu dan open, dan wacht het kaartje tot het dicht is.
     const show = () => {
-      if (shown || document.documentElement.classList.contains('menu-open')) return;
-      shown = true;
+      if (document.documentElement.classList.contains('menu-open')) { setTimeout(show, 1000); return; }
       box.hidden = false;
       requestAnimationFrame(() => box.classList.add('is-on'));
-      removeEventListener('scroll', onScroll);
     };
     const hide = () => { box.classList.remove('is-on'); setTimeout(() => (box.hidden = true), 400); };
-    const onScroll = () => { if (scrollY > (document.documentElement.scrollHeight - innerHeight) * 0.5) show(); };
-    setTimeout(show, 20000);
-    addEventListener('scroll', onScroll, { passive: true });
+    setTimeout(show, 5000);
 
-    box.querySelector('[data-nl-close]')?.addEventListener('click', () => { set(String(Date.now())); hide(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !box.hidden) { set(String(Date.now())); hide(); } });
+    box.querySelector('[data-nl-close]')?.addEventListener('click', hide);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !box.hidden) hide(); });
 
     // Prototype: confirm on screen only.
     form.addEventListener('submit', (e) => {

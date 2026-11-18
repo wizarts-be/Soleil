@@ -137,34 +137,24 @@ ${v("telefoon")}` : ""}`)}`;
       }
     };
     const seen = get();
-    const quiet = seen === "ingeschreven" || seen && Date.now() - Number(seen) < 60 * 864e5;
+    const quiet = seen === "ingeschreven";
     if (box && form && !quiet) {
-      let shown = false;
       const show = () => {
-        if (shown || document.documentElement.classList.contains("menu-open")) return;
-        shown = true;
+        if (document.documentElement.classList.contains("menu-open")) {
+          setTimeout(show, 1e3);
+          return;
+        }
         box.hidden = false;
         requestAnimationFrame(() => box.classList.add("is-on"));
-        removeEventListener("scroll", onScroll);
       };
       const hide = () => {
         box.classList.remove("is-on");
         setTimeout(() => box.hidden = true, 400);
       };
-      const onScroll = () => {
-        if (scrollY > (document.documentElement.scrollHeight - innerHeight) * 0.5) show();
-      };
-      setTimeout(show, 2e4);
-      addEventListener("scroll", onScroll, { passive: true });
-      box.querySelector("[data-nl-close]")?.addEventListener("click", () => {
-        set(String(Date.now()));
-        hide();
-      });
+      setTimeout(show, 5e3);
+      box.querySelector("[data-nl-close]")?.addEventListener("click", hide);
       document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !box.hidden) {
-          set(String(Date.now()));
-          hide();
-        }
+        if (e.key === "Escape" && !box.hidden) hide();
       });
       form.addEventListener("submit", (e) => {
         e.preventDefault();
