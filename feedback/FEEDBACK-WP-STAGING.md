@@ -57,7 +57,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 
 ## Stand van zaken
 
-**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b`, `000b25f`, `74ee9f4`, `98db93c`, `3e0cbea`, `3d0da8b` en `c6f2e7b`. Bij de volgende keer uitrollen gaan ze mee.
+**Gepusht maar nog niet op de staging:** commits `f385c74`, `ddaa217`, `b6d36e2`, `8a8015b`, `000b25f`, `74ee9f4`, `98db93c`, `3e0cbea`, `3d0da8b`, `c6f2e7b` en `d585f5e`. Bij de volgende keer uitrollen gaan ze mee. De staging draait nog het thema van 2 november: Saskia ziet deze aanpassingen pas na het uitrollen.
 
 ## Punten
 
@@ -85,7 +85,7 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 | # | Feedback | Actie | Status |
 |---|---|---|---|
 | 10 | Product in de kijker → detailpagina over het nieuwe product | Eigen pagina per product op `/nieuw/<product>/`, nieuw veld "Info over dit product", knop naar de webshop, "Ook nieuw" onderaan. Info leeg = kaartje gaat naar de webshop | ✅ `ddaa217` |
-| 11 | Nieuw bij Soleil: geen toegang om tekst en dingen aan te passen | Zie 5: de gele balk wijst nu naar Producten / Activiteiten / In de kijker. Nakijken of er nog vaste tekst is die ze niet kan aanpassen | ⏳ |
+| 11 | Nieuw bij Soleil: geen toegang om tekst en dingen aan te passen | Zie 5: de gele balk wijst naar Producten / Activiteiten / In de kijker. Vaste teksten nu aanpasbaar: In de kijker (kleine regel, knop, link) bij Soleil > In de kijker, de pagina van een product bij Soleil > Pagina van een product (leeg = standaardtekst). Melding "Voorbeeldinhoud" en het vinkje bij producten en activiteiten weg | ✅ `d585f5e` |
 
 ### Behandelingen
 
@@ -97,8 +97,8 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 | 15 | Handen & voeten: extra blokje met meer info (geen pedicure zonder gelaatsverzorging); stond 2 keer onder de prijzen | Stond er 2x: noot onder de prijzen + extra vak "Pedicure". Saskia's tekst (extra vak) blijft, als eigen beige blok links onder de tekst (staan de prijzen rechts in het vak, dan komt het extra vak links), met optionele foto (nieuw veld bij Extra vak); lege regel = nieuwe alinea. Lokaal staat er als voorbeeld foto 188 (HANDEN EN VOETEN (1)); op de staging kiest Saskia zelf. Noot leeggemaakt. **Inhoud:** op de staging nog `content-updates/2026-11-17-pedicure-noot.php` draaien (doet niets als de noot intussen veranderd is) | ✅ `3e0cbea` (script nog draaien op de staging) |
 | 16 | Skincare make-up: geen opsomming, gewoon een tekstblokje; blokjes meteen onder de hero | Vragen-opsomming wordt gewone tekst (lopend; lege regel = alinea). Editor: veld "Tekst onder de titel" in plaats van "Vragen" (bestaande vragen staan er al in). Volgorde: hero, dan de blokjes (minder witruimte ertussen), dan het merkblok Jane Iredale. Geldt ook voor Laser (zelfde opbouw). Geen inhoud te wijzigen op de staging | ✅ `3d0da8b` |
 | 17 | Laserontharing: tekst is weg; 4 blokjes kunnen toevoegen | Oorzaak: "Eigen paginaopbouw" (make-up) stond aan op laser voor een actie, dat verbergt de hele gewone pagina. Nu: laser terug op de gewone opbouw (titel, intro, Herken je dit?, laserdata), zelfde opbouw als de andere behandelingen: in de hero enkel de eerste alinea van de intro, de rest links onder de hero (geldt voor elke behandeling met een lange intro); "Intake gesprek" staat als prijs in het prijzenvak (vanaf 4 prijzen blokken, of zelf "Blokken" kiezen); laserdata links als eigen blok. Schakelaar "Eigen paginaopbouw" enkel nog zichtbaar waar hij aan staat (make-up). Ook: data altijd in het Nederlands (WordPress staat op en_US, data stonden in het Engels, ook op Nieuw), intro met alinea's. **Inhoud:** op de staging nog `content-updates/2026-11-17-laser-actie.php` draaien (oude waarde blijft bewaard in makeup_backup_2026_11_17) | ✅ `c6f2e7b` (script nog draaien op de staging) |
-| 18 | Laserontharing: H2-titel boven de tekst ("Actie van de maand") | Nieuw blok "Actie" op elke behandeling: kleine regel, H2 (standaard "Actie van de maand"), tekst en foto, onderaan de pagina. Saskia's promo oksels (4+1 gratis, voorwaarden, foto) staat erin via het script van 17 | ✅ `c6f2e7b` (via het script van 17) |
-| 19 | Make-up: standaard "Behandelingen" boven de blokken, maar zelf aan te passen | | ❓ alleen make-up of alle pagina's met kaarten? |
+| 18 | Laserontharing: H2-titel boven de tekst ("Actie van de maand") | Nieuw blok "Actie" op elke behandeling: kleine regel, H2 (standaard "Actie van de maand"), tekst en foto, onderaan de pagina. Saskia's promo oksels (4+1 gratis, voorwaarden, foto) staat erin via het script van 17 | ✅ `c6f2e7b` (via het script van 17). Actieblok herwerkt in `d585f5e`: beige vak, foto volledig zichtbaar, tekst na een lege regel staat kleiner (voorwaarden). Laserdata staan per maand |
+| 19 | Make-up: standaard "Behandelingen" boven de blokken, maar zelf aan te passen | Op elke behandeling: veld "Titel boven de blokken" (leeg = Behandelingen), ook op make-up en laser. Kaartjes staan op elke behandeling meteen onder de hero | ✅ `d585f5e` |
 
 ### Over Soleil en merken
 
@@ -112,6 +112,6 @@ ssh stagingwizartsbe@ssh020.webhosting.be 'cd ~/subsites/soleil.staging.wizarts.
 
 - Punt 6: wat moet er gebeuren met "Stralen begint met een huid in balans"?
 - Punt 8: is "Seizoenstips" de titel van de sectie op home of een categorie in het journaal?
-- Punt 19: "Behandelingen" boven de blokken: alleen voor make-up of voor alle pagina's met kaarten?
+- Laser: mag de lange intro over Cathy korter? Voorstel: "Cathy is verpleegkundige en gespecialiseerd lasertherapeute, met bijna 15 jaar dagelijkse ervaring met de LightSheer diodelaser. Of het nu om esthetische redenen of om een medische indicatie gaat: je krijgt een professionele, veilige en persoonlijke aanpak."
 - Punt 22: nieuwsbriefpopup op Over Soleil ook, of alleen op home?
 - Product zonder info: kaartje naar de webshop (nu) of altijd naar een eigen pagina?
